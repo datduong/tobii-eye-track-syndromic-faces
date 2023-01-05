@@ -8,7 +8,7 @@ library('ggpubr')
 library('coin')
 library('EnvStats')
 
-df = read.csv('C:/Users/duongdb/Documents/GitHub/Tobii-AOI/data/Trial_data_export_121522.csv')
+df = read.csv('C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/data/Trial_data_export_121522.csv')
 
 
 # ---------------------------------------------------------------------------- #
@@ -89,8 +89,8 @@ do_test_2_samples = function(df1,df2,colname1,colname2,test_type,remove_0=FALSE)
   return (test1)
 }
 
-slide_number_x = 'Slide 14'
-slide_number_y = 'Slide 5'
+slide_number_x = 'Slide 2'
+slide_number_y = 'Slide 11'
 what_stat = 'mean'
 # this_aoi = 'R_Eye'
 # 'Chin',
@@ -125,16 +125,76 @@ for (this_aoi in list_aoi) {
 
   temp5 = do_test_2_samples(df_wrt_slide_x,df_wrt_slide_y,'Time_to_first_whole_fixation','Time_to_first_whole_fixation',paste0('permu_',what_stat))
 
-  tempfinal = data.frame(rbind(temp1,temp2,temp3,temp4,temp5))
+  temp6 = do_test_2_samples(df_wrt_slide_x,df_wrt_slide_y,'Number_of_whole_fixations','Number_of_whole_fixations',paste0('permu_',what_stat),remove_0=FALSE)
+
+  tempfinal = data.frame(rbind(temp1,temp2,temp3,temp4,temp5,temp6))
   tempfinal$AOI = this_aoi
 
   colnames(tempfinal) = c('pvalue',paste0(what_stat,'_',gsub(' ','',slide_number_x)), paste0(what_stat,'_',gsub(' ','',slide_number_y)), 'AOI')
 
-  rownames(tempfinal) = c('Time_to_first_fixation','Total_duration_of_fixations','Number_of_fixations','Total_duration_of_whole_fixations','Time_to_first_whole_fixation')
+  rownames(tempfinal) = c('Time_to_first_fixation','Total_duration_of_fixations','Number_of_fixations','Total_duration_of_whole_fixations','Time_to_first_whole_fixation','Number_of_whole_fixations')
   list_output[[this_aoi]] = tempfinal
 
 }
 do.call(rbind,list_output)
+
+# ---------------------------------------------------------------------------- #
+
+
+# ! compare 2 groups 
+
+slide_number_x = 'Slide 11'
+slide_number_y = 'Slide 11'
+group1 = c('BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1')
+# group1 = c('BAF60a','BRD4','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','WHSC1')
+group2 = c('PTPN11','RIT1','TBX')
+what_stat = 'median'
+# this_aoi = 'R_Eye'
+# 'Chin',
+list_aoi = c('Chin','Forehead','L_Cheek','L_Ear','L_Eye','Mouth','Nose','R_Cheek','R_Ear','R_Eye') # L_Ear
+list_output = list()
+for (this_aoi in list_aoi) {
+  print (this_aoi)
+  df_wrt_slide_x = subset (df, df$TOI==slide_number_x & df$AOI==this_aoi & df$Participant %in% group1)
+  df_wrt_slide_y = subset (df, df$TOI==slide_number_y & df$AOI==this_aoi & df$Participant %in% group2)
+
+  if( sum ( ! is.na(df_wrt_slide_x$Time_to_first_fixation) ) < 2 ) {
+    next
+  }
+  if( sum ( ! is.na(df_wrt_slide_y$Time_to_first_fixation) ) < 2 ) {
+    next
+  }
+
+  if( sum ( ! is.na(df_wrt_slide_x$Time_to_first_whole_fixation) ) < 2 ) {
+    next
+  }
+  if( sum ( ! is.na(df_wrt_slide_y$Time_to_first_whole_fixation) ) < 2 ) {
+    next
+  }
+
+  temp1 = do_test_2_samples(df_wrt_slide_x,df_wrt_slide_y,'Time_to_first_fixation','Time_to_first_fixation',paste0('permu_',what_stat),remove_0=TRUE)
+
+  temp2 = do_test_2_samples(df_wrt_slide_x,df_wrt_slide_y,'Total_duration_of_fixations','Total_duration_of_fixations',paste0('permu_',what_stat),remove_0=TRUE)
+
+  temp3 = do_test_2_samples(df_wrt_slide_x,df_wrt_slide_y,'Number_of_fixations','Number_of_fixations',paste0('permu_',what_stat),remove_0=FALSE)
+
+  temp4 = do_test_2_samples(df_wrt_slide_x,df_wrt_slide_y,'Total_duration_of_whole_fixations','Total_duration_of_whole_fixations',paste0('permu_',what_stat),remove_0=FALSE)
+
+  temp5 = do_test_2_samples(df_wrt_slide_x,df_wrt_slide_y,'Time_to_first_whole_fixation','Time_to_first_whole_fixation',paste0('permu_',what_stat))
+
+  temp6 = do_test_2_samples(df_wrt_slide_x,df_wrt_slide_y,'Number_of_whole_fixations','Number_of_whole_fixations',paste0('permu_',what_stat),remove_0=FALSE)
+
+  tempfinal = data.frame(rbind(temp1,temp2,temp3,temp4,temp5,temp6))
+  tempfinal$AOI = this_aoi
+
+  colnames(tempfinal) = c('pvalue',paste0(what_stat,'_',gsub(' ','',slide_number_x)), paste0(what_stat,'_',gsub(' ','',slide_number_y)), 'AOI')
+
+  rownames(tempfinal) = c('Time_to_first_fixation','Total_duration_of_fixations','Number_of_fixations','Total_duration_of_whole_fixations','Time_to_first_whole_fixation','Number_of_whole_fixations')
+  list_output[[this_aoi]] = tempfinal
+
+}
+do.call(rbind,list_output)
+
 
 
 

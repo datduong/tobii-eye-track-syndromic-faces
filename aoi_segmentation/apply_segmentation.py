@@ -16,19 +16,22 @@ import aoi_to_segmentation
 
 # ---------------------------------------------------------------------------- #
 
-def apply_segmentation(img_dir, transparent_to_white, args): 
+def apply_segmentation(img_dir, threshold, transparent_to_white, args): 
   images = os.listdir(img_dir)
   if args.filter_by_word is not None: 
     images = [ i for i in images if re.match(args.filter_by_word,i) ]
   #
+  images = [i for i in images if ('otsu' not in i)] # ! only ourput images will have "otsu" name attached to it
+  images = [i for i in images if ('thresh' not in i)]
+  print (images)
   seg_dict = {} # save all segmentations in dict
   for img in images: 
     # cam_mask, threshold=np.nan, smoothing=False, k=0, workdir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None
-    seg_dict [ img ]  = aoi_to_segmentation.aoi_to_segmentation(  cam_mask = img, 
-                                                                  threshold = args.threshold,
-                                                                  smoothing = args.smoothing,
+    seg_dict [ img ]  = aoi_to_segmentation.cam_to_segmentation(  cam_mask = img, 
+                                                                  threshold = threshold,
+                                                                  smoothing = args.if_smoothing,
                                                                   k = args.k,
-                                                                  workdir = img_dir,
+                                                                  img_dir = img_dir,
                                                                   prefix = '', 
                                                                   transparent_to_white = transparent_to_white,
                                                                   resize = args.resize,
@@ -57,13 +60,19 @@ if __name__ == '__main__':
                               if_smoothing to True, otherwise no smoothing would \
                               be performed.')
 
-  parser.add_argument('--threshold', type=float,
+  parser.add_argument('--threshold_tobii', type=float, default= None,
+                        help="threshold heatmap, will not use otsu")
+
+  parser.add_argument('--threshold_model', type=float, default= None,
                         help="threshold heatmap, will not use otsu")
 
   parser.add_argument('--resize', type=int, default=None, 
                         help='resize images, before doing this, make sure faces are properly aligned')
 
   parser.add_argument('--img_dir_tobii', type=str,
+                        help='')
+
+  parser.add_argument('--filter_by_word', type=str, default=None, 
                         help='')
 
   parser.add_argument('--img_dir_model', type=str,
@@ -112,13 +121,13 @@ if __name__ == '__main__':
     args.resize = (args.resize, args.resize)
   
   # ! get segmentation of Tobii
-  tobii_segmentation = apply_segmentation(args.img_dir_tobii, transparent_to_white=True, args=args)
+  tobii_segmentation = apply_segmentation(args.img_dir_tobii, threshold=args.threshold_tobii, transparent_to_white=True, args=args)
 
   # ! get deep learning heatmap as segmentation 
   if args.if_smoothing is False: 
     args.if_smoothing = True
   
-  model_segmentation = apply_segmentation(args.img_dir_model, transparent_to_white=False, args=args)
+  model_segmentation = apply_segmentation(args.img_dir_model, threshold=args.threshold_model, transparent_to_white=False, args=args)
 
   # ! run simple mean/std of the differences 
   for model_name in model_segmentation: 
@@ -129,10 +138,13 @@ if __name__ == '__main__':
     #
     ave = np.mean ( np.array(mIoU) ) 
     std = np.std (np.array(mIoU))
-    mIoU.append([ave,std])
+    mIoU = mIoU + [ave,std]
+    
+    # save as csv 
+    fout = open(args.output_csv,'w')
+    print (mIoU)
+    fout.write ( model_name + ',' + ','.join ( [str(item) for item in mIoU] ) + '\n')
 
-  # save as csv 
-  fout = open(args.output_csv,'w')
-  fout.write ( ','.join ( [f'{item:03d}' for item in mIoU] ) ) 
-
+  # end
+  fout.close()
   

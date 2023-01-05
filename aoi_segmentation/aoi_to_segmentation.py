@@ -43,7 +43,7 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
     return iou_score
 
 
-def cam_to_segmentation(cam_mask, threshold=np.nan, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None):
+def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None):
     """
     Threshold a saliency heatmap to binary segmentation mask.
     Args:
@@ -97,7 +97,7 @@ def cam_to_segmentation(cam_mask, threshold=np.nan, smoothing=False, k=0, img_di
         mask = cv2.boxFilter(mask, -1, (k, k)) # ! smoothing on original grayscale image. 
 
     # use Otsu's method to find threshold if no threshold is passed in
-    if np.isnan(threshold):
+    if threshold is None:
         # mask = np.uint8(255 * mask) # ! grayscale should already be on 0-255 unit scale
         #
         mask = 255 - mask # ! this flip 0 into 255 and 255 into 0. 
@@ -140,7 +140,7 @@ def cam_to_segmentation(cam_mask, threshold=np.nan, smoothing=False, k=0, img_di
         segmentation_as_png = Image.fromarray(np.uint8(segmentation*255), 'L')
         # segmentation_as_png.show()
         prefix = 'smoothk'+str(k) if smoothing else 'nosmooth'
-        prefix = prefix + '-' + 'thresh'+str(thresh) if np.isnan(threshold)==False else 'otsu'
+        prefix = prefix + '-' + 'thresh'+str(threshold) if threshold is not None else 'otsu'
         temp = prefix + '-' + cam_mask.split('/')[-1]
         segmentation_as_png.save(os.path.join(img_dir,temp))
 
