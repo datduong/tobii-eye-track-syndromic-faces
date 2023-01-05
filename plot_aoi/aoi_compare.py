@@ -2,37 +2,59 @@ import os, sys, re, pickle
 import numpy as np
 import pandas as pd 
 
-def get_statistic (df, image_name, participants, col_name): 
+def get_statistic (df, image_name, participants, tobii_metrics): 
+  """_summary_
+
+  Args:
+      df (_type_): _description_
+      image_name (_type_): _description_
+      participants (_type_): _description_
+      tobii_metrics (_type_): _description_
+
+  Returns:
+      _type_: _description_
+  """
   if image_name is not None: 
     df = df[ df['TOI'].isin([image_name]) ] # get @participants who saw @image_name
   if len(participants)!=0 : 
     df = df[ df['Participant'].isin(participants) ]
   # for each face region, take mean. 
   if df.shape[0] == 0: 
-    print ('empty?')
-  obs_stat = df.groupby('AOI')[col_name].mean() # ! https://www.statology.org/pandas-mean-by-group/
+    print ('empty?', image_name, participants)
+  #
+  obs_stat = df.groupby('AOI')[tobii_metrics].mean() # ! https://www.statology.org/pandas-mean-by-group/
   AOI = obs_stat.index.tolist() # ! need this to access the row of each AOI
-  obs_stat = obs_stat.to_numpy() # array, num of AOI x col_name 
+  obs_stat = obs_stat.to_numpy() # array, num of AOI x tobii_metrics 
   return AOI, obs_stat, df 
 
-def random_shuffle_get_statistic (df, image_name, participants, col_name, seed): 
-  df = df.sample(frac=1,replace=True,seed=seed).reset_index(drop=True)
-  return get_statistic (df, image_name, participants, col_name)
 
 def random_sample_df (df1,df2,image_name,participants):
+  """_summary_
+
+  Args:
+      df1 (_type_): _description_
+      df2 (_type_): _description_
+      image_name (_type_): _description_
+      participants (_type_): _description_
+
+  Returns:
+      _type_: _description_
+  """
   N1 = len(participants[0])
   N2 = len(participants[1])
+  
   # randomly make df1 
   participants = sorted ( list(set ( participants[0] + participants[1] ) ) ) # combine everyone into a single list
 
-  df = pd.concat([df1,df2])
+  df = pd.concat([df1,df2]) # ! sample obs from both slides at once
+
   # 
   new_df1 = []
   for n in range(N1): 
-    pick_this_person = np.random.choice(participants,size=1)
-    pick_this_slide = np.random.choice(image_name,size=1)
-    this_random_point = df[ df['Participant'].isin(pick_this_person) & df['TOI'].isin(pick_this_slide) ]
-    new_df1.append(this_random_point)
+    pick_this_person = np.random.choice(participants,size=1) # ! pick random slide
+    pick_this_slide = np.random.choice(image_name,size=1) # ! pick a random person
+    this_random_point = df[ df['Participant'].isin(pick_this_person) & df['TOI'].isin(pick_this_slide) ] 
+    new_df1.append(this_random_point) # ! make a random dataset
   
   #
   new_df2 = []
@@ -43,45 +65,54 @@ def random_sample_df (df1,df2,image_name,participants):
     new_df2.append(this_random_point)
 
   return pd.concat(new_df1), pd.concat(new_df2)
-  
-def do_bootstrap (df, image_name, participants, col_name, boot_num=100): 
-  """
-  Bootstrap.
+
+
+def do_bootstrap (df, image_name, participants, tobii_metrics, boot_num=100): 
+  """Bootstrap
+
   Args:
-    df: pd.dataframe
-    image_name (array): [slide1,slide2]
-    participants (array): 
+      df (pd.dataframe): _description_
+      image_name (array): [slide1,slide2]
+      participants (array): _description_
+      tobii_metrics (array): _description_
+      boot_num (int, optional): _description_. Defaults to 100.
 
   Returns:
-      
+      _type_: _description_
   """
   group_statistic = {}
   for index,g in enumerate(image_name): 
-    group_statistic[g] = get_statistic (df, g, participants[index], col_name) 
+    group_statistic[index] = get_statistic (df, g, participants[index], tobii_metrics) 
 
   # 
-  assert np.array_equal(group_statistic[image_name[0]][0], group_statistic[image_name[1]][0]) # equal @AOI
-  observed_stat = group_statistic[image_name[0]][1] - group_statistic[image_name[1]][1] # matrix
+  assert np.array_equal(group_statistic[0][0], group_statistic[1][0]) # equal @AOI
+  observed_stat = group_statistic[0][1] - group_statistic[1][1] # matrix
 
   boot = []
 
   for i in range(boot_num):
     # make random df
-    boot_df1, boot_df2 = random_sample_df ( group_statistic[image_name[0]][2], group_statistic[image_name[1]][2], image_name, participants)
-    boot_group_statistic1 = get_statistic (boot_df1, image_name=None, participants=[], col_name=col_name) 
-    boot_group_statistic2 = get_statistic (boot_df2, image_name=None, participants=[], col_name=col_name) 
+    boot_df1, boot_df2 = random_sample_df ( group_statistic[0][2], group_statistic[1][2], image_name, participants)
+    boot_group_statistic1 = get_statistic (boot_df1, image_name=None, participants=[], tobii_metrics=tobii_metrics) 
+    boot_group_statistic2 = get_statistic (boot_df2, image_name=None, participants=[], tobii_metrics=tobii_metrics) 
     #
     boot_stat = boot_group_statistic1[1] - boot_group_statistic2[1]
     boot.append(boot_stat)
-  # 
-
+  
+  # finish bootstrap
   boot = np.array(boot)
   mean = np.nanmean(boot,axis=0)
   std = np.nanstd(boot,axis=0)
 
-  pval = np.sum( boot >= np.abs(observed_stat ), axis=0) / 100 # how often boot sample is more extreme than observed
+  pval = np.sum( boot >= np.abs(observed_stat ), axis=0) / boot_num # how often boot sample is more extreme than observed
 
-  AOI = group_statistic[image_name[0]][0]
+  AOI = group_statistic[0][0]
+
+  # format output 
+  observed_stat = pd.DataFrame(observed_stat, columns=tobii_metrics, index=AOI)
+  pval = pd.DataFrame(pval, columns=tobii_metrics, index=AOI)
+  mean = pd.DataFrame(mean, columns=tobii_metrics, index=AOI)
+  std = pd.DataFrame(std, columns=tobii_metrics, index=AOI)
   
   return observed_stat, pval, group_statistic, boot, mean, std, AOI
 
@@ -92,21 +123,25 @@ df = 'C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/data/Trial_data_
 df = pd.read_csv(df)
 df = df.sort_values(['AOI','Participant']).reset_index(drop=True)
 
-slides = ['Slide 2','Slide 11']
+slides = ['Slide 8','Slide 11']
 
 people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'], 
                   ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'] ]
 
-col_names = ['Total_duration_of_whole_fixations','Time_to_first_whole_fixation','Number_of_whole_fixations']
+# slides = ['Slide 11','Slide 11']
+
+# people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1'], 
+#                   ['PTPN11','RIT1','TBX'] ]
+
+tobii_metrics = ['Total_duration_of_whole_fixations','Time_to_first_whole_fixation','Number_of_whole_fixations']
 
 observed_stat, pval, group_statistic, boot, mean, std, AOI = do_bootstrap (   df, 
                                                                               image_name=slides, 
                                                                               participants=people_names,   
-                                                                              col_name=col_names)
-group_statistic['Slide 2'][0]
+                                                                              tobii_metrics=tobii_metrics,
+                                                                              boot_num=200)
 
-print (observed_stat[4])
-print (mean[4])
-print (std[4])
 
+for d in [observed_stat, pval, mean, std]:
+  print(d.to_string())
 
