@@ -2,7 +2,7 @@ import os, sys, re, pickle
 import numpy as np
 import pandas as pd 
 
-def get_statistic (df, image_name, participants, tobii_metrics): 
+def get_statistic (df, image_name, participants, tobii_metrics, average_option='median'): 
   """_summary_
 
   Args:
@@ -10,6 +10,7 @@ def get_statistic (df, image_name, participants, tobii_metrics):
       image_name (_type_): _description_
       participants (_type_): _description_
       tobii_metrics (_type_): _description_
+      average_option (str, optional): _description_. Defaults to 'median'.
 
   Returns:
       _type_: _description_
@@ -21,8 +22,14 @@ def get_statistic (df, image_name, participants, tobii_metrics):
   # for each face region, take mean. 
   if df.shape[0] == 0: 
     print ('empty?', image_name, participants)
+
   #
-  obs_stat = df.groupby('AOI')[tobii_metrics].mean() # ! https://www.statology.org/pandas-mean-by-group/
+  if average_option == 'mean': 
+    obs_stat = df.groupby('AOI')[tobii_metrics].mean() # ! https://www.statology.org/pandas-mean-by-group/
+
+  if average_option == 'median': 
+    obs_stat = df.groupby('AOI')[tobii_metrics].median() # ! https://www.statology.org/pandas-mean-by-group/  
+    
   AOI = obs_stat.index.tolist() # ! need this to access the row of each AOI
   obs_stat = obs_stat.to_numpy() # array, num of AOI x tobii_metrics 
   return AOI, obs_stat, df 
