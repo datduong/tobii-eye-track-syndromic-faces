@@ -19,16 +19,16 @@ cd $code_dir
 
 # ! 
 main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01032023
-img_dir_tobii=$main_data_dir/Prelim/KS_123022/IndividualFirstSecond
+img_dir_tobii=$main_data_dir/Prelim/KS_123022/IndividualFirst # Second
 img_dir_model=$main_data_dir/Prelim/KS_123022/EfficientNetOcclusion
 
 this_k=20
 threshold_tobii=.5 # lower --> more "high" signal (strong focus)
-threshold_model=.6
+threshold_model=.5
 
-output_csv=$main_data_dir/Prelim/KS_123022/mean_vs_model.csv
+# output_dir=$main_data_dir/Prelim/KS_123022/ # mean_vs_model.csv
 
-python3 apply_segmentation.py --img_dir_tobii $img_dir_tobii --img_dir_model $img_dir_model --output_csv $output_csv --resize 720 --k $this_k --plot_segmentation --if_smoothing 
+# python3 apply_segmentation.py --img_dir_tobii $img_dir_tobii --img_dir_model $img_dir_model --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing 
 
 # --threshold_tobii $threshold_tobii --threshold_model $threshold_model
 
@@ -37,3 +37,13 @@ python3 apply_segmentation.py --img_dir_tobii $img_dir_tobii --img_dir_model $im
 # threshold
 
 # k
+
+img_dir_model=$main_data_dir/Prelim/KS_123022/IndividualThird
+
+output_dir=$main_data_dir/Prelim/KS_123022/ # mean_vs_model.csv
+
+# python3 apply_segmentation.py --img_dir_tobii $img_dir_tobii --img_dir_model $img_dir_model --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 
+# # --threshold_tobii $threshold_tobii --threshold_model $threshold_model
+
+python3 apply_segmentation.py --img_dir_tobii $img_dir_tobii --img_dir_model $img_dir_model --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 --threshold_tobii $threshold_tobii --threshold_model $threshold_model
+

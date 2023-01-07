@@ -12,9 +12,11 @@ import matplotlib.pyplot as plt
 
 # ! test if average is similar to tobii's default 
 outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01032023/Prelim/KS_123022'
-imlist = "C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01032023/Prelim/KS_123022/Individual"
+imlist = "C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01032023/Prelim/KS_123022/Individual_all"
 os.chdir(imlist)
 imlist = os.listdir(imlist)
+imlist = [i for i in imlist if 'otsu' not in i]
+imlist = [i for i in imlist if 'thres' not in i]
 N = len(imlist)
 print ('total img count', N)
 
@@ -33,5 +35,5 @@ arr=np.array(np.round(arr),dtype=np.uint8)
 
 # Generate, save and preview final image
 out=Image.fromarray(arr,mode="RGBA")
-out.save(os.path.join(outdir,"ManualAverage.png"))
+out.save(os.path.join(outdir,"ManualAverageIndividual_all.png"))
 # out.show()

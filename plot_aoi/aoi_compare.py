@@ -51,8 +51,8 @@ def random_sample_df (df1,df2,image_name,participants):
   # 
   new_df1 = []
   for n in range(N1): 
-    pick_this_person = np.random.choice(participants,size=1) # ! pick random slide
-    pick_this_slide = np.random.choice(image_name,size=1) # ! pick a random person
+    pick_this_person = np.random.choice(participants,size=1) # ! pick a random person 
+    pick_this_slide = np.random.choice(image_name,size=1) # ! pick random slide
     this_random_point = df[ df['Participant'].isin(pick_this_person) & df['TOI'].isin(pick_this_slide) ] 
     new_df1.append(this_random_point) # ! make a random dataset
   
@@ -123,17 +123,21 @@ df = 'C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/data/Trial_data_
 df = pd.read_csv(df)
 df = df.sort_values(['AOI','Participant']).reset_index(drop=True)
 
-slides = ['Slide 8','Slide 11']
+# df["Time_to_first_whole_fixation"] = df["Time_to_first_whole_fixation"].replace(np.nan, 7000)
 
-people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'], 
-                  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'] ]
+df["Duration_of_first_whole_fixation"] = df["Duration_of_first_whole_fixation"].replace(np.nan, 0)
 
-# slides = ['Slide 11','Slide 11']
+# slides = ['Slide 2','Slide 11']
 
-# people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1'], 
-#                   ['PTPN11','RIT1','TBX'] ]
+# people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'], 
+#                   ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'] ]
 
-tobii_metrics = ['Total_duration_of_whole_fixations','Time_to_first_whole_fixation','Number_of_whole_fixations']
+slides = ['Slide 11','Slide 11']
+
+people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','SMAD1','TCOF1','WHSC1'], 
+                  ['PTPN11','RIT1','TBX'] ]
+
+tobii_metrics = ['Total_duration_of_whole_fixations','Time_to_first_whole_fixation','Number_of_whole_fixations','Duration_of_first_whole_fixation']
 
 observed_stat, pval, group_statistic, boot, mean, std, AOI = do_bootstrap (   df, 
                                                                               image_name=slides, 
