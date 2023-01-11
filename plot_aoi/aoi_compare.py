@@ -53,25 +53,23 @@ def random_sample_df (df1,df2,image_name,participants):
   # randomly make df1 
   participants = sorted ( list(set ( participants[0] + participants[1] ) ) ) # combine everyone into a single list
 
-  df = pd.concat([df1,df2]) # ! sample obs from both slides at once
+  df = [df1,df2] # ! sample obs from both slides at once
 
   # 
-  new_df1 = []
-  for n in range(N1): 
-    pick_this_person = np.random.choice(participants,size=1) # ! pick a random person 
-    pick_this_slide = np.random.choice(image_name,size=1) # ! pick random slide
-    this_random_point = df[ df['Participant'].isin(pick_this_person) & df['TOI'].isin(pick_this_slide) ] 
-    new_df1.append(this_random_point) # ! make a random dataset
-  
-  #
-  new_df2 = []
-  for n in range(N2): 
-    pick_this_person = np.random.choice(participants,size=1)
-    pick_this_slide = np.random.choice(image_name,size=1)
-    this_random_point = df[ df['Participant'].isin(pick_this_person) & df['TOI'].isin(pick_this_slide) ]
-    new_df2.append(this_random_point)
-
-  return pd.concat(new_df1), pd.concat(new_df2)
+  prob_1_2 = np.array ([N1,N2]) / (N1+N2)
+  boot_sample = []
+  for index, N in enumerate ([N1,N2]): 
+    new_df = []
+    for n in range (N): 
+      pick_this_slide = np.random.choice(image_name,size=1,p=prob_1_2) # ! pick random slide
+      temp = list ( set ( df[pick_this_slide]['Participants'].tolist() ) )
+      pick_this_person = np.random.choice(temp,size=1) # ! pick a random person in this slide 
+      this_random_point = df[ df['Participant'].isin(pick_this_person) & df['TOI'].isin(pick_this_slide) ] 
+      new_df.append(this_random_point) # ! make a random dataset
+    #
+    boot_sample.append ( pd.concat(new_df) )
+    
+  return boot_sample[0], boot_sample[1]
 
 
 def do_bootstrap (df, image_name, participants, tobii_metrics, boot_num=100): 

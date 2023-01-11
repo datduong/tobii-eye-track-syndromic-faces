@@ -70,32 +70,40 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     # mask = mask.div(mask.max()).data
     # mask = mask.cpu().detach().numpy()
 
-    # ! read saliency image 
-    
-    if transparent_to_white: 
-        mask = Image.open(os.path.join(img_dir,cam_mask))
-        new_image = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
-        new_image.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
-        mask = new_image.convert('RGB') 
-        mask=np.array(mask)  # ! https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
+    # ! read saliency image, or a numpy
+    # ! if input is numpy, then it should be 2D matrix on grayscale 0-255
+    if type(cam_mask) == str: 
+        if transparent_to_white: 
+            mask = Image.open(os.path.join(img_dir,cam_mask))
+            new_image = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
+            new_image.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
+            mask = new_image.convert('RGB') 
+            mask=np.array(mask)  # ! https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
+        else: 
+            mask = cv2.imread(os.path.join(img_dir,cam_mask))
+
+        if resize is not None: 
+            mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
+
+        mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY) # ! convert grayscale
+         
+        if plot_grayscale_map: 
+            img = Image.fromarray(np.array(mask), 'L')
+            img.show()
+
     else: 
-        mask = cv2.imread(os.path.join(img_dir,cam_mask))
+        mask = cam_mask # ! read in numpy, so we set mask=cam_mask
         
-    mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY) # ! convert grayscale
-
-    if resize is not None: 
-        mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
+    # ---------------------------------------------------------------------------- #
     
-    if plot_grayscale_map: 
-        img = Image.fromarray(np.array(mask), 'L')
-        img.show()
-
     if smoothing:
         # heatmap = cv2.applyColorMap(mask, cv2.COLORMAP_JET) # ! no reason to apply a color mapping to make @heatmap. we already have @heatmap in wanted color
         # gray_img = cv2.boxFilter(cv2.cvtColor(heatmap, cv2.COLOR_RGB2GRAY),
         #                          -1, (k, k)) # ! no reason to convert grayscale if read in as grayscale
         mask = cv2.boxFilter(mask, -1, (k, k)) # ! smoothing on original grayscale image. 
 
+    formated_input_img_as_np = np.array(mask) # ! may need this later for bootstrap, this is the input image after resize and smoothing (if used)
+    
     # use Otsu's method to find threshold if no threshold is passed in
     if threshold is None:
         # mask = np.uint8(255 * mask) # ! grayscale should already be on 0-255 unit scale
@@ -147,7 +155,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     # segmentation must be strict 0/1
     assert np.count_nonzero((segmentation!=0) & (segmentation!=1))==0 # https://stackoverflow.com/questions/40595967/fast-way-to-check-if-a-numpy-array-is-binary-contains-only-0-and-1
 
-    return segmentation
+    return segmentation, formated_input_img_as_np
 
 
 # ---------------------------------------------------------------------------- #

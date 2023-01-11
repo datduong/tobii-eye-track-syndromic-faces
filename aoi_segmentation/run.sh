@@ -19,18 +19,18 @@ cd $code_dir
 
 # ! 
 main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01032023
-img_dir_tobii=$main_data_dir/Prelim/KS_123022/IndividualFirst # Second
-img_dir_model=$main_data_dir/Prelim/KS_123022/EfficientNetOcclusion
+img_dir_group_1=$main_data_dir/Prelim/KS_25rad_01072023/IndividualFirstSecond_OnSlide1 # Second
+img_dir_group_2=$main_data_dir/Prelim/KS_25rad_01072023/EfficientNetOcclusion
 
 this_k=20
-threshold_tobii=.5 # lower --> more "high" signal (strong focus)
-threshold_model=.5
+threshold_group_1=.7 # lower --> more "high" signal (strong focus)
+threshold_group_2=.7
 
-# output_dir=$main_data_dir/Prelim/KS_123022/ # mean_vs_model.csv
+# output_dir=$main_data_dir/Prelim/KS_25rad_01072023/ # mean_vs_model.csv
 
-# python3 apply_segmentation.py --img_dir_tobii $img_dir_tobii --img_dir_model $img_dir_model --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing 
+# python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing 
 
-# --threshold_tobii $threshold_tobii --threshold_model $threshold_model
+# --threshold_group_1 $threshold_group_1 --threshold_group_2 $threshold_group_2
 
 # if_smoothing
 
@@ -38,12 +38,14 @@ threshold_model=.5
 
 # k
 
-img_dir_model=$main_data_dir/Prelim/KS_123022/IndividualThird
+img_dir_group_2=$main_data_dir/Prelim/KS_25rad_01072023/IndividualThird_OnSlide1
 
-output_dir=$main_data_dir/Prelim/KS_123022/ # mean_vs_model.csv
+output_dir=$main_data_dir/Prelim/KS_25rad_01072023/OnSlide1 # mean_vs_model.csv
+mkdir $output_dir
 
-# python3 apply_segmentation.py --img_dir_tobii $img_dir_tobii --img_dir_model $img_dir_model --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 
-# # --threshold_tobii $threshold_tobii --threshold_model $threshold_model
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 
 
-python3 apply_segmentation.py --img_dir_tobii $img_dir_tobii --img_dir_model $img_dir_model --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 --threshold_tobii $threshold_tobii --threshold_model $threshold_model
+# --threshold_group_1 $threshold_group_1 --threshold_group_2 $threshold_group_2
+
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 --threshold_group_1 $threshold_group_1 --threshold_group_2 $threshold_group_2
 
