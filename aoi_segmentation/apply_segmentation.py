@@ -266,6 +266,7 @@ if __name__ == '__main__':
     args.resize = (args.resize, args.resize)
 
   # ---------------------------------------------------------------------------- #
+  slide_number = args.img_dir_group_1.split('/')[-2]
   group_name1 = args.img_dir_group_1.split('/')[-1]
   group_name2 = args.img_dir_group_2.split('/')[-1]
   
@@ -278,6 +279,10 @@ if __name__ == '__main__':
   segmentation_group_2 = apply_segmentation(args.img_dir_group_2, threshold=args.threshold_group_2, transparent_to_white=True, args=args)
 
   if args.boot_num is None: 
+
+    prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
+    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else 'otsu'
+    
     # ! run simple mean/std of the differences 
     for model_name in segmentation_group_2: 
       mIoU = []
@@ -290,7 +295,7 @@ if __name__ == '__main__':
       mIoU = mIoU + [ave,std]
       
       # save as csv 
-      fout = open(os.path.join(args.output_dir,'many_vs_1_'+group_name1+'_'+args.img_dir_group_2.split('/')[-1]+'.csv'),'w')
+      fout = open(os.path.join(args.output_dir,'many_vs_1_'+group_name1+'_'+group_name2+'_'+prefix+'.csv'),'w')
       print (mIoU)
       fout.write ( model_name + ',' + ','.join ( [str(item) for item in mIoU] ) + '\n')
       # end write out
@@ -349,9 +354,9 @@ if __name__ == '__main__':
     print (std)
     print ('rank', np.sum( boot_stat > obs_stat))
     
-    fout = open(os.path.join(args.output_dir,'many_vs_many_'+group_name1+'_'+group_name2+'.csv'),'w')
-    fout.write ('group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank\n')
-    fout.write ( group_name1+','+group_name2 + ',' + ','.join ( [str(item) for item in [obs_stat,ave,std,boot_rank]] ) + '\n')
+    fout = open(os.path.join(args.output_dir,'many_vs_many_'+group_name1+'_'+group_name2+'_'+prefix+'.csv'),'w')
+    fout.write ('image_number','group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank\n')
+    fout.write ( slide_number+','+group_name1+','+group_name2 + ',' + ','.join ( [str(item) for item in [obs_stat,ave,std,boot_rank]] ) + '\n')
     # end write out
     fout.close()
 

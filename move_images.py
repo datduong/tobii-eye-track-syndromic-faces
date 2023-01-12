@@ -1,32 +1,54 @@
 import os,sys,re,pickle
+import pandas as pd
+import numpy as np 
 
 # probably not every important 
 # move images around 
 
-source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01032023/Prelim/25radius'
+df = pd.read_csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/TableEyeTrackingSimple.csv').fillna('')
 
-final_dir='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01032023/Prelim/KS_25rad_01072023/IndividualThird_OnSlide1'
+columns = [ 'Syn vs Non Syn Correct',
+            'Syn vs Non Syn Incorrect', 	 
+            'Syn vs NonSyn Correct Syndrome Name Correct',
+            'Syn vs NonSyn Correct Syndrome name Incorrect']
 
-if not os.path.exists(final_dir): 
-  os.makedirs(final_dir)
+main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
+source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius'
 
+for slide_name in np.arange(1,4): 
+
+  temp_df = df [ df['Image']==slide_name ]
   
-slide_name = '1_'
+  for index, col in enumerate(columns): 
+    
+    key_name = [i for i in temp_df[col].tolist() if len(i) > 0 ] 
+    print (key_name)
 
-# key_name = ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','SMAD1','TCOF1','WHSC1']
+    if len(key_name) == 0: 
+      continue
 
-key_name = ['PTPN11','RIT1','TBX']
+    slide_name = str(slide_name)
+    im = [i for i in os.listdir(source)] # ! copy images
+    im = [i for i in im if '_BAD.png' not in i]
+    im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
+    
+    final_dir = os.path.join(main_dir,'Slide'+slide_name,'Group'+str(index+1))
+    if not os.path.exists(final_dir): 
+      os.makedirs(final_dir)
 
-im = [i for i in os.listdir(source)]
+    if not os.path.exists(os.path.join(final_dir+'OnSlide1')): 
+      os.makedirs(os.path.join(final_dir+'OnSlide1'))
+      
+    for i in im: 
+      for k in key_name: 
+        if k in i : 
+          os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
+          # ! move their results from slide 1 --> can later use as baseline 
+          user = i.split('_')[1] # user name 
+          i = '1_'+user+'_25r.png'
+          if os.path.exists(os.path.join(source,i)): 
+            os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir+'OnSlide1'))
 
-im = [i for i in im if '_BAD.png' not in i]
-
-im = [i for i in im if re.match(r'^'+slide_name,i) ]
-
-for i in im: 
-  for k in key_name: 
-    if k in i : 
-      os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
 
 
     
