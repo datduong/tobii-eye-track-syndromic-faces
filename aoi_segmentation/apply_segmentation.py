@@ -266,7 +266,7 @@ if __name__ == '__main__':
     args.resize = (args.resize, args.resize)
 
   # ---------------------------------------------------------------------------- #
-  slide_number = args.img_dir_group_1.split('/')[-2]
+  slide_number = args.img_dir_group_1.split('/')[-2] # @slide_number expects input /path/SlideXYZ/GroupABC
   group_name1 = args.img_dir_group_1.split('/')[-1]
   group_name2 = args.img_dir_group_2.split('/')[-1]
   
