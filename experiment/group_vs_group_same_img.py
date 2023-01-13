@@ -33,17 +33,19 @@ output_dir=$main_data_dir/SLIDE_NUM # mean_vs_model.csv
 mkdir $output_dir
 
 # --if_smoothing
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --scale_pixel 
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
+
+# --scale_pixel 
 
 # ! may as well do this at tons of threshold to see what happens
-for this_thres in 0.5 0.6 0.7 
-do
+# for this_thres in 0.5 0.6 0.7 
+# do
 
-# --if_smoothing
+# # --if_smoothing
 
-  python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --threshold_group_1 $this_thres --threshold_group_2 $this_thres --scale_pixel
+#   python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --threshold_group_1 $this_thres --threshold_group_2 $this_thres --scale_pixel
 
-done
+# done
 
 """
 

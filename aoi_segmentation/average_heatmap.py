@@ -33,16 +33,33 @@ for im in imlist:
 # Round values in array and cast as 8-bit integer
 arr=np.array(np.round(arr),dtype=np.uint8)
 
-# Generate, save and preview final image
-out=Image.fromarray(arr,mode="RGBA")
-out.save(os.path.join(outdir,"ManualAverageIndividual_all.png"))
-# out.show()
+# # Generate, save and preview final image
+# out=Image.fromarray(arr,mode="RGBA")
+# out.save(os.path.join(outdir,"ManualAverageIndividual_all.png"))
+# # out.show()
 
-mask = cv2.cvtColor(arr, cv2.COLOR_BGR2GRAY)
+arr = cv2.cvtColor(arr, cv2.COLOR_BGR2GRAY)
 # cv2.imshow('image',mask)
 # cv2.waitKey(0)
 
-mask = cv2.cvtColor(np.array(mask), cv2.COLOR_BGR2GRAY)
-cv2.imshow('image',mask)
-cv2.waitKey(0)
+
+def scale_by_ave_pixel_one_image(arr,target=125): 
+  new_arr_no_0 = arr[np.where(arr!=0)]
+  new_arr_no_0 = np.mean(new_arr_no_0)
+  print (new_arr_no_0)
+  # mask_black = np.where(arr==0,arr,1)
+  arr = arr * target/new_arr_no_0 # scale mean to 125
+  # arr = arr * 255/ np.max(arr)
+  new_arr_no_0 = arr[np.where(arr!=0)]
+  new_arr_no_0 = np.mean(new_arr_no_0)
+  print (new_arr_no_0)
+  # arr = arr * mask_black
+  arr = np.where(arr>255,255,arr)
+  return arr
+
+arr = np.array(arr,dtype=float)
+arr=scale_by_ave_pixel_one_image(arr)
+arr=np.array(np.round(arr),dtype=np.uint8)
+out=Image.fromarray(np.array(arr),mode="L")
+out.show()
 

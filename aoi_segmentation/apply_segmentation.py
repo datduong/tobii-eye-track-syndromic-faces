@@ -34,7 +34,7 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
   #
   images = [i for i in images if ('otsu' not in i)] # ! only ourput images will have "otsu" name attached to it
   images = [i for i in images if ('thresh' not in i)]
-  print (images)
+  # print (images)
   seg_dict = {} # save all segmentations in dict
   for img in images: 
     # cam_mask, threshold=np.nan, smoothing=False, k=0, workdir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None
@@ -43,13 +43,7 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
                                                         smoothing = args.if_smoothing,
                                                         k = args.k,
                                                         img_dir = img_dir,
-                                                        prefix = '', 
-                                                                  prefix = '', 
-                                                        prefix = '', 
-                                                                  prefix = '', 
-                                                        prefix = '', 
-                                                                  prefix = '', 
-                                                        prefix = '', 
+                                                        prefix = '',
                                                         transparent_to_white = transparent_to_white,
                                                         resize = args.resize,
                                                         plot_segmentation = args.plot_segmentation,
@@ -108,7 +102,8 @@ def average_image (dict_segment,size=(720,720),scale_pixel=False):
 
   if scale_pixel: 
     # ! scale whitest spot to max value 255. 
-    arr = scale_by_ave_pixel_one_image(arr)
+    # ! DOES NOT WORK WELL? 
+    arr = scale_by_ave_pixel_one_image(np.array(np.round(arr),dtype=np.uint8))
     
   # Round values in array and cast as 8-bit integer # this is needed for image
   arr=np.array(np.round(arr),dtype=np.uint8)
@@ -116,12 +111,19 @@ def average_image (dict_segment,size=(720,720),scale_pixel=False):
 
 
 def scale_by_ave_pixel_one_image(arr,target=125): 
+  arr = np.array(arr,dtype=float)
+  minval = np.min(arr)
+  print (minval)
+  arr = np.where(arr>minval,arr,0)
+  new_arr_no_0 = arr[np.where(arr!=0)]
+  print (len(new_arr_no_0))
+  new_arr_no_0 = np.mean(new_arr_no_0)
+  print (new_arr_no_0)
+  arr = arr * target/new_arr_no_0 # scale mean to 125
   new_arr_no_0 = arr[np.where(arr!=0)]
   new_arr_no_0 = np.mean(new_arr_no_0)
-  # mask_black = np.where(arr==0,arr,1)
-  arr = arr * target/new_arr_no_0 # scale mean to 125
-  # arr = arr * mask_black
-  arr = np.where(arr<=255,arr,255)
+  print (new_arr_no_0)
+  arr = np.where(arr>255,255,arr)
   return arr
 
 
