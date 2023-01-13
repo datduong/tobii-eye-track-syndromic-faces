@@ -15,7 +15,7 @@ columns = [ 'Syn vs Non Syn Correct',
 main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
 source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius'
 
-for slide_name in np.arange(1,4): 
+for slide_name in np.arange(2,18): 
 
   temp_df = df [ df['Image']==slide_name ]
   
@@ -30,8 +30,10 @@ for slide_name in np.arange(1,4):
     slide_name = str(slide_name)
     im = [i for i in os.listdir(source)] # ! copy images
     im = [i for i in im if '_BAD.png' not in i]
+    im = [i for i in im if '_Bad.png' not in i]
+    im = [i for i in im if '_bad.png' not in i]
     im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
-    
+
     final_dir = os.path.join(main_dir,'Slide'+slide_name,'Group'+str(index+1))
     if not os.path.exists(final_dir): 
       os.makedirs(final_dir)

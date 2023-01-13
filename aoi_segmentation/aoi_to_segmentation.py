@@ -35,7 +35,9 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
         else:
             iou_score = np.sum(intersection) / (np.sum(union))
     else:
-        if np.sum(union) == 0:
+        if np.sum(union) == 0: 
+            # ! union has no overlapping, so return 0 intead of nan ??
+            # ! at extreme threshold, this happens if we put in all black images (so 0 or 0 = 0)
             iou_score = np.nan
         else:
             iou_score = np.sum(intersection) / (np.sum(union))

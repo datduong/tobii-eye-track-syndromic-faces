@@ -281,7 +281,7 @@ if __name__ == '__main__':
   if args.boot_num is None: 
 
     prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
-    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else 'otsu'
+    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'otsu'
     
     # ! run simple mean/std of the differences 
     for model_name in segmentation_group_2: 
@@ -296,7 +296,7 @@ if __name__ == '__main__':
       
       # save as csv 
       fout = open(os.path.join(args.output_dir,'many_vs_1_'+group_name1+'_'+group_name2+'_'+prefix+'.csv'),'w')
-      print (mIoU)
+      # print (mIoU)
       fout.write ( model_name + ',' + ','.join ( [str(item) for item in mIoU] ) + '\n')
       # end write out
       fout.close()
@@ -307,7 +307,7 @@ if __name__ == '__main__':
     
     # ! process data group 1
     prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
-    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else 'otsu'
+    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'otsu'
     if args.boot_ave_segmentation: # ! take average of segmentation 
       ave1 = average_segmentation(segmentation_group_1, round_to_int=True)
     else: # ! average image, then take segmentation of average 
@@ -322,7 +322,7 @@ if __name__ == '__main__':
     
     # ! process data group 2
     prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
-    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_2) if args.threshold_group_2 is not None else 'otsu'
+    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_2) if args.threshold_group_2 is not None else prefix+'otsu'
     if args.boot_ave_segmentation: 
       ave2 = average_segmentation(segmentation_group_2, round_to_int=True)
     else: 
@@ -345,18 +345,21 @@ if __name__ == '__main__':
       
     # ! output
     boot_stat = np.array(boot_stat)
-    ave = np.mean ( np.array(boot_stat) ) 
-    std = np.std (np.array(boot_stat))
-    boot_rank = np.sum( boot_stat > obs_stat)
+    boot_stat = boot_stat[~np.isnan(boot_stat)]
+    if len(boot_stat) != args.boot_num:
+      args.boot_num = len(boot_stat)
+    ave = np.nanmean ( np.array(boot_stat) ) 
+    std = np.nanstd (np.array(boot_stat))
+    boot_rank = np.sum( boot_stat > obs_stat)/args.boot_num # ! very high rank --> high pval --> signif (same apply for very low rank)
     
-    print (obs_stat)
-    print (ave)
-    print (std)
-    print ('rank', np.sum( boot_stat > obs_stat))
+    # print (obs_stat)
+    # print (ave)
+    # print (std)
+    # print ('rank', boot_rank)
     
     fout = open(os.path.join(args.output_dir,'many_vs_many_'+group_name1+'_'+group_name2+'_'+prefix+'.csv'),'w')
-    fout.write ('image_number','group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank\n')
-    fout.write ( slide_number+','+group_name1+','+group_name2 + ',' + ','.join ( [str(item) for item in [obs_stat,ave,std,boot_rank]] ) + '\n')
+    fout.write ('image_number,type,group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2\n')
+    fout.write ( slide_number+','+prefix+','+group_name1+','+group_name2 + ',' + ','.join ( [str(item) for item in [obs_stat,ave,std,boot_rank,args.boot_num,len(segmentation_group_1),len(segmentation_group_2)]] ) + '\n')
     # end write out
     fout.close()
 
