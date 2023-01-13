@@ -18,22 +18,34 @@ for s in slide:
     print ('empty',s)
     continue
   this_df = [ pd.read_csv(os.path.join(this_path,c) ) for c in csv ] 
-  for d in this_df: 
-    temp = d['boot_rank'].to_numpy()
-    temp = np.where(temp > .5, 1-temp, temp)
-    d['boot_pval'] = list(temp)
+  this_df = pd.concat(this_df)
+  temp = this_df['boot_rank'].to_numpy()
+  temp = np.where(temp > .5, 1-temp, temp)
+  this_df['boot_pval'] = list(temp)
   # 
-  all_df_long = all_df_long + this_df # add 2 list 
   # ! how to view this? https://stackoverflow.com/questions/22798934/pandas-long-to-wide-reshape-by-two-variables
-  this_df = pd.concat (this_df)
+  # ! filter some other stuffs? this will make viewing easier
+  this_df = this_df[ ~((this_df['group_name1']=='Group1') & (this_df['group_name2']=='Group3')) ]
+  this_df = this_df[ ~((this_df['group_name1']=='Group1') & (this_df['group_name2']=='Group4')) ]
+  this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group3')) ]
+  this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group4')) ]
+  this_df = this_df[ ~((this_df['group_name1']=='Group1OnSlide1') & (this_df['group_name2']=='Group3OnSlide1')) ]
+  this_df = this_df[ ~((this_df['group_name1']=='Group1OnSlide1') & (this_df['group_name2']=='Group4OnSlide1')) ]
+  this_df = this_df[ ~((this_df['group_name1']=='Group2OnSlide1') & (this_df['group_name2']=='Group3OnSlide1')) ]
+  this_df = this_df[ ~((this_df['group_name1']=='Group2OnSlide1') & (this_df['group_name2']=='Group4OnSlide1')) ]
+  this_df = this_df[ this_df['group_size1'] > 0]
+  this_df = this_df[ this_df['group_size2'] > 0]
   #  values = 'obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2'.split(',')
+  # ! long format
+  all_df_long.append(this_df) # add 2 list 
+  # ! wide format
   this_df = pd.pivot(this_df, index=['image_number','group_name1','group_name2'], columns = ['type'], values = 'obs_stat,boot_pval,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2'.split(',')) #Reshape from long to wide
   all_df_wide.append(this_df) # append single item
 
+
 # 
 all_df_wide = pd.concat(all_df_wide)
-all_df_wide.to_csv(os.path.join(path,'all_heatmap_vs_heatmap_wide.csv'))
+# all_df_wide.to_csv(os.path.join(path,'all_heatmap_vs_heatmap_wide.csv'))
 
 all_df_long = pd.concat(all_df_long)
-all_df_long.to_csv(os.path.join(path,'all_heatmap_vs_heatmap_long.csv'),index=None)
-
+# all_df_long.to_csv(os.path.join(path,'all_heatmap_vs_heatmap_long.csv'),index=None)

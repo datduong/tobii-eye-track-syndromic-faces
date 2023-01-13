@@ -45,7 +45,7 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
     return iou_score
 
 
-def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None):
+def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_off_pixel=None):
     """
     Threshold a saliency heatmap to binary segmentation mask.
     Args:
@@ -88,16 +88,26 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
             mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
 
         mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY) # ! convert grayscale
-         
+
+        if cut_off_pixel is not None: 
+            # remove black pixel that are not dark enough (these can noise, or @thresh needs this?)
+            mask = np.array(mask) 
+            mask = np.where (mask<cut_off_pixel,mask,0) # set lighter color pixel (above @cut_off_pixel) as 0
+            
         if plot_grayscale_map: 
             img = Image.fromarray(np.array(mask), 'L')
             img.show()
 
     else: 
+        # ! 
+        if cut_off_pixel is not None: 
+            # remove black pixel that are not dark enough (these can noise, or @thresh needs this?)
+            mask = np.where (mask<cut_off_pixel,mask,0) # set lighter color pixel (above @cut_off_pixel) as 0
         mask = cam_mask # ! read in numpy, so we set mask=cam_mask
         
     # ---------------------------------------------------------------------------- #
-    
+
+        
     if smoothing:
         # heatmap = cv2.applyColorMap(mask, cv2.COLORMAP_JET) # ! no reason to apply a color mapping to make @heatmap. we already have @heatmap in wanted color
         # gray_img = cv2.boxFilter(cv2.cvtColor(heatmap, cv2.COLOR_RGB2GRAY),

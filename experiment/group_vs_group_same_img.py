@@ -33,16 +33,15 @@ output_dir=$main_data_dir/SLIDE_NUM # mean_vs_model.csv
 mkdir $output_dir
 
 # --if_smoothing
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
-
-# python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 --threshold_group_1 $threshold_group_1 --threshold_group_2 $threshold_group_2
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --scale_pixel 
 
 # ! may as well do this at tons of threshold to see what happens
-for this_thres in 0.5 0.55 0.6 0.65 0.7 0.75 
+for this_thres in 0.5 0.6 0.7 
 do
 
 # --if_smoothing
-  python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --threshold_group_1 $this_thres --threshold_group_2 $this_thres
+
+  python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --threshold_group_1 $this_thres --threshold_group_2 $this_thres --scale_pixel
 
 done
 
@@ -64,7 +63,7 @@ slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Sl
 
 slide_folders = [s for s in slide_folders if 'Slide' in s]
 
-# slide_folders = ['Slide2', 'Slide3']
+slide_folders = ['Slide2'] # , 'Slide3']
 
 # ---------------------------------------------------------------------------- #
 
@@ -89,6 +88,23 @@ for folder in slide_folders:
         if j<=i: 
           continue
         print (g1,g2)
+        if g1=='Group1' and g2=='Group3': 
+          continue
+        if g1=='Group1' and g2=='Group4': 
+          continue
+        if g1=='Group2' and g2=='Group3': 
+          continue
+        if g1=='Group2' and g2=='Group4': 
+          continue
+        if g1=='Group1OnSlide1' and g2=='Group3OnSlide1': 
+          continue
+        if g1=='Group1OnSlide1' and g2=='Group4OnSlide1': 
+          continue
+        if g1=='Group2OnSlide1' and g2=='Group3OnSlide1': 
+          continue
+        if g1=='Group2OnSlide1' and g2=='Group4OnSlide1': 
+          continue
+        #
         script = re.sub('THIS_K',str(this_k),script_base)
         script = re.sub('THRESHOLD_GROUP_1',str(threshold_group_1),script)
         script = re.sub('THRESHOLD_GROUP_2',str(threshold_group_2),script)

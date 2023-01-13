@@ -22,8 +22,7 @@ for slide_name in np.arange(2,18):
   for index, col in enumerate(columns): 
     
     key_name = [i for i in temp_df[col].tolist() if len(i) > 0 ] 
-    print (key_name)
-
+    
     if len(key_name) == 0: 
       continue
 
@@ -34,6 +33,11 @@ for slide_name in np.arange(2,18):
     im = [i for i in im if '_bad.png' not in i]
     im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
 
+    if len(im) == 0: 
+      continue
+
+    print (slide_name,key_name,im)
+    
     final_dir = os.path.join(main_dir,'Slide'+slide_name,'Group'+str(index+1))
     if not os.path.exists(final_dir): 
       os.makedirs(final_dir)

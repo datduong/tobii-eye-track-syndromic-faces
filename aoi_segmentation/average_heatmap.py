@@ -37,3 +37,12 @@ arr=np.array(np.round(arr),dtype=np.uint8)
 out=Image.fromarray(arr,mode="RGBA")
 out.save(os.path.join(outdir,"ManualAverageIndividual_all.png"))
 # out.show()
+
+mask = cv2.cvtColor(arr, cv2.COLOR_BGR2GRAY)
+# cv2.imshow('image',mask)
+# cv2.waitKey(0)
+
+mask = cv2.cvtColor(np.array(mask), cv2.COLOR_BGR2GRAY)
+cv2.imshow('image',mask)
+cv2.waitKey(0)
+
