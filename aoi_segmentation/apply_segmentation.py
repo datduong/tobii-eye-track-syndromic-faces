@@ -56,7 +56,7 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
   return seg_dict
 
 
-def average_segmentation (dict_segment,round_to_int=False): 
+def average_segmentation (dict_segment,round_to_int=False,args=None): 
   """_summary_
 
   Args:
@@ -76,9 +76,17 @@ def average_segmentation (dict_segment,round_to_int=False):
   arr = arr/N
 
   if round_to_int: # Round values in array and cast as 8-bit integer
+    ave =np.array(np.round(arr),dtype=int) # ! return raw average of segmentation
+    
+  # ! SMOOTH? 
+  if args.if_smoothing: 
+    arr = cv2.boxFilter(arr, -1, (args.k, args.k))
+    arr = np.array(arr)
+  
+  if round_to_int: # Round values in array and cast as 8-bit integer
     arr=np.array(np.round(arr),dtype=int)
   
-  return arr
+  return arr, ave
 
 
 def average_image (dict_segment,size=(720,720),scale_pixel=False): 
@@ -100,10 +108,10 @@ def average_image (dict_segment,size=(720,720),scale_pixel=False):
   # average 
   arr = arr/N
 
-  if scale_pixel: 
-    # ! scale whitest spot to max value 255. 
-    # ! DOES NOT WORK WELL? 
-    arr = scale_by_ave_pixel_one_image(np.array(np.round(arr),dtype=np.uint8))
+  # if scale_pixel: 
+  #   # ! scale whitest spot to max value 255. 
+  #   # ! DOES NOT WORK WELL? 
+  #   arr = scale_by_ave_pixel_one_image(np.array(np.round(arr),dtype=np.uint8))
     
   # Round values in array and cast as 8-bit integer # this is needed for image
   arr=np.array(np.round(arr),dtype=np.uint8)
@@ -158,11 +166,11 @@ def diff_two_sets(dict1,dict2,args):
   # average segmentation in @dict1, compute @cam_to_segmentation of this average? 
   # aoi_to_segmentation.calculate_iou
   if args.boot_ave_segmentation: 
-    seg_im1 = average_segmentation(dict1, round_to_int=True)
-    seg_im2 = average_segmentation(dict2, round_to_int=True)
+    seg_im1, _ = average_segmentation(dict1, round_to_int=True,args=args)
+    seg_im2, _ = average_segmentation(dict2, round_to_int=True,args=args)
   else: 
-    seg_im1, ave_im1 = segementation_ave_image (dict1,size=(720,720),args=args)  
-    seg_im2, ave_im2 = segementation_ave_image (dict2,size=(720,720),args=args)
+    seg_im1, _ = segementation_ave_image (dict1,size=(720,720),args=args)  
+    seg_im2, _ = segementation_ave_image (dict2,size=(720,720),args=args)
 
   #
   mIOU = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) 
@@ -340,10 +348,14 @@ if __name__ == '__main__':
     # ! process data group 1
     prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
     # prefix = '-cut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else '-nocut'
-    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'otsu'
+    prefix = prefix + '-thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'-otsu'
     prefix = prefix + '-scale255' if args.scale_pixel else prefix
+    prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
+    
     if args.boot_ave_segmentation: # ! take average of segmentation 
-      ave1 = average_segmentation(segmentation_group_1, round_to_int=True)
+      ave1, img = average_segmentation(segmentation_group_1, round_to_int=True, args=args)
+      out=Image.fromarray(np.uint8(img*255),mode="L")
+      out.save(os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name1+".png"))
     else: # ! average image, then take segmentation of average 
       ave1, img = segementation_ave_image (segmentation_group_1,size=(720,720),args=args)
       out=Image.fromarray(np.uint8(img*255),mode="L")
@@ -357,10 +369,14 @@ if __name__ == '__main__':
     # ! process data group 2
     prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
     # prefix = '-cut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else '-nocut'
-    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_2) if args.threshold_group_2 is not None else prefix+'otsu'
+    prefix = prefix + '-thresh'+str(args.threshold_group_2) if args.threshold_group_2 is not None else prefix+'-otsu'
     prefix = prefix + '-scale255' if args.scale_pixel else prefix
+    prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
+    
     if args.boot_ave_segmentation: 
-      ave2 = average_segmentation(segmentation_group_2, round_to_int=True)
+      ave2, img = average_segmentation(segmentation_group_2, round_to_int=True, args=args)
+      out=Image.fromarray(np.uint8(img*255),mode="L")
+      out.save(os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name2+".png"))
     else: 
       ave2, img = segementation_ave_image (segmentation_group_2,size=(720,720),args=args)
       out=Image.fromarray(np.uint8(img*255),mode="L")

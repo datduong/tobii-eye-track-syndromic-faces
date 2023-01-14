@@ -33,19 +33,22 @@ output_dir=$main_data_dir/SLIDE_NUM # mean_vs_model.csv
 mkdir $output_dir
 
 # --if_smoothing
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
+
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --boot_ave_segmentation --if_smoothing
 
 # --scale_pixel 
 
 # ! may as well do this at tons of threshold to see what happens
-# for this_thres in 0.5 0.6 0.7 
-# do
+for this_thres in 0.4 0.5 0.6 0.7 
+do
 
-# # --if_smoothing
+# --if_smoothing
 
-#   python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --threshold_group_1 $this_thres --threshold_group_2 $this_thres --scale_pixel
+  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --boot_ave_segmentation --if_smoothing
 
-# done
+# --scale_pixel
+
+done
 
 """
 
@@ -65,7 +68,7 @@ slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Sl
 
 slide_folders = [s for s in slide_folders if 'Slide' in s]
 
-slide_folders = ['Slide2'] # , 'Slide3']
+slide_folders = ['Slide2','Slide11'] # , 'Slide3']
 
 # ---------------------------------------------------------------------------- #
 
