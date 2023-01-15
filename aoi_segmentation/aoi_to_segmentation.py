@@ -75,19 +75,24 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     # ! read saliency image, or a numpy
     # ! if input is numpy, then it should be 2D matrix on grayscale 0-255
     if type(cam_mask) == str: 
-        if transparent_to_white: 
-            mask = Image.open(os.path.join(img_dir,cam_mask))
-            new_image = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
-            new_image.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
-            mask = new_image.convert('RGB') 
-            mask=np.array(mask)  # ! https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
-        else: 
-            mask = cv2.imread(os.path.join(img_dir,cam_mask))
+        # if transparent_to_white: 
+        #     mask = Image.open(os.path.join(img_dir,cam_mask))
+        #     new_image = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
+        #     new_image.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
+        #     mask = new_image.convert('RGB') 
+        #     mask=np.array(mask)  # ! https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
+        #     mask=np.array(np.round(mask),dtype=np.uint8)
+        # else: 
+        #     mask = cv2.imread(os.path.join(img_dir,cam_mask))
+
+        # @cv2.cvtColor can be applied on transparent background. read in via PIL then conver to unit8
+        mask = np.array( Image.open(os.path.join(img_dir,cam_mask)), dtype=np.uint8)
+        
+        # ! convert grayscale
+        mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY) # in some dtype=np.uint8
 
         if resize is not None: 
             mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
-
-        mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY) # ! convert grayscale
 
         if cut_off_pixel is not None: 
             # remove black pixel that are not dark enough (these can noise, or @thresh needs this?)
@@ -102,8 +107,10 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         # ! 
         if cut_off_pixel is not None: 
             # remove black pixel that are not dark enough (these can noise, or @thresh needs this?)
-            mask = np.where (mask<cut_off_pixel,mask,0) # set lighter color pixel (above @cut_off_pixel) as 0
-        mask = cam_mask # ! read in numpy, so we set mask=cam_mask
+            # set lighter color pixel (above @cut_off_pixel) as 0
+            mask = np.where (mask<cut_off_pixel,mask,0) 
+        #
+        mask = np.array(cam_mask,dtype=np.uint8) # ! read in numpy, so we set mask=cam_mask, set to uint8 for @cv2
         
     # ---------------------------------------------------------------------------- #
 
@@ -157,8 +164,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
 
 
     if plot_segmentation: # ! plot
-        segmentation_as_png = Image.fromarray(np.uint8(segmentation*255), 'L')
-        # segmentation_as_png.show()
+        segmentation_as_png = Image.fromarray(np.uint8(segmentation*255), 'L') 
         prefix = 'smoothk'+str(k) if smoothing else 'nosmooth'
         prefix = prefix + '-' + 'thresh'+str(threshold) if threshold is not None else 'otsu'
         temp = prefix + '-' + cam_mask.split('/')[-1]

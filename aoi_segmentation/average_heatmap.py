@@ -33,13 +33,15 @@ for im in imlist:
 # Round values in array and cast as 8-bit integer
 arr=np.array(np.round(arr),dtype=np.uint8)
 
+# arr=np.array(np.round(arr))
+
 # # Generate, save and preview final image
 # out=Image.fromarray(arr,mode="RGBA")
 # out.save(os.path.join(outdir,"ManualAverageIndividual_all.png"))
 # # out.show()
 
 arr = cv2.cvtColor(arr, cv2.COLOR_BGR2GRAY)
-# cv2.imshow('image',mask)
+# cv2.imshow('image',arr)
 # cv2.waitKey(0)
 
 
@@ -58,8 +60,24 @@ def scale_by_ave_pixel_one_image(arr,target=125):
   return arr
 
 arr = np.array(arr,dtype=float)
+print ('ave')
+print ('min', np.min(arr))
+print ('max', np.max(arr) )
+print ('mean', np.mean(arr) )
+print ('size', arr.shape )
+  
 arr=scale_by_ave_pixel_one_image(arr)
+
+print ('after scale')
+print ('min', np.min(arr))
+print ('max', np.max(arr) )
+print ('mean', np.mean(arr) )
+print ('size', arr.shape )
+
 arr=np.array(np.round(arr),dtype=np.uint8)
 out=Image.fromarray(np.array(arr),mode="L")
 out.show()
+
+# ---------------------------------------------------------------------------- #
+
 

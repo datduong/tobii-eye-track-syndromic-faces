@@ -34,21 +34,22 @@ mkdir $output_dir
 
 # --if_smoothing
 
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --boot_ave_segmentation --if_smoothing
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --if_smoothing
 
+# --boot_ave_segmentation
 # --scale_pixel 
 
 # ! may as well do this at tons of threshold to see what happens
-for this_thres in 0.4 0.5 0.6 0.7 
-do
+# for this_thres in 0.4 0.5 0.6 0.7 
+# do
 
 # --if_smoothing
 
-  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --boot_ave_segmentation --if_smoothing
+  # python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --boot_ave_segmentation --if_smoothing
 
 # --scale_pixel
 
-done
+# done
 
 """
 
@@ -97,18 +98,18 @@ for folder in slide_folders:
           continue
         if g1=='Group1' and g2=='Group4': 
           continue
-        if g1=='Group2' and g2=='Group3': 
-          continue
-        if g1=='Group2' and g2=='Group4': 
-          continue
+        # if g1=='Group2' and g2=='Group3': 
+        #   continue
+        # if g1=='Group2' and g2=='Group4': 
+        #   continue
         if g1=='Group1OnSlide1' and g2=='Group3OnSlide1': 
           continue
         if g1=='Group1OnSlide1' and g2=='Group4OnSlide1': 
           continue
-        if g1=='Group2OnSlide1' and g2=='Group3OnSlide1': 
-          continue
-        if g1=='Group2OnSlide1' and g2=='Group4OnSlide1': 
-          continue
+        # if g1=='Group2OnSlide1' and g2=='Group3OnSlide1': 
+        #   continue
+        # if g1=='Group2OnSlide1' and g2=='Group4OnSlide1': 
+        #   continue
         #
         script = re.sub('THIS_K',str(this_k),script_base)
         script = re.sub('THRESHOLD_GROUP_1',str(threshold_group_1),script)
@@ -123,7 +124,7 @@ for folder in slide_folders:
         fout = open(script_name,'w')
         fout.write(script)
         fout.close()
-        os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
+        # os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
 				
 #
 

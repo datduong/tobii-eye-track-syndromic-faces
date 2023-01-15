@@ -7,7 +7,7 @@ import pandas as pd
 # ! filter rows/cols for nice visual
 
 path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/'
-slide = ['Slide' + str(i) for i in np.arange(2,18)]
+slide = ['Slide' + str(i) for i in np.arange(1,18)]
 # slide = ['Slide11','Slide10']
 all_df_wide = []
 all_df_long = []
@@ -27,12 +27,12 @@ for s in slide:
   # ! filter some other stuffs? this will make viewing easier
   this_df = this_df[ ~((this_df['group_name1']=='Group1') & (this_df['group_name2']=='Group3')) ]
   this_df = this_df[ ~((this_df['group_name1']=='Group1') & (this_df['group_name2']=='Group4')) ]
-  this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group3')) ]
-  this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group4')) ]
+  # this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group3')) ]
+  # this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group4')) ]
   this_df = this_df[ ~((this_df['group_name1']=='Group1OnSlide1') & (this_df['group_name2']=='Group3OnSlide1')) ]
   this_df = this_df[ ~((this_df['group_name1']=='Group1OnSlide1') & (this_df['group_name2']=='Group4OnSlide1')) ]
-  this_df = this_df[ ~((this_df['group_name1']=='Group2OnSlide1') & (this_df['group_name2']=='Group3OnSlide1')) ]
-  this_df = this_df[ ~((this_df['group_name1']=='Group2OnSlide1') & (this_df['group_name2']=='Group4OnSlide1')) ]
+  # this_df = this_df[ ~((this_df['group_name1']=='Group2OnSlide1') & (this_df['group_name2']=='Group3OnSlide1')) ]
+  # this_df = this_df[ ~((this_df['group_name1']=='Group2OnSlide1') & (this_df['group_name2']=='Group4OnSlide1')) ]
   this_df = this_df[ this_df['group_size1'] > 0]
   this_df = this_df[ this_df['group_size2'] > 0]
   #  values = 'obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2'.split(',')
@@ -45,9 +45,9 @@ for s in slide:
 
 # 
 all_df_wide = pd.concat(all_df_wide)
-# all_df_wide.to_csv(os.path.join(path,'all_heatmap_vs_heatmap_wide.csv'))
+all_df_wide.to_csv(os.path.join(path,'all_heatmap_vs_heatmap_wide.csv'))
 
 all_df_long = pd.concat(all_df_long)
-# all_df_long.to_csv(os.path.join(path,'all_heatmap_vs_heatmap_long.csv'),index=None)
+all_df_long.to_csv(os.path.join(path,'all_heatmap_vs_heatmap_long.csv'),index=None)
 
 all_df_long

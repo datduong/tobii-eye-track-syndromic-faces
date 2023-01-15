@@ -73,32 +73,31 @@ def average_segmentation (dict_segment,round_to_int=False,args=None):
     arr=arr+dict_segment[im]['segmentation']
 
   # average 
-  arr = arr/N
+  arr = arr/N # ! @arr is matrix 720x720 (or so), has values 0-1. 1=white pixel
 
-  if round_to_int: # Round values in array and cast as 8-bit integer
-    ave =np.array(np.round(arr),dtype=int) # ! return raw average of segmentation
-    
+  # if round_to_int: # Round values in array and cast as 8-bit integer
+  #   ave =np.array(np.round(arr),dtype=int) # ! return raw average of segmentation
+  ave = np.array (arr)
+  
   # ! SMOOTH? 
   if args.if_smoothing: 
-    arr = cv2.boxFilter(arr, -1, (args.k, args.k))
+    arr = cv2.boxFilter(arr, -1, (1, 1))
     arr = np.array(arr)
   
-  if round_to_int: # Round values in array and cast as 8-bit integer
-    arr=np.array(np.round(arr),dtype=int)
+  # if round_to_int: # Round values in array and cast as 8-bit integer
+  #   arr=np.array(np.round(arr),dtype=int)
+
+  arr = scale_by_ave_pixel_one_image (arr)
+  ave = scale_by_ave_pixel_one_image (ave)
   
+  if round_to_int: 
+    arr = np.array(arr > .5, dtype="int") # @threshold=0.7, then white pixel > 0.7 --> stay as white pixel. 
+    
   return arr, ave
 
 
 def average_image (dict_segment,size=(720,720),scale_pixel=False): 
-  """_summary_
 
-  Args:
-      dict_segment (dict): {image1:[h,w], image2:[h,w]}
-      size (tuple, optional): _description_. Defaults to (720,720).
-
-  Returns:
-      _type_: _description_
-  """
   imlist = list ( dict_segment.keys() ) 
   N = len(imlist)*1.0 # float
   arr=np.zeros((size),float) # make empty array of 0
@@ -108,30 +107,30 @@ def average_image (dict_segment,size=(720,720),scale_pixel=False):
   # average 
   arr = arr/N
 
-  # if scale_pixel: 
-  #   # ! scale whitest spot to max value 255. 
-  #   # ! DOES NOT WORK WELL? 
-  #   arr = scale_by_ave_pixel_one_image(np.array(np.round(arr),dtype=np.uint8))
-    
-  # Round values in array and cast as 8-bit integer # this is needed for image
-  arr=np.array(np.round(arr),dtype=np.uint8)
+  arr = scale_by_ave_pixel_one_image (arr,target=125,maxval=255) # ! DOES NOT WORK WELL? 
+
+  # Round values 
+  arr=np.array(np.round(arr))
+
   return arr 
 
 
-def scale_by_ave_pixel_one_image(arr,target=125): 
+def scale_by_ave_pixel_one_image(arr,target=0.5,maxval=1): 
+  """_summary_
+
+  Args:
+      arr (_type_): H x W matrix, should have value 0 to 1? 1=white 0=black pixel. 
+                      not need to be 0-1 though can be any other value?
+      target (int, optional): _description_. Defaults to 125.
+
+  Returns:
+      _type_: _description_
+  """
   arr = np.array(arr,dtype=float)
-  minval = np.min(arr)
-  print (minval)
-  arr = np.where(arr>minval,arr,0)
-  new_arr_no_0 = arr[np.where(arr!=0)]
-  print (len(new_arr_no_0))
+  new_arr_no_0 = arr[np.where(arr>0)]
   new_arr_no_0 = np.mean(new_arr_no_0)
-  print (new_arr_no_0)
-  arr = arr * target/new_arr_no_0 # scale mean to 125
-  new_arr_no_0 = arr[np.where(arr!=0)]
-  new_arr_no_0 = np.mean(new_arr_no_0)
-  print (new_arr_no_0)
-  arr = np.where(arr>255,255,arr)
+  arr = arr * target/new_arr_no_0 # ! scale down so new mean matches @target
+  arr = np.where(arr>maxval,maxval,arr)
   return arr
 
 
@@ -262,7 +261,7 @@ if __name__ == '__main__':
   parser.add_argument('--boot_ave_segmentation', action='store_true', default= False,
                         help='')
 
-  parser.add_argument('--cut_off_pixel', type=int, default=None, 
+  parser.add_argument('--cut_off_pixel', type=float, default=None, 
                         help='')
 
   parser.add_argument('--scale_pixel', action='store_true', default=False,
@@ -385,6 +384,8 @@ if __name__ == '__main__':
     out=Image.fromarray(np.uint8(ave2*255),mode="L")
     out.save(os.path.join(args.output_dir,prefix+"_segment_ave"+group_name2+".png"))
 
+    # exit() # !!! debug
+    
     # ---------------------------------------------------------------------------- #
 
     # ! observe statistics 

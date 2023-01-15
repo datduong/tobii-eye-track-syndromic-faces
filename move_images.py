@@ -15,7 +15,7 @@ columns = [ 'Syn vs Non Syn Correct',
 main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
 source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius'
 
-for slide_name in np.arange(2,18): 
+for slide_name in np.arange(1,18): 
 
   temp_df = df [ df['Image']==slide_name ]
   
@@ -36,7 +36,8 @@ for slide_name in np.arange(2,18):
     if len(im) == 0: 
       continue
 
-    print (slide_name,key_name,im)
+    print (slide_name)
+    print (key_name,im)
     
     final_dir = os.path.join(main_dir,'Slide'+slide_name,'Group'+str(index+1))
     if not os.path.exists(final_dir): 
