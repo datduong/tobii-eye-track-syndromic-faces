@@ -75,45 +75,31 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     # ! read saliency image, or a numpy
     # ! if input is numpy, then it should be 2D matrix on grayscale 0-255
     if type(cam_mask) == str: 
-        # if transparent_to_white: 
-        #     mask = Image.open(os.path.join(img_dir,cam_mask))
-        #     new_image = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
-        #     new_image.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
-        #     mask = new_image.convert('RGB') 
-        #     mask=np.array(mask)  # ! https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
-        #     mask=np.array(np.round(mask),dtype=np.uint8)
-        # else: 
-        #     mask = cv2.imread(os.path.join(img_dir,cam_mask))
+        if transparent_to_white: 
+            mask = Image.open(os.path.join(img_dir,cam_mask))
+            temp = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
+            temp.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
+            mask = np.array(temp)  # ! https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
+        else: 
+            mask = cv2.imread(os.path.join(img_dir,cam_mask))
 
-        # @cv2.cvtColor can be applied on transparent background. read in via PIL then conver to unit8
-        mask = np.array( Image.open(os.path.join(img_dir,cam_mask)), dtype=np.uint8)
-        
         # ! convert grayscale
-        mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY) # in some dtype=np.uint8
-
-        if resize is not None: 
-            mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
-
-        if cut_off_pixel is not None: 
-            # remove black pixel that are not dark enough (these can noise, or @thresh needs this?)
-            mask = np.array(mask) 
-            mask = np.where (mask<cut_off_pixel,mask,0) # set lighter color pixel (above @cut_off_pixel) as 0
-            
-        if plot_grayscale_map: 
-            img = Image.fromarray(np.array(mask), 'L')
-            img.show()
-
+        # ! @mask will have white background, and black spots for eye tracks
+        mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY) # in some dtype=np.uint8, need to call @np.array(mask) later
+    
+    # ! read in numpy, so we set mask=cam_mask, set to uint8 for @cv2
     else: 
-        # ! 
-        if cut_off_pixel is not None: 
-            # remove black pixel that are not dark enough (these can noise, or @thresh needs this?)
-            # set lighter color pixel (above @cut_off_pixel) as 0
-            mask = np.where (mask<cut_off_pixel,mask,0) 
-        #
-        mask = np.array(cam_mask,dtype=np.uint8) # ! read in numpy, so we set mask=cam_mask, set to uint8 for @cv2
-        
+        mask = cam_mask # https://stackoverflow.com/questions/10965417/how-to-convert-a-numpy-array-to-pil-image-applying-matplotlib-colormap
+
     # ---------------------------------------------------------------------------- #
 
+    if resize is not None: 
+        mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
+
+    if cut_off_pixel is not None: 
+        mask = np.array(mask)
+        mask = np.where (mask < cut_off_pixel, mask, 255) # background is white=255. low @cut_off_pixel --> keep very few "black spot"
+        mask = np.array (mask,dtype=np.uint8)
         
     if smoothing:
         # heatmap = cv2.applyColorMap(mask, cv2.COLORMAP_JET) # ! no reason to apply a color mapping to make @heatmap. we already have @heatmap in wanted color
@@ -121,7 +107,15 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         #                          -1, (k, k)) # ! no reason to convert grayscale if read in as grayscale
         mask = cv2.boxFilter(mask, -1, (k, k)) # ! smoothing on original grayscale image. 
 
-    formated_input_img_as_np = np.array(mask) # ! may need this later for bootstrap, this is the input image after resize and smoothing (if used)
+    if plot_grayscale_map: 
+        img = Image.fromarray(np.array(mask), 'L') # plot original image as grayscale
+        img.show()
+        
+    # ---------------------------------------------------------------------------- #
+    
+    formated_input_img_as_np = np.copy(np.array(mask)) # ! may need this later for bootstrap, this is the input image after resize and smoothing (if used)
+
+    # ---------------------------------------------------------------------------- #
     
     # use Otsu's method to find threshold if no threshold is passed in
     if threshold is None:
@@ -159,6 +153,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     else:
         segmentation_output = None
         thresh = None
+        # @mask will have white background, and black spots
         mask = np.array(mask)/255.0 # so white=255 will be converted into value 1, black=0 stays as 0
         segmentation = np.array(mask < threshold, dtype="int") # ! use < because we want black (low value pixel) to show up as TRUE
 

@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 # ! test if average is similar to tobii's default 
 outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01032023/Prelim/KS_123022'
-imlist = "C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01032023/Prelim/KS_123022/Individual_all"
+imlist = "C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Slide2/Group1"
 os.chdir(imlist)
 imlist = os.listdir(imlist)
 imlist = [i for i in imlist if 'otsu' not in i]
@@ -34,6 +34,61 @@ for im in imlist:
 arr=np.array(np.round(arr),dtype=np.uint8)
 
 # arr=np.array(np.round(arr))
+
+# ---------------------------------------------------------------------------- #
+
+mask = Image.open(im)
+new_image = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
+new_image.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
+mask = np.array(new_image)
+
+imarr = cv2.cvtColor(np.array(mask), cv2.COLOR_BGR2GRAY)
+cv2.imshow('image',imarr)
+cv2.waitKey(0)
+
+imarr = np.array(imarr)
+imarr = np.where (imarr>70, 255, imarr)
+imarr=Image.fromarray(imarr,mode='L')
+imarr.show()
+
+# ---------------------------------------------------------------------------- #
+imarr=Image.open(im).convert('L') 
+imarr.show()
+imarr = np.array(imarr,dtype=float)
+new_arr_no_0 = imarr[np.where(imarr>0)]
+np.min(new_arr_no_0)
+np.mean(new_arr_no_0)
+
+
+imarr = np.where (imarr>0,-1*imarr + 255, imarr)
+imarr = np.where (imarr>255,255,imarr)
+
+imarr=Image.fromarray(imarr)
+imarr.show()
+
+
+for i in range(4):
+  print (np.sum(imarr[:,:,i]) )
+
+
+new_image = Image.new("RGBA", (imarr.size), "BLACK") # Create a white rgba background
+new_image.paste(imarr, (0, 0), imarr)              # Paste the image on the background. Go to the links given below for details.
+# imarr.show()
+new_image.show()
+
+imarr = cv2.cvtColor(np.array(new_image), cv2.COLOR_BGR2GRAY)
+cv2.imshow('image',imarr)
+cv2.waitKey(0)
+
+
+
+imarr=np.array(Image.open(im),dtype=np.uint8)
+imarr = cv2.cvtColor(imarr, cv2.COLOR_BGR2GRAY)
+cv2.imshow('image',imarr)
+cv2.waitKey(0)
+
+# ---------------------------------------------------------------------------- #
+
 
 # # Generate, save and preview final image
 # out=Image.fromarray(arr,mode="RGBA")

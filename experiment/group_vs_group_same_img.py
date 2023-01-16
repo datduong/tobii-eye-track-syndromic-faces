@@ -34,7 +34,7 @@ mkdir $output_dir
 
 # --if_smoothing
 
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --if_smoothing
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
 
 # --boot_ave_segmentation
 # --scale_pixel 
@@ -125,6 +125,7 @@ for folder in slide_folders:
         fout.write(script)
         fout.close()
         # os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
+        exit()
 				
 #
 
