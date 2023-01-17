@@ -247,8 +247,7 @@ def load_data (group_name, segmentation_of_group, args):
   # ! average image, then take segmentation of average 
   else: 
     ave, img = segementation_ave_image (segmentation_of_group, size=(720,720), args=args)
-    img = np.array(img,dtype=np.uint8)
-    out=Image.fromarray(img,mode="L")  # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
+    out=Image.fromarray(np.array(img,dtype=np.uint8),mode="L")  # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
     out.save(os.path.join(args.output_dir,prefix+"_img_ave"+group_name+".png"))
     
   out=Image.fromarray(np.uint8(ave*255),mode="L") 
@@ -348,9 +347,11 @@ if __name__ == '__main__':
     args.resize = (args.resize, args.resize)
 
   # ---------------------------------------------------------------------------- #
-  slide_number = args.img_dir_group_1.split('/')[-2] # @slide_number expects input /path/SlideXYZ/GroupABC
-  group_name1 = args.img_dir_group_1.split('/')[-1]
-  group_name2 = args.img_dir_group_2.split('/')[-1]
+  slide_number1 = args.img_dir_group_1.split('/')[-2] # @slide_number expects input /path/SlideXYZ/GroupABC
+  group_name1 = slide_number1 + args.img_dir_group_1.split('/')[-1]
+
+  slide_number2 = args.img_dir_group_2.split('/')[-2]
+  group_name2 = slide_number2 + args.img_dir_group_2.split('/')[-1]
   
   # ---------------------------------------------------------------------------- #
   
@@ -388,10 +389,10 @@ if __name__ == '__main__':
     # ---------------------------------------------------------------------------- #
 
     # ! process data group 1  
-    ave1, _, prefix = load_data (group_name1, segmentation_group_1, args)
+    ave1, _, prefix1 = load_data (group_name1, segmentation_group_1, args)
     
     # ! process data group 2
-    ave2, _, prefix = load_data (group_name1, segmentation_group_1, args)
+    ave2, _, prefix2 = load_data (group_name2, segmentation_group_2, args)
 
     # ---------------------------------------------------------------------------- #
 
@@ -416,9 +417,14 @@ if __name__ == '__main__':
     boot_rank = np.sum( boot_stat > obs_stat)/args.boot_num # ! very high rank --> high pval --> signif (same apply for very low rank)
     
     #
-    fout = open(os.path.join(args.output_dir,'many_vs_many_'+group_name1+'_'+group_name2+'_'+prefix+'.csv'),'w')
+    if prefix1==prefix2: 
+      prefix = prefix1
+    else:
+      prefix = prefix1 + prefix2
+      
+    fout = open(os.path.join(args.output_dir,group_name1+'-vs-'+group_name2+'_'+prefix+'.csv'),'w')
     fout.write ('image_number,type,group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2\n')
-    fout.write ( slide_number+','+prefix+','+group_name1+','+group_name2 + ',' + ','.join ( [str(item) for item in [obs_stat,ave,std,boot_rank,args.boot_num,len(segmentation_group_1),len(segmentation_group_2)]] ) + '\n')
+    fout.write ( slide_number1+'+'+slide_number2+','+prefix+','+group_name1+','+group_name2 + ',' + ','.join ( [str(item) for item in [obs_stat,ave,std,boot_rank,args.boot_num,len(segmentation_group_1),len(segmentation_group_2)]] ) + '\n')
     fout.close()
 
 

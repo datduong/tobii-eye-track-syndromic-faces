@@ -75,11 +75,11 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     # ! read saliency image, or a numpy
     # ! if input is numpy, then it should be 2D matrix on grayscale 0-255
     if type(cam_mask) == str: 
-        if transparent_to_white: 
+        if transparent_to_white: # https://stackoverflow.com/questions/50898034/how-replace-transparent-with-a-color-in-pillow/50898375#50898375
             mask = Image.open(os.path.join(img_dir,cam_mask))
             temp = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
             temp.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
-            mask = np.array(temp)  # ! https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
+            mask = np.array(temp)  # https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
         else: 
             mask = cv2.imread(os.path.join(img_dir,cam_mask))
 

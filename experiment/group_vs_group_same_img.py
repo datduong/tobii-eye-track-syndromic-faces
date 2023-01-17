@@ -26,36 +26,33 @@ img_dir_group_1=$main_data_dir/SLIDE_NUM/GROUP1
 img_dir_group_2=$main_data_dir/SLIDE_NUM/GROUP2
 
 this_k=THIS_K
+
 # threshold_group_1=THRESHOLD_GROUP_1 
 # threshold_group_2=THRESHOLD_GROUP_2
 
-output_dir=$main_data_dir/SLIDE_NUM # mean_vs_model.csv
+output_dir=$main_data_dir/SLIDE_NUM/Result # mean_vs_model.csv
 mkdir $output_dir
 
 # --if_smoothing
-
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
-
 # --boot_ave_segmentation
 # --scale_pixel 
 
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --if_smoothing
+
+
 # ! may as well do this at tons of threshold to see what happens
-# for this_thres in 0.4 0.5 0.6 0.7 
-# do
+for this_thres in 0.3 0.4 0.5 0.6 0.7 
+do
 
-# --if_smoothing
+  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --if_smoothing
 
-  # python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --boot_ave_segmentation --if_smoothing
-
-# --scale_pixel
-
-# done
+done
 
 """
 
 # ---------------------------------------------------------------------------- #
 
-this_k = 10 # 20 # ! lower-->rough shape, higher-->more smooth
+this_k = 20 # 20 # ! lower-->rough shape, higher-->more smooth
 threshold_group_1 = .7 # ! higher-->more white spot. lower-->less white spot
 threshold_group_2 = .7 
 

@@ -36,7 +36,7 @@ for slide_name in np.arange(1,18):
     if len(im) == 0: 
       continue
 
-    print (slide_name)
+    print ('slide', slide_name)
     print (key_name,im)
     
     final_dir = os.path.join(main_dir,'Slide'+slide_name,'Group'+str(index+1))
