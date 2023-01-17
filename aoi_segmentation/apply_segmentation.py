@@ -37,7 +37,6 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
   
   seg_dict = {} # save all segmentations in dict
   for img in images: 
-    # cam_mask, threshold=np.nan, smoothing=False, k=0, workdir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None
     x, y = aoi_to_segmentation.cam_to_segmentation(   cam_mask = img, 
                                                       threshold = threshold,
                                                       smoothing = args.if_smoothing,
@@ -159,6 +158,16 @@ def segementation_ave_image (dict_segment,size,args):
   return seg_im, ave_im
   
 def diff_two_sets(dict1,dict2,args): 
+  """_summary_
+
+  Args:
+      dict1 (_type_): _description_
+      dict2 (_type_): _description_
+      args (_type_): _description_
+
+  Returns:
+      _type_: _description_
+  """
   # average images in @dict1, compute @cam_to_segmentation of this average? 
   # average segmentation in @dict1, compute @cam_to_segmentation of this average? 
   # aoi_to_segmentation.calculate_iou
@@ -208,6 +217,44 @@ def one_bootstrap_sample (dict1, dict2, args):
   boot_statistics = diff_two_sets(boot_sample[0],boot_sample[1],args)
 
   return boot_statistics
+
+
+
+def load_data (group_name, segmentation_of_group, args): 
+  """_summary_
+
+  Args:
+      group_name (_type_): _description_
+      segmentation_of_group (_type_): _description_
+      args (_type_): _description_
+
+  Returns:
+      _type_: _description_
+  """
+  
+  # ! process data of 1 group, create output name
+  prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
+  prefix = prefix + '-thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'-otsu'
+  prefix = prefix + '-scale_ave_pix' if args.scale_ave_pixel else prefix
+  prefix = prefix + '-boot_seg' if args.boot_ave_segmentation else prefix
+
+  # ! take average of segmentation 
+  if args.boot_ave_segmentation: 
+    ave, img = average_segmentation(segmentation_of_group, round_to_int=True, args=args)
+    out=Image.fromarray(np.uint8(img*255),mode="L")
+    out.save(os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name+".png"))
+
+  # ! average image, then take segmentation of average 
+  else: 
+    ave, img = segementation_ave_image (segmentation_of_group, size=(720,720), args=args)
+    img = np.array(img,dtype=np.uint8)
+    out=Image.fromarray(img,mode="L")  # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
+    out.save(os.path.join(args.output_dir,prefix+"_img_ave"+group_name+".png"))
+    
+  out=Image.fromarray(np.uint8(ave*255),mode="L") 
+  out.save(os.path.join(args.output_dir,prefix+"_seg_ave"+group_name+".png"))
+
+  return ave, img, prefix
 
 
 # ---------------------------------------------------------------------------- #
@@ -318,7 +365,7 @@ if __name__ == '__main__':
     prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
     # prefix = '-cut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else '-nocut'
     prefix = prefix + '-' + 'thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'otsu'
-    prefix = prefix + '-scale255' if args.scale_ave_pixel else prefix
+    prefix = prefix + '-scale_ave_pixel' if args.scale_ave_pixel else prefix
 
     # ! run simple mean/std of the differences 
     for model_name in segmentation_group_2: 
@@ -333,63 +380,19 @@ if __name__ == '__main__':
       
       # save as csv 
       fout = open(os.path.join(args.output_dir,'many_vs_1_'+group_name1+'_'+group_name2+'_'+prefix+'.csv'),'w')
-      # print (mIoU)
       fout.write ( model_name + ',' + ','.join ( [str(item) for item in mIoU] ) + '\n')
-      # end write out
       fout.close()
 
   else:
 
     # ---------------------------------------------------------------------------- #
-    
-    # ! process data group 1
-    prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
-    # prefix = '-cut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else '-nocut'
-    prefix = prefix + '-thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'-otsu'
-    prefix = prefix + '-scale255' if args.scale_ave_pixel else prefix
-    prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
-    
-    if args.boot_ave_segmentation: # ! take average of segmentation 
-      ave1, img = average_segmentation(segmentation_group_1, round_to_int=True, args=args)
-      out=Image.fromarray(img,mode="L")
-      out.save(os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name1+".png"))
-    else: # ! average image, then take segmentation of average 
-      ave1, img = segementation_ave_image (segmentation_group_1,size=(720,720),args=args)
-      img = np.array(img,dtype=np.uint8)
-      print ('\nbefore save scale')
-      print ('min', np.min(img))
-      print ('max', np.max(img) )
-      print ('mean', np.mean(img) )
-      print ('size', img.shape )
-      out=Image.fromarray(img,mode="L")
-      out.save(os.path.join(args.output_dir,prefix+"_img_ave"+group_name1+".png"))
-      
-    out=Image.fromarray(np.uint8(ave1*255),mode="L") # Image.fromarray(np.uint8(segmentation*255), 'L')
-    out.save(os.path.join(args.output_dir,prefix+"_segment_ave"+group_name1+".png"))
 
-    # ---------------------------------------------------------------------------- #
+    # ! process data group 1  
+    ave1, _, prefix = load_data (group_name1, segmentation_group_1, args)
     
     # ! process data group 2
-    prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
-    # prefix = '-cut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else '-nocut'
-    prefix = prefix + '-thresh'+str(args.threshold_group_2) if args.threshold_group_2 is not None else prefix+'-otsu'
-    prefix = prefix + '-scale255' if args.scale_ave_pixel else prefix
-    prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
-    
-    if args.boot_ave_segmentation: 
-      ave2, img = average_segmentation(segmentation_group_2, round_to_int=True, args=args)
-      out=Image.fromarray(np.array(img),mode="L")
-      out.save(os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name2+".png"))
-    else: 
-      ave2, img = segementation_ave_image (segmentation_group_2,size=(720,720),args=args)
-      out=Image.fromarray(np.array(img),mode="L")
-      out.save(os.path.join(args.output_dir,prefix+"_img_ave"+group_name2+".png"))
-      
-    out=Image.fromarray(np.uint8(ave2*255),mode="L")
-    out.save(os.path.join(args.output_dir,prefix+"_segment_ave"+group_name2+".png"))
+    ave2, _, prefix = load_data (group_name1, segmentation_group_1, args)
 
-    exit() # !!! debug
-    
     # ---------------------------------------------------------------------------- #
 
     # ! observe statistics 
@@ -403,21 +406,19 @@ if __name__ == '__main__':
     # ! output
     boot_stat = np.array(boot_stat)
     boot_stat = boot_stat[~np.isnan(boot_stat)]
+    
     if len(boot_stat) != args.boot_num:
       args.boot_num = len(boot_stat)
+
+    # 
     ave = np.nanmean ( np.array(boot_stat) ) 
     std = np.nanstd (np.array(boot_stat))
     boot_rank = np.sum( boot_stat > obs_stat)/args.boot_num # ! very high rank --> high pval --> signif (same apply for very low rank)
     
-    # print (obs_stat)
-    # print (ave)
-    # print (std)
-    # print ('rank', boot_rank)
-    
+    #
     fout = open(os.path.join(args.output_dir,'many_vs_many_'+group_name1+'_'+group_name2+'_'+prefix+'.csv'),'w')
     fout.write ('image_number,type,group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2\n')
     fout.write ( slide_number+','+prefix+','+group_name1+','+group_name2 + ',' + ','.join ( [str(item) for item in [obs_stat,ave,std,boot_rank,args.boot_num,len(segmentation_group_1),len(segmentation_group_2)]] ) + '\n')
-    # end write out
     fout.close()
 
 
