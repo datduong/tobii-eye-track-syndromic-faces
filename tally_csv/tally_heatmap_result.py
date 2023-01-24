@@ -6,13 +6,16 @@ import pandas as pd
 # ! combine all heatmap result
 # ! filter rows/cols for nice visual
 
+# criteria = 'nosmooth-thresh0.7'
 path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/'
 slide = ['Slide' + str(i) for i in np.arange(1,18)]
 # slide = ['Slide11','Slide10']
 all_df_wide = []
 all_df_long = []
 for s in slide: 
-  this_path = os.path.join(path,s)
+  this_path = os.path.join(path,s,'Result')
+  if not os.path.exists(this_path): 
+    continue
   csv = [i for i in os.listdir(this_path) if i.endswith('csv')]
   if len(csv)==0:
     print ('empty',s)
@@ -22,15 +25,16 @@ for s in slide:
   temp = this_df['boot_rank'].to_numpy()
   temp = np.where(temp > .5, 1-temp, temp)
   this_df['boot_pval'] = list(temp)
+  # this_df = this_df[this_df['type']==criteria]
   # 
   # ! how to view this? https://stackoverflow.com/questions/22798934/pandas-long-to-wide-reshape-by-two-variables
   # ! filter some other stuffs? this will make viewing easier
   this_df = this_df[ ~((this_df['group_name1']=='Group1') & (this_df['group_name2']=='Group3')) ]
   this_df = this_df[ ~((this_df['group_name1']=='Group1') & (this_df['group_name2']=='Group4')) ]
-  # this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group3')) ]
-  # this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group4')) ]
-  this_df = this_df[ ~((this_df['group_name1']=='Group1OnSlide1') & (this_df['group_name2']=='Group3OnSlide1')) ]
-  this_df = this_df[ ~((this_df['group_name1']=='Group1OnSlide1') & (this_df['group_name2']=='Group4OnSlide1')) ]
+  this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group3')) ]
+  this_df = this_df[ ~((this_df['group_name1']=='Group2') & (this_df['group_name2']=='Group4')) ]
+  # this_df = this_df[ ~((this_df['group_name1']=='Group1OnSlide1') & (this_df['group_name2']=='Group3OnSlide1')) ]
+  # this_df = this_df[ ~((this_df['group_name1']=='Group1OnSlide1') & (this_df['group_name2']=='Group4OnSlide1')) ]
   # this_df = this_df[ ~((this_df['group_name1']=='Group2OnSlide1') & (this_df['group_name2']=='Group3OnSlide1')) ]
   # this_df = this_df[ ~((this_df['group_name1']=='Group2OnSlide1') & (this_df['group_name2']=='Group4OnSlide1')) ]
   this_df = this_df[ this_df['group_size1'] > 0]

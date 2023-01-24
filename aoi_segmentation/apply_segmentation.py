@@ -72,7 +72,7 @@ def average_segmentation (dict_segment,round_to_int=False,args=None):
 
   # average 
   arr = arr/N # ! @arr is matrix 720x720 (or so), has values 0-1. 1=white pixel
-  ave =np.array(np.round(arr),dtype=int)
+  ave = np.array(np.round(arr),dtype=int)
   
   # ! SMOOTH? 
   if args.if_smoothing: 

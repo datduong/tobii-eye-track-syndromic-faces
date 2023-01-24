@@ -37,14 +37,14 @@ mkdir $output_dir
 # --boot_ave_segmentation
 # --scale_pixel 
 
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --if_smoothing
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
 
 
 # ! may as well do this at tons of threshold to see what happens
-for this_thres in 0.3 0.4 0.5 0.6 0.7 
+for this_thres in 0.7
 do
 
-  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --if_smoothing
+  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
 
 done
 
@@ -66,7 +66,7 @@ slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Sl
 
 slide_folders = [s for s in slide_folders if 'Slide' in s]
 
-slide_folders = ['Slide2','Slide11'] # , 'Slide3']
+# slide_folders = ['Slide2','Slide11'] # , 'Slide3']
 
 # ---------------------------------------------------------------------------- #
 
@@ -76,13 +76,14 @@ slide_folders = ['Slide2','Slide11'] # , 'Slide3']
 os.chdir(main_folder)
 
 for folder in slide_folders: 
-  for SUFFIX in ['','OnSlide1']: 
+  for SUFFIX in ['']: # ,'OnSlide1']: 
     if len(SUFFIX)>0: 
       group_folder = [f for f in os.listdir(folder) if SUFFIX in f]
     else: 
       group_folder = [f for f in os.listdir(folder) if 'OnSlide1' not in f] # kinda dumb... whatever
     #
 		#
+    group_folder = [g for g in group_folder if 'Result' not in g]
     group_folder = [g for g in group_folder if os.path.isdir(os.path.join(main_folder,folder,g))]
     print (folder, group_folder)
 		#
@@ -121,8 +122,8 @@ for folder in slide_folders:
         fout = open(script_name,'w')
         fout.write(script)
         fout.close()
-        # os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
-        exit()
+        os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
+        # exit()
 				
 #
 

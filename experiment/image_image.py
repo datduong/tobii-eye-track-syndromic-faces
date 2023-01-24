@@ -37,13 +37,13 @@ mkdir $output_dir
 # --boot_ave_segmentation
 # --scale_pixel 
 
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --if_smoothing
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
 
 # ! may as well do this at tons of threshold to see what happens
-for this_thres in 0.3 0.4 0.5 0.6 0.7 
+for this_thres in .95
 do
 
-  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 --if_smoothing
+  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
 
 done
 
@@ -51,7 +51,7 @@ done
 
 # ---------------------------------------------------------------------------- #
 
-this_k = 20 # 20 # ! lower-->rough shape, higher-->more smooth
+this_k = 5 # 20 # ! lower-->rough shape, higher-->more smooth
 threshold_group_1 = .7 # ! higher-->more white spot. lower-->less white spot
 threshold_group_2 = .7 
 
@@ -102,3 +102,6 @@ for i1, folder1 in enumerate(slide_folders):
       # os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
       # exit()
         
+#
+
+
