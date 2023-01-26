@@ -53,8 +53,8 @@ slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Sl
 slide_folders = [s for s in slide_folders if 'Slide' in s]
 slide_folders = [s for s in slide_folders if os.path.isdir(os.path.join(main_folder,s)) ]
 
-# slide_folders = ['Slide2','Slide3','Slide11'] # , 'Slide3']
-
+# slide_folders = ['Slide2','Slide11'] # , 'Slide3']
+# slide_folders_base = ['Slide2']
 # ---------------------------------------------------------------------------- #
 
 # ! for each slide1, slide2 (as a folder)
@@ -81,6 +81,8 @@ for i1, folder1 in enumerate(slide_folders):
       script = re.sub('GROUP2',g2_name,script)
       OUTPUTNAME = folder1+folder2+SUFFIX
       script = re.sub('OUTPUTNAME',OUTPUTNAME,script)
+      if os.path.exists('/data/duongdb/Face11CondTobiiEyeTrack01112023/img_img_aoi_result/'+OUTPUTNAME+'.csv'):
+        continue
       #
       time.sleep( 1.5 )
       now = datetime.now() # current date and time
@@ -88,7 +90,7 @@ for i1, folder1 in enumerate(slide_folders):
       fout = open(script_name,'w')
       fout.write(script)
       fout.close()
-      os.system('sbatch --time=00:20:00 --mem=2g --cpus-per-task=2 ' + script_name )
+      os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=2 ' + script_name )
       # exit()
         
 #
