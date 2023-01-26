@@ -16,6 +16,7 @@ import aoi_to_segmentation
 
 # ---------------------------------------------------------------------------- #
 
+
 def apply_segmentation(img_dir, threshold, transparent_to_white, args): 
   """_summary_
 
@@ -156,6 +157,7 @@ def segementation_ave_image (dict_segment,size,args):
                                                         )
 
   return seg_im, ave_im
+
   
 def diff_two_sets(dict1,dict2,args): 
   """_summary_
@@ -217,7 +219,6 @@ def one_bootstrap_sample (dict1, dict2, args):
   boot_statistics = diff_two_sets(boot_sample[0],boot_sample[1],args)
 
   return boot_statistics
-
 
 
 def load_data (group_name, segmentation_of_group, args): 

@@ -2,7 +2,17 @@ import os, sys, re, pickle
 import numpy as np
 import pandas as pd 
 
-def get_statistic (df, image_name, participants, tobii_metrics, average_option='median'): 
+from argparse import ArgumentParser
+
+from scipy.stats import mannwhitneyu
+import pingouin as pg
+
+from tqdm import tqdm
+
+# ---------------------------------------------------------------------------- #
+
+
+def get_statistic (df, image_name, participants, tobii_metrics, average_option='mean'): 
   """_summary_
 
   Args:
@@ -54,6 +64,7 @@ def random_sample_df (df1,df2,image_name,participants):
   participants = sorted ( list(set ( participants[0] + participants[1] ) ) ) # combine everyone into a single list
 
   df = [df1,df2] # ! sample obs from both slides at once
+  num_of_slide = len(df)
 
   # 
   prob_1_2 = np.array ([N1,N2]) / (N1+N2)
@@ -61,10 +72,12 @@ def random_sample_df (df1,df2,image_name,participants):
   for index, N in enumerate ([N1,N2]): 
     new_df = []
     for n in range (N): 
-      pick_this_slide = np.random.choice(image_name,size=1,p=prob_1_2) # ! pick random slide
-      temp = list ( set ( df[pick_this_slide]['Participants'].tolist() ) )
+      pick_this_slide = np.random.choice(num_of_slide,size=1,p=prob_1_2)[0] # ! pick random slide
+      # print ('pick_this_slide',pick_this_slide)
+      temp = list ( set ( df[pick_this_slide]['Participant'].tolist() ) )
       pick_this_person = np.random.choice(temp,size=1) # ! pick a random person in this slide 
-      this_random_point = df[ df['Participant'].isin(pick_this_person) & df['TOI'].isin(pick_this_slide) ] 
+      temp = df[pick_this_slide]
+      this_random_point = temp[ temp['Participant'].isin(pick_this_person) & temp['TOI'].isin([image_name[pick_this_slide]]) ] 
       new_df.append(this_random_point) # ! make a random dataset
     #
     boot_sample.append ( pd.concat(new_df) )
@@ -72,7 +85,7 @@ def random_sample_df (df1,df2,image_name,participants):
   return boot_sample[0], boot_sample[1]
 
 
-def do_bootstrap (df, image_name, participants, tobii_metrics, boot_num=100): 
+def do_bootstrap (df, image_name, participants, tobii_metrics, args, boot_num=100): 
   """Bootstrap
 
   Args:
@@ -87,7 +100,7 @@ def do_bootstrap (df, image_name, participants, tobii_metrics, boot_num=100):
   """
   group_statistic = {}
   for index,g in enumerate(image_name): 
-    group_statistic[index] = get_statistic (df, g, participants[index], tobii_metrics) 
+    group_statistic[index] = get_statistic (df, g, participants[index], tobii_metrics, average_option=args.test_statistic) 
 
   # 
   assert np.array_equal(group_statistic[0][0], group_statistic[1][0]) # equal @AOI
@@ -98,8 +111,8 @@ def do_bootstrap (df, image_name, participants, tobii_metrics, boot_num=100):
   for i in range(boot_num):
     # make random df
     boot_df1, boot_df2 = random_sample_df ( group_statistic[0][2], group_statistic[1][2], image_name, participants)
-    boot_group_statistic1 = get_statistic (boot_df1, image_name=None, participants=[], tobii_metrics=tobii_metrics) 
-    boot_group_statistic2 = get_statistic (boot_df2, image_name=None, participants=[], tobii_metrics=tobii_metrics) 
+    boot_group_statistic1 = get_statistic (boot_df1, image_name=None, participants=[], tobii_metrics=tobii_metrics, average_option=args.test_statistic) 
+    boot_group_statistic2 = get_statistic (boot_df2, image_name=None, participants=[], tobii_metrics=tobii_metrics, average_option=args.test_statistic) 
     #
     boot_stat = boot_group_statistic1[1] - boot_group_statistic2[1]
     boot.append(boot_stat)
@@ -114,43 +127,154 @@ def do_bootstrap (df, image_name, participants, tobii_metrics, boot_num=100):
   AOI = group_statistic[0][0]
 
   # format output 
-  observed_stat = pd.DataFrame(observed_stat, columns=tobii_metrics, index=AOI)
+  observed_stat = pd.DataFrame(observed_stat, columns=tobii_metrics, index=AOI) # ! matrix size: num_aoi x num_tobii_metric
   pval = pd.DataFrame(pval, columns=tobii_metrics, index=AOI)
   mean = pd.DataFrame(mean, columns=tobii_metrics, index=AOI)
   std = pd.DataFrame(std, columns=tobii_metrics, index=AOI)
   
   return observed_stat, pval, group_statistic, boot, mean, std, AOI
 
+
+def many_df_to_csv (args,df_list,header): 
+  fout = open(args.outname,'w')
+  for index,d in enumerate(df_list):
+    fout.write('\n'+header[index])
+    fout.write(d.to_string())
+    fout.write('\n')
+  fout.close()
+
+
+def df_to_long_csv (args,df_list,header): 
+  # https://stackoverflow.com/questions/36537945/reshape-wide-to-long-in-pandas
+  for index,d in enumerate(df_list):
+    d['index'] = d.index
+    d = d.reset_index()
+    df = pd.melt(d, id_vars='index', value_vars=args.tobii_metrics)
+    df['stat_type'] = header[index]
+    df['slide1'] = args.slides[0].split()[-1]
+    df['slide2'] = args.slides[1].split()[-1]
+    df.to_csv(re.sub(r'.csv',header[index]+'.csv',args.outname) , index=None) 
+
+
+def string_comma_to_list (this_str): 
+  if this_str is None: 
+    return None
+  return [s.strip() for s in this_str.split(',')]
+
 # ---------------------------------------------------------------------------- #
 
 # ! permute entire row to get statistic significant test. 
-df = 'C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/data/Trial_data_export_121522.csv'
-df = pd.read_csv(df)
-df = df.sort_values(['AOI','Participant']).reset_index(drop=True)
+# df = 'C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/data/Trial_data_export_121522.csv'
+# df = pd.read_csv(df)
+# df = df.sort_values(['AOI','Participant']).reset_index(drop=True)
 
-# df["Time_to_first_whole_fixation"] = df["Time_to_first_whole_fixation"].replace(np.nan, 7000)
+# # df["Time_to_first_whole_fixation"] = df["Time_to_first_whole_fixation"].replace(np.nan, 7000)
 
-df["Duration_of_first_whole_fixation"] = df["Duration_of_first_whole_fixation"].replace(np.nan, 0)
+# df["Duration_of_first_whole_fixation"] = df["Duration_of_first_whole_fixation"].replace(np.nan, 0)
 
-# slides = ['Slide 2','Slide 11']
+# # slides = ['Slide 2','Slide 11']
 
-# people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'], 
-#                   ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'] ]
+# # people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'], 
+# #                   ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'] ]
 
-slides = ['Slide 11','Slide 11']
+# slides = ['Slide 11','Slide 11']
 
-people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','SMAD1','TCOF1','WHSC1'], 
-                  ['PTPN11','RIT1','TBX'] ]
+# people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','SMAD1','TCOF1','WHSC1'], 
+#                   ['PTPN11','RIT1','TBX'] ]
 
-tobii_metrics = ['Total_duration_of_whole_fixations','Time_to_first_whole_fixation','Number_of_whole_fixations','Duration_of_first_whole_fixation']
+# tobii_metrics = ['Total_duration_of_whole_fixations','Time_to_first_whole_fixation','Number_of_whole_fixations','Duration_of_first_whole_fixation']
 
-observed_stat, pval, group_statistic, boot, mean, std, AOI = do_bootstrap (   df, 
-                                                                              image_name=slides, 
-                                                                              participants=people_names,   
-                                                                              tobii_metrics=tobii_metrics,
-                                                                              boot_num=200)
+# observed_stat, pval, group_statistic, boot, mean, std, AOI = do_bootstrap (   df, 
+#                                                                               image_name=slides, 
+#                                                                               participants=people_names,   
+#                                                                               tobii_metrics=tobii_metrics,
+#                                                                               boot_num=200)
 
 
-for d in [observed_stat, pval, mean, std]:
-  print(d.to_string())
+# for d in [observed_stat, pval, mean, std]:
+#   print(d.to_string())
 
+
+
+if __name__ == '__main__':
+  parser = ArgumentParser()
+
+  parser.add_argument('--csv', type=str,
+                        help='')
+
+  parser.add_argument('--outname', type=str,
+                        help='')
+
+  parser.add_argument('--test_statistic', type=str, default='median', 
+                        help='')
+
+  parser.add_argument('--boot_num', type=int, default=200, 
+                        help='')
+
+  parser.add_argument('--nan_to_0',  action='store_true', default=False,
+                        help='')
+
+  parser.add_argument('--tobii_metrics', type=string_comma_to_list,
+                        help='')
+
+  parser.add_argument('--slides', type=string_comma_to_list,
+                        help='')
+
+  parser.add_argument('--group1', type=string_comma_to_list,
+                        help='')
+
+  parser.add_argument('--group2', type=string_comma_to_list,
+                        help='')
+  
+  # ---------------------------------------------------------------------------- #
+  args = parser.parse_args()
+
+  # ---------------------------------------------------------------------------- #
+  
+  df = pd.read_csv ( args.csv )
+  df = df.sort_values(['AOI','Participant']).reset_index(drop=True)
+
+  if args.nan_to_0: 
+    df["Duration_of_first_whole_fixation"] = df["Duration_of_first_whole_fixation"].replace(np.nan, 0)
+
+  
+  people_names = [args.group1, args.group2]
+  observed_stat, pval, group_statistic, boot, mean, std, AOI = do_bootstrap (   df, 
+                                                                                image_name=args.slides, 
+                                                                                participants=people_names,   
+                                                                                tobii_metrics=args.tobii_metrics,
+                                                                                args=args,
+                                                                                boot_num=args.boot_num)
+
+  
+  many_df_to_csv(args, [observed_stat, pval, mean, std], ['observed_stat', 'pval', 'boot_mean', 'boot_std'])
+
+  df_to_long_csv(args, [pval], ['pval'])
+  
+  # # ! 
+  # df1 = df[ df['TOI'].isin([args.slides[0]]) ] # get @participants who saw @image_name
+  # df1 = df1[ df1['Participant'].isin(args.group1) ]
+  # df2 = df[ df['TOI'].isin([args.slides[1]]) ] # get @participants who saw @image_name
+  # df2 = df2[ df2['Participant'].isin(args.group2) ]
+  # fout = open(re.sub(r'.csv','',args.outname)+'mannwhitneyu.csv','w')
+  # for aoi in AOI: 
+  #   for met in args.tobii_metrics: 
+  #     temp1 = df1[df1['AOI']==aoi][met]
+  #     temp2 = df2[df2['AOI']==aoi][met]
+  #     if len(temp1)==0 or len(temp2)==0: 
+  #       continue
+  #     try: 
+  #       U1, p = mannwhitneyu (temp1,temp2)
+  #       # res = pg.ttest(temp1, temp2)
+  #       # print (aoi,met)
+  #       # print (res)
+  #     except: 
+  #       continue
+  #     fout.write(aoi+','+met+','+str(p)+'\n')
+  # #
+  # fout.close()
+
+  
+
+
+  
