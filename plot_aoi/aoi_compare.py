@@ -12,7 +12,7 @@ from tqdm import tqdm
 # ---------------------------------------------------------------------------- #
 
 
-def get_statistic (df, image_name, participants, tobii_metrics, average_option='mean'): 
+def get_statistic (df, image_name, participants, tobii_metrics, average_option='median'): 
   """_summary_
 
   Args:
@@ -32,7 +32,7 @@ def get_statistic (df, image_name, participants, tobii_metrics, average_option='
   # for each face region, take mean. 
   if df.shape[0] == 0: 
     print ('empty?', image_name, participants)
-
+    exit() 
   #
   if average_option == 'mean': 
     obs_stat = df.groupby('AOI')[tobii_metrics].mean() # ! https://www.statology.org/pandas-mean-by-group/
@@ -249,7 +249,7 @@ if __name__ == '__main__':
   
   many_df_to_csv(args, [observed_stat, pval, mean, std], ['observed_stat', 'pval', 'boot_mean', 'boot_std'])
 
-  df_to_long_csv(args, [pval], ['pval'])
+  df_to_long_csv(args, [pval,observed_stat], ['pval','observed_stat'])
   
   # # ! 
   # df1 = df[ df['TOI'].isin([args.slides[0]]) ] # get @participants who saw @image_name

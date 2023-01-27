@@ -81,8 +81,8 @@ for i1, folder1 in enumerate(slide_folders):
       script = re.sub('GROUP2',g2_name,script)
       OUTPUTNAME = folder1+folder2+SUFFIX
       script = re.sub('OUTPUTNAME',OUTPUTNAME,script)
-      if os.path.exists('/data/duongdb/Face11CondTobiiEyeTrack01112023/img_img_aoi_result/'+OUTPUTNAME+'.csv'):
-        continue
+      # if os.path.exists('/data/duongdb/Face11CondTobiiEyeTrack01112023/img_img_aoi_result/'+OUTPUTNAME+'.csv'):
+      #   continue
       #
       time.sleep( 1.5 )
       now = datetime.now() # current date and time
