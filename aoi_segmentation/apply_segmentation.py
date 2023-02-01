@@ -47,7 +47,8 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
                                                       transparent_to_white = transparent_to_white,
                                                       resize = args.resize,
                                                       plot_segmentation = args.plot_segmentation,
-                                                      cut_off_pixel = args.cut_off_pixel
+                                                      cut_off_pixel = args.cut_off_pixel, 
+                                                      hi_threshold = args.hi_threshold_group_1
                                                       )
 
     seg_dict [ img ] = {'segmentation':x, 'image':y} # save both
@@ -153,7 +154,8 @@ def segementation_ave_image (dict_segment,size,args):
                                                         transparent_to_white = False,
                                                         resize = args.resize,
                                                         plot_segmentation = False,
-                                                        cut_off_pixel = None # ! don't need this if we already filter low pixel in individual img?
+                                                        cut_off_pixel = None, # ! don't need this if we already filter low pixel in individual img?
+                                                        hi_threshold = args.hi_threshold_group_1
                                                         )
 
   return seg_im, ave_im
@@ -280,6 +282,12 @@ if __name__ == '__main__':
                         help="threshold heatmap, will not use otsu")
 
   parser.add_argument('--threshold_group_2', type=float, default= None,
+                        help="threshold heatmap, will not use otsu")
+
+  parser.add_argument('--hi_threshold_group_1', type=float, default= None,
+                        help="threshold heatmap, will not use otsu")
+
+  parser.add_argument('--hi_threshold_group_2', type=float, default= None,
                         help="threshold heatmap, will not use otsu")
 
   parser.add_argument('--resize', type=int, default=None, 
