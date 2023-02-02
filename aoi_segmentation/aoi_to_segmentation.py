@@ -156,8 +156,8 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         # @mask will have white background, and black spots
         mask = np.array(mask)/255.0 # so white=255 will be converted into value 1, black=0 stays as 0
         segmentation = np.array(mask < threshold, dtype="int") # ! use < because we want black (low value pixel) to show up as TRUE
-        if hi_threshold is not None: 
-            segmentation = segmentation * np.array(mask > hi_threshold, dtype="int") # @hi_threshold remove super dark (original in red color) because everyone is looking at eyeballs/nose/mouth? 
+        # if hi_threshold is not None: 
+        #     segmentation = segmentation * np.array(mask > hi_threshold, dtype="int") # @hi_threshold remove super dark (original in red color) because everyone is looking at eyeballs/nose/mouth? 
 
 
     if plot_segmentation: # ! plot
@@ -167,8 +167,8 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         temp = prefix + '-' + cam_mask.split('/')[-1]
         segmentation_as_png.save(os.path.join(img_dir,temp))
 
-    if face_parse_mask is not None: 
-        segmentation = segmentation * face_parse_mask
+    # if face_parse_mask is not None: 
+    #     segmentation = segmentation * face_parse_mask
         
     # segmentation must be strict 0/1
     assert np.count_nonzero((segmentation!=0) & (segmentation!=1))==0 # https://stackoverflow.com/questions/40595967/fast-way-to-check-if-a-numpy-array-is-binary-contains-only-0-and-1

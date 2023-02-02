@@ -9,7 +9,7 @@ from sklearn.metrics import confusion_matrix, balanced_accuracy_score
 
 # ! can make a heatmap of pvalue here. 
 
-# this_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Compare2Diseases'
+# this_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images'
 # df = [pd.read_csv(os.path.join(this_path,i)) for i in os.listdir(this_path) if i.endswith('csv')]
 # df = pd.concat(df)
 # temp = df['boot_rank'].to_numpy()
@@ -21,13 +21,13 @@ from sklearn.metrics import confusion_matrix, balanced_accuracy_score
 
 # ---------------------------------------------------------------------------- #
 
-this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Compare2Diseases'
+this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases'
 df = 'all_results.csv'
 df = pd.read_csv(os.path.join(this_path,df))
 
 slide_count = 17
 all_pval = np.ones((slide_count,slide_count))
-criteria = 'nosmooth-thresh0.7'
+criteria = 'smoothk10-thresh0.5-scaleave-bootseg-round0.7'
 
 # {'smoothk20-otsu',
 #  'smoothk20-thresh0.3',
@@ -37,6 +37,8 @@ criteria = 'nosmooth-thresh0.7'
 #  'smoothk20-thresh0.7'}
 
 df = df[df['type']==criteria ]
+df = df[df['group_name1'].str.contains('Group1') ]
+
 for index,row in df.iterrows(): 
   slides = [s.strip() for s in row['image_number'].split('+')]
   i = int(re.sub('Slide','',slides[0]))-1
@@ -65,8 +67,8 @@ ax.set_title('Img vs Img, Correct Affected vs. Unaffected, '+criteria)
 plt.xticks(rotation=20)
 plt.yticks(rotation=0)
 plt.rc('ytick', labelsize=18)
-# plt.savefig(os.path.join(args.output_dir,args.title+'.png'))
+plt.savefig(os.path.join(this_path,criteria+'.png'))
 # pickle.dump(normalized_array,open(title+'.np','wb')) # later we will average over many folds
 
-
+# /data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/smoothk10-thresh0.5-scaleave-bootseg-round0.7_seg_ave
 

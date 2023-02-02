@@ -74,19 +74,25 @@ def average_segmentation (dict_segment,round_to_int=False,args=None):
 
   # average 
   arr = arr/N # ! @arr is matrix 720x720 (or so), has values 0-1. 1=white pixel
-  ave = np.array(np.round(arr),dtype=int)
+  ave = np.array(arr,dtype=float)
   
   # ! SMOOTH? 
-  if args.if_smoothing: 
-    arr = cv2.boxFilter(arr, -1, (1, 1))
-    arr = np.array(arr)
+  # if args.if_smoothing: 
+  #   arr = cv2.boxFilter(arr, -1, (10, 10))
+  #   arr = np.array(arr)
 
   if args.scale_ave_pixel:
     arr = scale_by_ave_pixel_one_image (arr) # ! put on same scale, so easier to compare between 2 groups
     ave = scale_by_ave_pixel_one_image (ave)
-  
-  if round_to_int: # Round values in array and cast as 8-bit integer
-    arr=np.array(np.round(arr),dtype=int)
+    
+  if args.if_smoothing: 
+    arr = cv2.boxFilter(arr, -1, (10, 10))
+    arr = np.array(arr)
+
+  if args.round_to_int is not None: # Round values in array and cast as 8-bit integer
+    # arr = np.array(np.round(arr),dtype=int)
+    arr = np.array(arr) # may not need it, but whatever
+    arr = np.where( arr > args.round_to_int, 1, 0) # ! we want 1=white spot to show up a lot, then set @args.round_to_int as a low number args.round_to_int=0
     
   return arr, ave
 
@@ -238,13 +244,14 @@ def load_data (group_name, segmentation_of_group, args):
   # ! process data of 1 group, create output name
   prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
   prefix = prefix + '-thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'-otsu'
-  prefix = prefix + '-scale_ave_pix' if args.scale_ave_pixel else prefix
-  prefix = prefix + '-boot_seg' if args.boot_ave_segmentation else prefix
+  prefix = prefix + '-scaleave' if args.scale_ave_pixel else prefix
+  prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
+  prefix = prefix + '-round'+str(args.round_to_int) if args.round_to_int is not None else prefix
 
   # ! take average of segmentation 
   if args.boot_ave_segmentation: 
     ave, img = average_segmentation(segmentation_of_group, round_to_int=True, args=args)
-    out=Image.fromarray(np.uint8(img*255),mode="L")
+    out=Image.fromarray(np.array(img*255,dtype=np.uint8),mode="L")
     out.save(os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name+".png"))
 
   # ! average image, then take segmentation of average 
@@ -253,7 +260,7 @@ def load_data (group_name, segmentation_of_group, args):
     out=Image.fromarray(np.array(img,dtype=np.uint8),mode="L")  # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
     out.save(os.path.join(args.output_dir,prefix+"_img_ave"+group_name+".png"))
     
-  out=Image.fromarray(np.uint8(ave*255),mode="L") 
+  out=Image.fromarray(np.array(ave*255,dtype=np.uint8),mode="L") 
   out.save(os.path.join(args.output_dir,prefix+"_seg_ave"+group_name+".png"))
 
   return ave, img, prefix
@@ -320,6 +327,9 @@ if __name__ == '__main__':
   parser.add_argument('--scale_ave_pixel', action='store_true', default=False,
                         help='')
 
+  parser.add_argument('--round_to_int', type=float, default=None, 
+                        help='')
+  
   # ---------------------------------------------------------------------------- #
   
   parser.add_argument('--metric', type=str,

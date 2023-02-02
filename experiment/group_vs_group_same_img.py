@@ -20,7 +20,7 @@ cd $code_dir
 
 # ! 
 
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023
+main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack
 
 img_dir_group_1=$main_data_dir/SLIDE_NUM/GROUP1 
 img_dir_group_2=$main_data_dir/SLIDE_NUM/GROUP2
@@ -37,30 +37,34 @@ mkdir $output_dir
 # --boot_ave_segmentation
 # --scale_pixel 
 
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
+# python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
 
 
 # ! may as well do this at tons of threshold to see what happens
-for this_thres in 0.7
+
+this_thres=0.5
+
+for round_to_int in .5 .6 .7  # .75 .8 .85
 do
 
-  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
+  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --boot_ave_segmentation --round_to_int $round_to_int --scale_ave_pixel
 
 done
+
 
 """
 
 # ---------------------------------------------------------------------------- #
 
-this_k = 20 # 20 # ! lower-->rough shape, higher-->more smooth
-threshold_group_1 = .7 # ! higher-->more white spot. lower-->less white spot
-threshold_group_2 = .7 
+this_k = 10 # 20 # ! lower-->rough shape, higher-->more smooth
+threshold_group_1 = .5 # ! higher-->more white spot. lower-->less white spot
+threshold_group_2 = .5 
 
 # ---------------------------------------------------------------------------- #
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023' # @main_folder is where we save all the data
+main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack' # @main_folder is where we save all the data
 
 slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Slide2" ...
 
@@ -76,14 +80,15 @@ slide_folders = [s for s in slide_folders if 'Slide' in s]
 os.chdir(main_folder)
 
 for folder in slide_folders: 
-  for SUFFIX in ['']: # ,'OnSlide1']: 
-    if len(SUFFIX)>0: 
-      group_folder = [f for f in os.listdir(folder) if SUFFIX in f]
-    else: 
-      group_folder = [f for f in os.listdir(folder) if 'OnSlide1' not in f] # kinda dumb... whatever
+  for SUFFIX in ['Group']: # ,'OnSlide1']: 
+    # if len(SUFFIX)>0: 
+    group_folder = [f for f in os.listdir(folder) if re.match(r'^'+SUFFIX,f) ]
+    # else: 
+    #   group_folder = [f for f in os.listdir(folder) if 'OnSlide1' not in f] # kinda dumb... whatever
     #
 		#
     group_folder = [g for g in group_folder if 'Result' not in g]
+    group_folder = [g for g in group_folder if 'all' not in g]
     group_folder = [g for g in group_folder if os.path.isdir(os.path.join(main_folder,folder,g))]
     print (folder, group_folder)
 		#
@@ -100,10 +105,10 @@ for folder in slide_folders:
         #   continue
         # if g1=='Group2' and g2=='Group4': 
         #   continue
-        if g1=='Group1OnSlide1' and g2=='Group3OnSlide1': 
-          continue
-        if g1=='Group1OnSlide1' and g2=='Group4OnSlide1': 
-          continue
+        # if g1=='Group1OnSlide1' and g2=='Group3OnSlide1': 
+        #   continue
+        # if g1=='Group1OnSlide1' and g2=='Group4OnSlide1': 
+        #   continue
         # if g1=='Group2OnSlide1' and g2=='Group3OnSlide1': 
         #   continue
         # if g1=='Group2OnSlide1' and g2=='Group4OnSlide1': 
@@ -122,7 +127,7 @@ for folder in slide_folders:
         fout = open(script_name,'w')
         fout.write(script)
         fout.close()
-        os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
+        os.system('sbatch --time=00:30:00 --mem=4g --cpus-per-task=4 ' + script_name )
         # exit()
 				
 #
