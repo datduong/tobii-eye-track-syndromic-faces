@@ -86,7 +86,7 @@ import matplotlib.pyplot as plt
 # ! average of a few images after remove the "common consensus"
 # imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-has-mismatch-name-csv-no-ave/'
 
-imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/all'
+imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Slide11/Group1'
 imlist = os.listdir(imdir)
 
 # imlist = [i for i in imlist if '_BAD.png' not in i]
@@ -98,13 +98,11 @@ imlist = os.listdir(imdir)
 # imlist = [i for i in imlist if re.match(r'^5_',i) ]
 N = len(imlist)
 print ('total img count', N)
-z=Image.open(os.path.join(imdir,imlist[0])).size
+z=np.array(Image.open(os.path.join(imdir,imlist[0])),dtype=float).shape
     
 # Create a np array of floats to store the average (assume RGB images)
 # arr=np.zeros((h,w,4),float)
-
 arr=np.zeros(z,float)
-
 
 # Build up average pixel intensities, casting each image as an array of floats
 for im in imlist:
@@ -113,18 +111,6 @@ for im in imlist:
 
 # Round values in array and cast as 8-bit integer
 arr=np.array(np.round(arr),dtype=np.uint8)
-average_image_array = np.array(arr) # ! 4 dimension not 3. 
 
 out=Image.fromarray(np.array(arr)).convert('L')
-# out.save(os.path.join('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023',"total_average_no_totave_25radius_slide_5.jpg"))
-
-out.show()
-
-out = np.array(out)
-out = cv2.boxFilter(out, -1, (5, 5))
-out = np.array(out)
-out = np.where(out>10,0,255)
-
-out = Image.fromarray(out).convert('L')
-out.show()
-
+out.save(os.path.join('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023',"total_average_no_totave_25radius_slide_11_group1.jpg"))

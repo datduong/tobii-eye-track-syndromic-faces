@@ -40,14 +40,19 @@ mkdir $output_dir
 # python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
 
 # ! may as well do this at tons of threshold to see what happens
-this_thres=0.3
 
-for round_to_int in .3 .4 .5 .6 .7  # .75 .8 .85
-do
+this_thres=.1
+python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing
 
-  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --boot_ave_segmentation --round_to_int $round_to_int --scale_ave_pixel
+# this_thres=0.3
+# for round_to_int in .3 .4 .5 .6 .7  # .75 .8 .85
+# do
 
-done
+#   python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --scale_ave_pixel
+
+# # --if_smoothing --boot_ave_segmentation --round_to_int $round_to_int
+
+# done
 
 """
 
@@ -69,7 +74,7 @@ slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Sl
 
 slide_folders = [s for s in slide_folders if 'Slide' in s]
 
-# slide_folders = ['Slide2','Slide3','Slide11','Slide14'] # , 'Slide3']
+slide_folders = ['Slide2','Slide3','Slide11','Slide14'] # , 'Slide3']
 
 # ---------------------------------------------------------------------------- #
 
@@ -102,7 +107,7 @@ for i1, folder1 in enumerate(slide_folders):
       fout = open(script_name,'w')
       fout.write(script)
       fout.close()
-      os.system('sbatch --time=00:30:00 --mem=4g --cpus-per-task=4 ' + script_name )
+      # os.system('sbatch --time=00:30:00 --mem=4g --cpus-per-task=4 ' + script_name )
       # os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
       # exit()
         

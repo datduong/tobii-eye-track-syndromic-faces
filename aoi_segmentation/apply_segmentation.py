@@ -76,21 +76,15 @@ def average_segmentation (dict_segment,round_to_int=False,args=None):
   arr = arr/N # ! @arr is matrix 720x720 (or so), has values 0-1. 1=white pixel
   ave = np.array(arr,dtype=float)
   
-  # ! SMOOTH? 
-  # if args.if_smoothing: 
-  #   arr = cv2.boxFilter(arr, -1, (10, 10))
-  #   arr = np.array(arr)
-
   if args.scale_ave_pixel:
     arr = scale_by_ave_pixel_one_image (arr) # ! put on same scale, so easier to compare between 2 groups
     ave = scale_by_ave_pixel_one_image (ave)
     
-  if args.if_smoothing: 
+  if args.if_smoothing: # ! SMOOTH? 
     arr = cv2.boxFilter(arr, -1, (10, 10))
     arr = np.array(arr)
 
   if args.round_to_int is not None: # Round values in array and cast as 8-bit integer
-    # arr = np.array(np.round(arr),dtype=int)
     arr = np.array(arr) # may not need it, but whatever
     arr = np.where( arr > args.round_to_int, 1, 0) # ! we want 1=white spot to show up a lot, then set @args.round_to_int as a low number args.round_to_int=0
     
@@ -109,7 +103,7 @@ def average_image (dict_segment,size=(720,720),args=None):
   arr = arr/N
 
   if args.scale_ave_pixel: 
-    arr = scale_by_ave_pixel_one_image (arr,target=125,maxval=255,criteria_pixel=0,flip_01=True) # ! DOES NOT WORK WELL? 
+    arr = 255 * scale_by_ave_pixel_one_image (arr/255) # ! DOES NOT WORK WELL? # put everything in 0/1 scale # bring back to 0/255
 
   # Round values 
   arr=np.array(np.round(arr),dtype=np.uint8)

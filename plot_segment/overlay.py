@@ -35,10 +35,10 @@ image = np.array(image)
 
 mask_as_img = [
                'C:/Users/duongdb/Documents/ManyFaceConditions12012022/Classify/b4ns448wlEqualss10lr3e-05dp0.2b64ntest1NormalNotAsUnaff/EfficientNetOccSegment/smoothk20-thresh0.8-KSSlide133_heatmappositiveAverage.png', 
-               'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/total_average_no_totave_25radius_slide_11.jpg']
+               'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/smoothk10-thresh0.1_seg_aveSlide11Group1.png']
 mask_labels = [
                'Model', 
-               'Human simple ave']
+               'Human']
 masks = []
 for this_mask in mask_as_img: 
   this_mask = Image.open(this_mask).convert("L")
@@ -50,12 +50,12 @@ for this_mask in mask_as_img:
 
 # [Optional] prepare colors
 # https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
-cmap = plt.cm.Set1(np.arange(len(mask_labels)))
-
+cmap = plt.cm.tab10(np.arange(6)) # np.arange(len(mask_labels))
+cmap = cmap[[3,2],:]
 # Laminate your image!
 fig = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.5)
 
 # Do with that image whatever you want to do.
-fig.savefig(output_name, bbox_inches="tight", dpi=300)
+# fig.savefig(output_name, bbox_inches="tight", dpi=300)
 
 fig
