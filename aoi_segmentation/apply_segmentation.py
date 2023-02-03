@@ -29,6 +29,7 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
   Returns:
       _type_: _description_
   """
+  
   images = os.listdir(img_dir)
   if args.filter_by_word is not None: 
     images = [ i for i in images if re.match(args.filter_by_word,i) ]
@@ -56,16 +57,17 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
   return seg_dict
 
 
-def average_segmentation (dict_segment,round_to_int=False,args=None): 
+def ave_of_segmentation (dict_segment,args=None): 
   """_summary_
 
   Args:
-      dict_segment (dict): {image1:[h,w], image2:[h,w]}
-      round_to_int (bool, optional): _description_. Defaults to False.
+      dict_segment (_type_): _description_
+      args (_type_, optional): _description_. Defaults to None.
 
   Returns:
       _type_: _description_
   """
+  
   imlist = list ( dict_segment.keys() ) 
   N = len(imlist)*1.0 # float
   arr=np.zeros(dict_segment[imlist[0]]['segmentation'].shape,float)
@@ -133,7 +135,7 @@ def scale_by_ave_pixel_one_image(arr,target=0.5,maxval=1,criteria_pixel=0,flip_0
   return arr
 
 
-def segementation_ave_image (dict_segment,size,args): 
+def segementation_of_ave (dict_segment,size,args): 
   """_summary_
 
   Args:
@@ -176,11 +178,11 @@ def diff_two_sets(dict1,dict2,args):
   # average segmentation in @dict1, compute @cam_to_segmentation of this average? 
   # aoi_to_segmentation.calculate_iou
   if args.boot_ave_segmentation: 
-    seg_im1, _ = average_segmentation(dict1, round_to_int=True,args=args)
-    seg_im2, _ = average_segmentation(dict2, round_to_int=True,args=args)
+    seg_im1, _ = ave_of_segmentation(dict1, args=args)
+    seg_im2, _ = ave_of_segmentation(dict2, args=args)
   else: 
-    seg_im1, _ = segementation_ave_image (dict1,size=(720,720),args=args)  
-    seg_im2, _ = segementation_ave_image (dict2,size=(720,720),args=args)
+    seg_im1, _ = segementation_of_ave (dict1,size=(720,720),args=args)  
+    seg_im2, _ = segementation_of_ave (dict2,size=(720,720),args=args)
 
   #
   mIOU = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) 
@@ -244,13 +246,13 @@ def load_data (group_name, segmentation_of_group, args):
 
   # ! take average of segmentation 
   if args.boot_ave_segmentation: 
-    ave, img = average_segmentation(segmentation_of_group, round_to_int=True, args=args)
+    ave, img = ave_of_segmentation(segmentation_of_group,  args=args)
     out=Image.fromarray(np.array(img*255,dtype=np.uint8),mode="L")
     out.save(os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name+".png"))
 
   # ! average image, then take segmentation of average 
   else: 
-    ave, img = segementation_ave_image (segmentation_of_group, size=(720,720), args=args)
+    ave, img = segementation_of_ave (segmentation_of_group, size=(720,720), args=args)
     out=Image.fromarray(np.array(img,dtype=np.uint8),mode="L")  # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
     out.save(os.path.join(args.output_dir,prefix+"_img_ave"+group_name+".png"))
     
