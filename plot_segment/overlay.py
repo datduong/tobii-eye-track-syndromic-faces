@@ -11,8 +11,8 @@ from segmentation_mask_overlay import overlay_masks
 
 
 # [Example] Load image. If you are sure of you masks
-image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide7.PNG'
-output_name = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/NS_overlay.png'
+image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide10.PNG'
+output_name = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KS_overlay.png'
 image = Image.open(image).convert("L")
 image = np.array(image)
 
@@ -30,10 +30,15 @@ image = np.array(image)
 # smoothk20-thresh0.8-KSSlide133_heatmappositiveAverage.png
 # smoothk20-thresh0.8-NSSlide7_heatmappositiveAverage.png
 
-mask_as_img = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/smoothk10-thresh0.5-scaleave-bootseg-round0.5/smoothk10-thresh0.5-scaleave-bootseg-round0.5_seg_raw_aveSlide12Group1.png',
-               'C:/Users/duongdb/Documents/ManyFaceConditions12012022/Classify/b4ns448wlEqualss10lr3e-05dp0.2b64ntest1NormalNotAsUnaff/EfficientNetOccSegment/smoothk20-thresh0.7-NSSlide7_heatmappositiveAverage.png']
-mask_labels = ['Human',
-               'Model']
+# 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/smoothk10-thresh0.5-scaleave-bootseg-round0.5/smoothk10-thresh0.5-scaleave-bootseg-round0.5_seg_raw_aveSlide11Group1.png',
+# 'Human segment ave'
+
+mask_as_img = [
+               'C:/Users/duongdb/Documents/ManyFaceConditions12012022/Classify/b4ns448wlEqualss10lr3e-05dp0.2b64ntest1NormalNotAsUnaff/EfficientNetOccSegment/smoothk20-thresh0.8-KSSlide133_heatmappositiveAverage.png', 
+               'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/total_average_no_totave_25radius_slide_11.jpg']
+mask_labels = [
+               'Model', 
+               'Human simple ave']
 masks = []
 for this_mask in mask_as_img: 
   this_mask = Image.open(this_mask).convert("L")
