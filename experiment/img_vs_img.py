@@ -25,34 +25,28 @@ main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack
 img_dir_group_1=$main_data_dir/SLIDE_NUM1/GROUP1 
 img_dir_group_2=$main_data_dir/SLIDE_NUM2/GROUP2
 
-this_k=THIS_K
-
-# threshold_group_1=THRESHOLD_GROUP_1 
-# threshold_group_2=THRESHOLD_GROUP_2
-
 output_dir=$main_data_dir/Compare2Images # mean_vs_model.csv
 mkdir $output_dir
 
-# --if_smoothing
-# --boot_ave_segmentation
-# --scale_pixel 
-
-# python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 100 
-
 # ! may as well do this at tons of threshold to see what happens
 
-this_thres=.1
-python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing
+for this_k in 10 
+do
+  for this_thres in .1 
+  do
 
-# this_thres=0.3
-# for round_to_int in .3 .4 .5 .6 .7  # .75 .8 .85
-# do
+  # python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing 
+  
+  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --scale_ave_pixel .2 --round_to_int .3
 
-#   python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --scale_ave_pixel
+  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --scale_ave_pixel .2 --round_to_int .4
 
-# # --if_smoothing --boot_ave_segmentation --round_to_int $round_to_int
+  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --scale_ave_pixel .2 --round_to_int .5
 
-# done
+  # python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --boot_ave_segmentation --scale_ave_pixel .5 --round_to_int .4
+  
+  done
+done 
 
 """
 
@@ -107,9 +101,8 @@ for i1, folder1 in enumerate(slide_folders):
       fout = open(script_name,'w')
       fout.write(script)
       fout.close()
-      # os.system('sbatch --time=00:30:00 --mem=4g --cpus-per-task=4 ' + script_name )
-      # os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
-      # exit()
+      os.system('sbatch --time=00:30:00 --mem=4g --cpus-per-task=4 ' + script_name )
+
         
 #
 

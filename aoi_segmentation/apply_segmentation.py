@@ -78,9 +78,9 @@ def ave_of_segmentation (dict_segment,args=None):
   arr = arr/N # ! @arr is matrix 720x720 (or so), has values 0-1. 1=white pixel
   ave = np.array(arr,dtype=float)
   
-  if args.scale_ave_pixel:
-    arr = scale_by_ave_pixel_one_image (arr) # ! put on same scale, so easier to compare between 2 groups
-    ave = scale_by_ave_pixel_one_image (ave)
+  if args.scale_ave_pixel is not None:
+    arr = scale_by_ave_pixel_one_image (arr, target=args.scale_ave_pixel) # ! put on same scale, so easier to compare between 2 groups
+    ave = scale_by_ave_pixel_one_image (ave, target=args.scale_ave_pixel)
     
   if args.if_smoothing: # ! SMOOTH? 
     arr = cv2.boxFilter(arr, -1, (10, 10))
@@ -104,8 +104,8 @@ def average_image (dict_segment,size=(720,720),args=None):
   # average 
   arr = arr/N
 
-  if args.scale_ave_pixel: 
-    arr = 255 * scale_by_ave_pixel_one_image (arr/255) # ! DOES NOT WORK WELL? # put everything in 0/1 scale # bring back to 0/255
+  if args.scale_ave_pixel is not None: 
+    arr = 255 * scale_by_ave_pixel_one_image (arr/255, target=args.scale_ave_pixel) # ! DOES NOT WORK WELL? # put everything in 0/1 scale # bring back to 0/255
 
   # Round values 
   arr=np.array(np.round(arr),dtype=np.uint8)
@@ -147,8 +147,9 @@ def segementation_of_ave (dict_segment,size,args):
       _type_: _description_
   """
   ave_im = average_image (dict_segment, size=size, args=args)
+  threshold_to_binary = args.round_to_int if args.scale_ave_pixel is not None else args.threshold_group_1 # ! scale ave pixel up to brighter value, need to use @round_to_int
   seg_im, _ = aoi_to_segmentation.cam_to_segmentation(  cam_mask = ave_im, 
-                                                        threshold = args.threshold_group_1, # ! should use same setting for both set? 
+                                                        threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                         smoothing = args.if_smoothing,
                                                         k = args.k,
                                                         img_dir = '',
@@ -225,6 +226,14 @@ def one_bootstrap_sample (dict1, dict2, args):
   return boot_statistics
 
 
+def save_img (image,outname,mode="L"): 
+  if np.max(np.array(image)) <= 1: 
+    image = image*255
+  #
+  out=Image.fromarray(np.array(image,dtype=np.uint8),mode=mode)
+  out.save(outname)
+  
+  
 def load_data (group_name, segmentation_of_group, args): 
   """_summary_
 
@@ -240,24 +249,22 @@ def load_data (group_name, segmentation_of_group, args):
   # ! process data of 1 group, create output name
   prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
   prefix = prefix + '-thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'-otsu'
-  prefix = prefix + '-scaleave' if args.scale_ave_pixel else prefix
+  prefix = prefix + '-avepix'+str(args.scale_ave_pixel) if args.scale_ave_pixel is not None else prefix
   prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
   prefix = prefix + '-round'+str(args.round_to_int) if args.round_to_int is not None else prefix
 
   # ! take average of segmentation 
   if args.boot_ave_segmentation: 
     ave, img = ave_of_segmentation(segmentation_of_group,  args=args)
-    out=Image.fromarray(np.array(img*255,dtype=np.uint8),mode="L")
-    out.save(os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name+".png"))
+    save_img ( img, os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name+".png") )
 
   # ! average image, then take segmentation of average 
   else: 
     ave, img = segementation_of_ave (segmentation_of_group, size=(720,720), args=args)
-    out=Image.fromarray(np.array(img,dtype=np.uint8),mode="L")  # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
-    out.save(os.path.join(args.output_dir,prefix+"_img_ave"+group_name+".png"))
-    
-  out=Image.fromarray(np.array(ave*255,dtype=np.uint8),mode="L") 
-  out.save(os.path.join(args.output_dir,prefix+"_seg_ave"+group_name+".png"))
+    save_img (img, os.path.join(args.output_dir,prefix+"_img_ave"+group_name+".png") ) # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
+
+  # 
+  save_img (ave, os.path.join(args.output_dir,prefix+"_seg_ave"+group_name+".png"))
 
   return ave, img, prefix
 
@@ -320,7 +327,7 @@ if __name__ == '__main__':
   parser.add_argument('--cut_off_pixel', type=float, default=None, 
                         help='')
 
-  parser.add_argument('--scale_ave_pixel', action='store_true', default=False,
+  parser.add_argument('--scale_ave_pixel', type=float, default=None,
                         help='')
 
   parser.add_argument('--round_to_int', type=float, default=None, 
@@ -381,7 +388,7 @@ if __name__ == '__main__':
     prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
     # prefix = '-cut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else '-nocut'
     prefix = prefix + '-' + 'thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'otsu'
-    prefix = prefix + '-scale_ave_pixel' if args.scale_ave_pixel else prefix
+    prefix = prefix + '-avepix'+str(args.scale_ave_pixel) if args.scale_ave_pixel is not None else prefix
 
     # ! run simple mean/std of the differences 
     for model_name in segmentation_group_2: 
