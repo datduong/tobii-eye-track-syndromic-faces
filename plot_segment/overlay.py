@@ -1,5 +1,5 @@
 
-
+import os,sys,re,pickle
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
@@ -10,52 +10,97 @@ from segmentation_mask_overlay import overlay_masks
 # ! https://github.com/lobantseff/segmentation-mask-overlay
 
 
-# [Example] Load image. If you are sure of you masks
-image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide10.PNG'
-output_name = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KS_overlay.png'
-image = Image.open(image).convert("L")
-image = np.array(image)
+match_powerpoint_to_tobii = {
+  1:3, 
+  2:5, 
+  3:7, 
+  4:10, 
+  5:13, 
+  6:16, 
+  7:12, 
+  8:15, 
+  9:8, 
+  10:11, 
+  11:6, 
+  12:4, 
+  13:14, 
+  16:17, 
+  17:9, 
+  23:2
+}
 
-# [Example] Mimic list of masks
-# masks = []
-# for i in np.linspace(0, image.shape[1], 10, dtype="int"):
-#     mask = np.zeros(image.shape, dtype="bool")
-#     mask[i : i + 100, i : i + 200] = 1
-#     masks.append(mask)
+match_tobii_to_powerpoint = { v:k for k,v in match_powerpoint_to_tobii.items() }
 
-# C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/smoothk10-thresh0.5-scaleave-bootseg-round0.5/smoothk10-thresh0.5-scaleave-bootseg-round0.5_seg_aveSlide14Group1.png'
-# smoothk10-thresh0.5-scaleave-bootseg-round0.5_seg_raw_aveSlide14Group1
-# C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/smoothk10-thresh0.5-scaleave-bootseg-round0.5/smoothk10-thresh0.5-scaleave-bootseg-round0.5_seg_raw_aveSlide14Group1.png
-# smoothk20-thresh0.8-22q11DSSlide150v2_heatmappositiveAverage.png
-# smoothk20-thresh0.8-KSSlide133_heatmappositiveAverage.png
-# smoothk20-thresh0.8-NSSlide7_heatmappositiveAverage.png
+id_to_english = {
+  2:'WS', 
+  4:'RSTS1', 
+  6:'WHS',
+  8:'CdLS', 
+  9:'Down',
+  11:'KS', 
+  12:'NS', 
+  14:'22q11DS', 
+  15:'PWS',
+  17:'BWS'
+}
 
-# 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/smoothk10-thresh0.5-scaleave-bootseg-round0.5/smoothk10-thresh0.5-scaleave-bootseg-round0.5_seg_raw_aveSlide11Group1.png',
-# 'Human segment ave'
 
-mask_as_img = [
-               'C:/Users/duongdb/Documents/ManyFaceConditions12012022/Classify/b4ns448wlEqualss10lr3e-05dp0.2b64ntest1NormalNotAsUnaff/EfficientNetOccSegment/smoothk20-thresh0.8-KSSlide133_heatmappositiveAverage.png', 
-               'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/smoothk10-thresh0.1_seg_aveSlide11Group1.png']
-mask_labels = [
-               'Model', 
-               'Human']
-masks = []
-for this_mask in mask_as_img: 
-  this_mask = Image.open(this_mask).convert("L")
-  this_mask = np.array(this_mask,dtype="bool") # should be pure black/white style ??
-  masks.append(this_mask)
+model_choice = 'smoothk20-thresh0.3-'
+model_dir = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/Classify/b4ns448wlEqualss10lr3e-05dp0.2b64ntest1NormalNotAsUnaff/EfficientNetOccSegment/'
+all_model_mask = os.listdir(model_dir)
+all_model_mask = [i for i in all_model_mask if model_choice in i]
+
+tobii_num = [11,14,2,8,6]
+tobii_choice = 'smoothk10-thresh0.1-avepix0.2-round0.3_seg_ave' 
+tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases'
+all_tobii_mask = os.listdir(tobii_dir)
+all_tobii_mask = [i for i in all_tobii_mask if tobii_choice in i]
+
+for this_tobii in tobii_num : 
+
+  image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG'
+
+  disease_english_name = id_to_english[this_tobii]
+  output_name = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+disease_english_name+'_overlay.png'
+
+  image = Image.open(image).convert("L")
+  image = np.array(image)
+
+  this_tobii_mask = [i for i in all_tobii_mask if 'Slide'+str(this_tobii)+'G' in i]
+  if len(this_tobii_mask) == 0: 
+    continue
+
+  this_tobii_mask = this_tobii_mask[0]
+
+  this_model_mask = [i for i in all_model_mask if disease_english_name+'Slide' in i][0]
   
-# [Optional] prepare labels
-# mask_labels = [f"Mask_{i}" for i in range(len(masks))]
+  mask_as_img = [
+                os.path.join(model_dir,this_model_mask), 
+                os.path.join(tobii_dir,this_tobii_mask)
+                ]
 
-# [Optional] prepare colors
-# https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
-cmap = plt.cm.tab10(np.arange(6)) # np.arange(len(mask_labels))
-cmap = cmap[[3,2],:]
-# Laminate your image!
-fig = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.5)
+  mask_labels = [
+                'Model', 
+                'Human'
+                ]
 
-# Do with that image whatever you want to do.
-# fig.savefig(output_name, bbox_inches="tight", dpi=300)
+  masks = []
+  for this_mask in mask_as_img: 
+    this_mask = Image.open(this_mask).convert("L")
+    this_mask = np.array(this_mask,dtype="bool") # should be pure black/white style ??
+    masks.append(this_mask)
+    
+  # [Optional] prepare labels
+  # mask_labels = [f"Mask_{i}" for i in range(len(masks))]
 
-fig
+  # [Optional] prepare colors
+  # https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
+  cmap = plt.cm.tab10(np.arange(6)) # np.arange(len(mask_labels))
+  cmap = cmap[[3,2],:]
+  # Laminate your image!
+  fig = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.5)
+
+  # Do with that image whatever you want to do.
+  fig.savefig(output_name, bbox_inches="tight", dpi=300)
+
+  # fig

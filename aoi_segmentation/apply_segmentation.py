@@ -14,6 +14,8 @@ import matplotlib.pyplot as plt
 
 import aoi_to_segmentation 
 
+from copy import deepcopy
+
 # ---------------------------------------------------------------------------- #
 
 
@@ -180,13 +182,18 @@ def diff_two_sets(dict1,dict2,args):
   # aoi_to_segmentation.calculate_iou
   if args.boot_ave_segmentation: 
     seg_im1, _ = ave_of_segmentation(dict1, args=args)
-    seg_im2, _ = ave_of_segmentation(dict2, args=args)
+    if args.compare_vs_this is None: 
+      seg_im2, _ = ave_of_segmentation(dict2, args=args)
   else: 
     seg_im1, _ = segementation_of_ave (dict1,size=(720,720),args=args)  
-    seg_im2, _ = segementation_of_ave (dict2,size=(720,720),args=args)
+    if args.compare_vs_this is None: 
+      seg_im2, _ = segementation_of_ave (dict2,size=(720,720),args=args)
 
   #
-  mIOU = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) 
+  if args.compare_vs_this is None: 
+    mIOU = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) 
+  else: 
+    mIOU = aoi_to_segmentation.calculate_iou(seg_im1, dict2['segmentation'], true_pos_only=False) 
   return mIOU
 
 
@@ -332,7 +339,10 @@ if __name__ == '__main__':
 
   parser.add_argument('--round_to_int', type=float, default=None, 
                         help='')
-  
+
+  parser.add_argument('--compare_vs_this', type=str, default=None, 
+                        help='')
+
   # ---------------------------------------------------------------------------- #
   
   parser.add_argument('--metric', type=str,
@@ -379,40 +389,51 @@ if __name__ == '__main__':
   
   # ! get segmentation of Tobii, group 1
   segmentation_group_1 = apply_segmentation(args.img_dir_group_1, threshold=args.threshold_group_1, transparent_to_white=True, args=args)
+  
+  # ! process data group 1  
+  ave1, _, prefix1 = load_data (group_name1, segmentation_group_1, args)
 
-  # ! get segmentation of Tobii, group 2, or, we get deep learning heatmap as segmentation 
-  segmentation_group_2 = apply_segmentation(args.img_dir_group_2, threshold=args.threshold_group_2, transparent_to_white=True, args=args)
-
-  if args.boot_num is None: 
+  if args.compare_vs_this is not None: 
     # get name 
-    prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
-    # prefix = '-cut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else '-nocut'
-    prefix = prefix + '-' + 'thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'otsu'
-    prefix = prefix + '-avepix'+str(args.scale_ave_pixel) if args.scale_ave_pixel is not None else prefix
+    prefix = prefix1
+    segmentation_group_2 = {'segmentation': np.array (Image.open(args.compare_vs_this).convert("L"), dtype=int) } # save both
 
-    # ! run simple mean/std of the differences 
-    for model_name in segmentation_group_2: 
-      mIoU = []
-      for person in segmentation_group_1: 
-        temp = aoi_to_segmentation.calculate_iou(segmentation_group_1[person], segmentation_group_2[model_name], true_pos_only=False) 
-        mIoU.append(temp)
-      #
-      ave = np.mean ( np.array(mIoU) ) 
-      std = np.std (np.array(mIoU))
-      mIoU = mIoU + [ave,std]
+    observed_mIOU = diff_two_sets ( segmentation_group_1, segmentation_group_2 , args )
+
+    num_people_to_sample = len(segmentation_group_1)
+    mIoU = [] # ! bootstrap only on @segmentation_group_1
+    for i in np.arange(args.boot_num): 
+      boot_dict = dict() # empty: 
+      pick_this_person = np.random.choice( list(segmentation_group_1.keys()), size=num_people_to_sample, replace=True )
+      for ip,p in enumerate(pick_this_person): 
+        pick_this_data_point = segmentation_group_1[p]
+        if p not in boot_dict: 
+          boot_dict[p] = deepcopy ( pick_this_data_point ) # need deepcopy? probably not. 
+        else: 
+          boot_dict[p+str(ip)] = deepcopy ( pick_this_data_point )
+      # 
+      boot_mIOU = diff_two_sets ( boot_dict, segmentation_group_2 , args )
+      mIoU.append(boot_mIOU)
       
-      # save as csv 
-      fout = open(os.path.join(args.output_dir,'many_vs_1_'+group_name1+'_'+group_name2+'_'+prefix+'.csv'),'w')
-      fout.write ( model_name + ',' + ','.join ( [str(item) for item in mIoU] ) + '\n')
-      fout.close()
+    # end boot
+    ave = np.nanmean ( np.array(mIoU) ) 
+    std = np.nanstd (np.array(mIoU))
+    boot_output = [observed_mIOU,ave,std]
+    
+    # save as csv 
+    model_name = args.compare_vs_this.split('/')[-1]
+    fout = open(os.path.join(args.output_dir,'saliency-vs-'+group_name1+'_'+prefix+'.csv'),'w')
+    fout.write ('saliency,tobii,observed_stat,mean,std\n')
+    fout.write ( model_name + ',' + group_name1 + ',' + ','.join ( [str(item) for item in boot_output] ) + '\n')
+    fout.close()
 
   else:
 
-    # ---------------------------------------------------------------------------- #
+    # ! get segmentation of Tobii, group 2, or, we get deep learning heatmap as segmentation 
+    segmentation_group_2 = apply_segmentation(args.img_dir_group_2, threshold=args.threshold_group_2, transparent_to_white=True, args=args)
 
-    # ! process data group 1  
-    ave1, _, prefix1 = load_data (group_name1, segmentation_group_1, args)
-    
+    # ---------------------------------------------------------------------------- #
+ 
     # ! process data group 2
     ave2, _, prefix2 = load_data (group_name2, segmentation_group_2, args)
 

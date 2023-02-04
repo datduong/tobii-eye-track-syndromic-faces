@@ -82,7 +82,10 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
             # temp.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
             # mask = np.array(temp)  # https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
         else: 
-            mask = cv2.imread(os.path.join(img_dir,cam_mask))
+            # mask = cv2.imread(os.path.join(img_dir,cam_mask))
+            mask = Image.open(os.path.join(img_dir,cam_mask)).convert('L')
+            mask = np.array(mask)
+            mask = 255 - mask
 
         # ! convert grayscale
         # ! @mask will have white background, and black spots for eye tracks

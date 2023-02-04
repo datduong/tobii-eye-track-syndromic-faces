@@ -22,6 +22,8 @@ this_img = [i for i in this_img if 'thres' not in i]
 print (this_img)
 
 for cam_mask in this_img:
-  img, seg = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=.65, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None)
+  img, seg = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=.3, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None)
 
+
+#  'smoothk20-thresh0.8-'
 
