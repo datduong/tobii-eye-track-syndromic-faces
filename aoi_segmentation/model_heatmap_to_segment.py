@@ -13,7 +13,7 @@ from argparse import ArgumentParser
 import matplotlib.pyplot as plt
 
 import aoi_to_segmentation 
-from apply_segmentation import scale_by_ave_pixel_one_image
+from apply_segmentation import scale_shift_ave_pixel_one_image
 
 this_path = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/Classify/b4ns448wlEqualss10lr3e-05dp0.2b64ntest1NormalNotAsUnaff/EfficientNetOccSegment'
 

@@ -80,9 +80,9 @@ def ave_of_segmentation (dict_segment,args=None):
   arr = arr/N # ! @arr is matrix 720x720 (or so), has values 0-1. 1=white pixel
   ave = np.array(arr,dtype=float)
   
-  if args.scale_ave_pixel is not None:
-    arr = scale_by_ave_pixel_one_image (arr, target=args.scale_ave_pixel) # ! put on same scale, so easier to compare between 2 groups
-    ave = scale_by_ave_pixel_one_image (ave, target=args.scale_ave_pixel)
+  if args.scale_or_shift_ave_pixel is not None:
+    arr = scale_shift_ave_pixel_one_image (arr, target=args.scale_or_shift_ave_pixel) # ! put on same scale, so easier to compare between 2 groups
+    ave = scale_shift_ave_pixel_one_image (ave, target=args.scale_or_shift_ave_pixel)
     
   if args.if_smoothing: # ! SMOOTH? 
     arr = cv2.boxFilter(arr, -1, (10, 10))
@@ -106,15 +106,15 @@ def average_image (dict_segment,size=(720,720),args=None):
   # average 
   arr = arr/N
 
-  if args.scale_ave_pixel is not None: 
-    arr = 255 * scale_by_ave_pixel_one_image (arr/255, target=args.scale_ave_pixel) # ! DOES NOT WORK WELL? # put everything in 0/1 scale # bring back to 0/255
+  if args.scale_or_shift_ave_pixel is not None: 
+    arr = 255 * scale_shift_ave_pixel_one_image (arr/255, target=args.scale_or_shift_ave_pixel) # ! DOES NOT WORK WELL? # put everything in 0/1 scale # bring back to 0/255
 
   # Round values 
   arr=np.array(np.round(arr),dtype=np.uint8)
   return arr 
 
 
-def scale_by_ave_pixel_one_image(arr,target=0.5,maxval=1,criteria_pixel=0,flip_01=False): 
+def scale_shift_ave_pixel_one_image(arr,target=0.5,maxval=1,criteria_pixel=0,flip_01=False,scale=True): 
   """_summary_
 
   Args:
@@ -130,8 +130,14 @@ def scale_by_ave_pixel_one_image(arr,target=0.5,maxval=1,criteria_pixel=0,flip_0
     arr = maxval-arr
   new_arr_no_0 = arr[np.where(arr!=criteria_pixel)] 
   new_arr_no_0 = np.mean(new_arr_no_0)
-  arr = np.where( arr!=criteria_pixel, arr*target/new_arr_no_0, criteria_pixel ) # ! scale so new mean without @criteria matches @target
-  arr = np.where( arr>maxval, maxval, arr)
+  if scale: # ! works a lot better with tobii
+    arr = np.where( arr!=criteria_pixel, arr*target/new_arr_no_0, criteria_pixel ) # ! scale so new mean without @criteria matches @target
+  else: 
+    amount = target - new_arr_no_0 
+    arr = np.where( arr!=criteria_pixel, arr+amount, criteria_pixel )
+  #
+  arr = np.where( arr>maxval, maxval, arr) # bound so nothing goes over 255
+  arr = np.where( arr<0, 0, arr) # bound at 0 from below
   if flip_01:
     arr = maxval-arr
   return arr
@@ -149,7 +155,7 @@ def segementation_of_ave (dict_segment,size,args):
       _type_: _description_
   """
   ave_im = average_image (dict_segment, size=size, args=args)
-  threshold_to_binary = args.round_to_int if args.scale_ave_pixel is not None else args.threshold_group_1 # ! scale ave pixel up to brighter value, need to use @round_to_int
+  threshold_to_binary = args.round_to_int if args.scale_or_shift_ave_pixel is not None else args.threshold_group_1 # ! scale ave pixel up to brighter value, need to use @round_to_int
   seg_im, _ = aoi_to_segmentation.cam_to_segmentation(  cam_mask = ave_im, 
                                                         threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                         smoothing = args.if_smoothing,
@@ -256,7 +262,7 @@ def average_over_data (group_name, segmentation_of_group, args):
   # ! process data of 1 group, create output name
   prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
   prefix = prefix + '-thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'-otsu'
-  prefix = prefix + '-avepix'+str(args.scale_ave_pixel) if args.scale_ave_pixel is not None else prefix
+  prefix = prefix + '-avepix'+str(args.scale_or_shift_ave_pixel) if args.scale_or_shift_ave_pixel is not None else prefix
   prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
   prefix = prefix + '-round'+str(args.round_to_int) if args.round_to_int is not None else prefix
 
@@ -334,7 +340,7 @@ if __name__ == '__main__':
   parser.add_argument('--cut_off_pixel', type=float, default=None, 
                         help='')
 
-  parser.add_argument('--scale_ave_pixel', type=float, default=None,
+  parser.add_argument('--scale_or_shift_ave_pixel', type=float, default=None,
                         help='')
 
   parser.add_argument('--round_to_int', type=float, default=None, 

@@ -47,7 +47,7 @@ this_thres=0.5
 for round_to_int in .5 .6 .7  # .75 .8 .85
 do
 
-  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --boot_ave_segmentation --round_to_int $round_to_int --scale_ave_pixel
+  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --boot_ave_segmentation --round_to_int $round_to_int --scale_or_shift_ave_pixel
 
 done
 
