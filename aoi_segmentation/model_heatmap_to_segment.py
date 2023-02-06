@@ -32,26 +32,35 @@ def save_img (image,outname,mode="L"):
   out.save(outname)
 
 
-new_arr_no_0 = arr[np.where(arr!=criteria_pixel)] 
-new_arr_no_0 = np.mean(new_arr_no_0)
-arr = np.where( arr!=criteria_pixel, arr*target/new_arr_no_0, criteria_pixel ) # ! scale so new mean without @criteria matches @target
-arr = np.where( arr>maxval, maxval, arr)
+# new_arr_no_0 = arr[np.where(arr!=criteria_pixel)] 
+# new_arr_no_0 = np.mean(new_arr_no_0)
+# arr = np.where( arr!=criteria_pixel, arr*target/new_arr_no_0, criteria_pixel ) # ! scale so new mean without @criteria matches @target
+# arr = np.where( arr>maxval, maxval, arr)
 
-  
+criteria_pixel = 255.0/2
+
+target = 51.0
+
 for cam_mask in this_img:
 
-  img = Image.open(os.path.join(this_path,cam_mask)).convert("L")
-  img = 255-np.array(img)
-  out = Image.fromarray(np.array(img,dtype=np.uint8),mode='L')
+  arr = Image.open(os.path.join(this_path,cam_mask)).convert("L") # high signal --> green color --> black dot
+  arr = 255-np.array(arr) # flip so white=high signal 
+  new_arr_no_0 = arr[np.where(arr!=0)] 
+  
 
-  img = scale_by_ave_pixel_one_image ( img/255, target=.1, maxval=1,criteria_pixel=0 ) * 255
+  # img = scale_by_ave_pixel_one_image ( img/255, target=.1, maxval=1,criteria_pixel=0 ) * 255
+  new_arr_no_0 = np.mean(new_arr_no_0)
 
-  out = Image.fromarray(np.array(img,dtype=np.uint8),mode='L')
+  print (new_arr_no_0)
+  print ( 'ratio', target/new_arr_no_0 )
+  
+  
+  # out = Image.fromarray(np.array(img,dtype=np.uint8),mode='L')
 
   
-  img, seg = aoi_to_segmentation.cam_to_segmentation(img, threshold=0.7, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None)
+  # img, seg = aoi_to_segmentation.cam_to_segmentation(img, threshold=0.7, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None)
 
-  save_img (img, os.path.join(this_path,cam_mask.split('/')[-1]+"_mask.png"))
+  # save_img (img, os.path.join(this_path,cam_mask.split('/')[-1]+"_mask.png"))
 
 
 #  'smoothk20-thresh0.8-'
