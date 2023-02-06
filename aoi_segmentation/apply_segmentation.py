@@ -241,7 +241,7 @@ def save_img (image,outname,mode="L"):
   out.save(outname)
   
   
-def load_data (group_name, segmentation_of_group, args): 
+def average_over_data (group_name, segmentation_of_group, args): 
   """_summary_
 
   Args:
@@ -391,7 +391,7 @@ if __name__ == '__main__':
   segmentation_group_1 = apply_segmentation(args.img_dir_group_1, threshold=args.threshold_group_1, transparent_to_white=True, args=args)
   
   # ! process data group 1  
-  ave1, _, prefix1 = load_data (group_name1, segmentation_group_1, args)
+  ave1, _, prefix1 = average_over_data (group_name1, segmentation_group_1, args)
 
   if args.compare_vs_this is not None: 
     # get name 
@@ -435,7 +435,7 @@ if __name__ == '__main__':
     # ---------------------------------------------------------------------------- #
  
     # ! process data group 2
-    ave2, _, prefix2 = load_data (group_name2, segmentation_group_2, args)
+    ave2, _, prefix2 = average_over_data (group_name2, segmentation_group_2, args)
 
     # ---------------------------------------------------------------------------- #
 
@@ -443,6 +443,10 @@ if __name__ == '__main__':
     obs_stat = diff_two_sets(segmentation_group_1,segmentation_group_2, args=args) 
 
     # ! do bootstrap 
+    total_sample = len(segmentation_group_1) + len(segmentation_group_2) # ! edit boot number? 
+    if total_sample**total_sample < args.boot_num : # ! in some cases, sample size too small.
+      args.boot_num = np.min ( [ total_sample**total_sample * 2, args.boot_num ] )# let's say we have 2 groups, size 1 and 3, then that's 4**4 = 256, now 256*2. 
+
     boot_stat = []
     for n in range (args.boot_num):
       boot_stat.append (one_bootstrap_sample (segmentation_group_1, segmentation_group_2, args=args))

@@ -35,16 +35,12 @@ do
   for this_thres in .1 
   do
 
-  # python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing 
-  
-  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --scale_ave_pixel .2 --round_to_int .3
-
-  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --scale_ave_pixel .2 --round_to_int .4
-
-  python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --scale_ave_pixel .2 --round_to_int .5
-
-  # python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --boot_ave_segmentation --scale_ave_pixel .5 --round_to_int .4
-  
+    for round_to_int in .2 .3 .4 .45 .5 do
+    
+    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --scale_ave_pixel .2 --round_to_int $round_to_int
+    
+    done 
+    
   done
 done 
 
@@ -68,7 +64,7 @@ slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Sl
 
 slide_folders = [s for s in slide_folders if 'Slide' in s]
 
-slide_folders = ['Slide2','Slide3','Slide11','Slide14'] # , 'Slide3']
+# slide_folders = ['Slide2','Slide3','Slide11','Slide14'] # , 'Slide3']
 
 # ---------------------------------------------------------------------------- #
 
@@ -83,7 +79,7 @@ for i1, folder1 in enumerate(slide_folders):
       continue
     #
     print (folder1,folder2)
-    for SUFFIX in ['Group1']:  # Group1
+    for SUFFIX in ['Group1','Group2']:  # Group1
       group_folder1 = os.path.join(folder1,SUFFIX)
       group_folder2 = os.path.join(folder2,SUFFIX)
       #
@@ -101,7 +97,7 @@ for i1, folder1 in enumerate(slide_folders):
       fout = open(script_name,'w')
       fout.write(script)
       fout.close()
-      os.system('sbatch --time=00:30:00 --mem=4g --cpus-per-task=4 ' + script_name )
+      os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=4 ' + script_name )
 
         
 #

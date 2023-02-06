@@ -29,7 +29,6 @@ output_dir=$main_data_dir/Compare2Images # mean_vs_model.csv
 mkdir $output_dir
 
 compare_vs_this=/data/duongdb/Face11CondTobiiEyeTrack01112023/EfficientNetOccSegment/COMPARE_VS_THIS
-# ! may as well do this at tons of threshold to see what happens
 
 # 'smoothk10-thresh0.1-avepix0.2-round0.3_seg_ave' # ! best... or most reasonable? 
 
