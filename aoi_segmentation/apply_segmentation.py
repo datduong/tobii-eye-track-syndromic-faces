@@ -450,8 +450,9 @@ if __name__ == '__main__':
 
     # ! do bootstrap 
     total_sample = len(segmentation_group_1) + len(segmentation_group_2) # ! edit boot number? 
-    if total_sample**total_sample < args.boot_num : # ! in some cases, sample size too small.
-      args.boot_num = np.min ( [ total_sample**total_sample * 2, args.boot_num ] )# let's say we have 2 groups, size 1 and 3, then that's 4**4 = 256, now 256*2. 
+    call_combo = total_sample**total_sample
+    if call_combo < args.boot_num : # ! in some cases, sample size too small.
+      args.boot_num = np.min ( [ int(call_combo * 1.5) , args.boot_num ] )# let's say we have 2 groups, size 1 and 3, then that's 4**4 = 256, now 256*2. 
 
     boot_stat = []
     for n in range (args.boot_num):

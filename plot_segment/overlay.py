@@ -58,13 +58,15 @@ use_face_seg_removal = True
 
 # slide_folders = ['Slide2','Slide11','Slide14','Slide12','Slide8'
 tobii_num = [2,11,14,12,8]
-tobii_choice = 'smoothk10-thresh0.1-avepix0.2-round0.5_seg_ave' 
-tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases'
+tobii_choice = 'smoothk10-thresh0.1-avepix0.2-round0.3_seg_ave' 
+tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/thresh0.1-avepix0.2-round0.3_seg_ave'
 all_tobii_mask = os.listdir(tobii_dir)
 all_tobii_mask = [i for i in all_tobii_mask if tobii_choice in i]
 
 
-for this_tobii in tobii_num : 
+all_img_as_pil = []
+
+for tobii_index, this_tobii in enumerate(tobii_num) : 
 
   image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG'
 
@@ -114,9 +116,25 @@ for this_tobii in tobii_num :
   cmap = plt.cm.tab10(np.arange(6)) # np.arange(len(mask_labels))
   cmap = cmap[[3,2],:]
   # Laminate your image!
-  fig = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.5)
-
+  # fig = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.5) # matplotlib.figure.Figure
   # Do with that image whatever you want to do.
-  fig.savefig(output_name, bbox_inches="tight", dpi=300)
+  # fig.savefig(output_name, bbox_inches="tight", dpi=300)
+  
+  pil_img = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.4, return_pil_image=True) # matplotlib.figure.Figure
+  all_img_as_pil.append(pil_img)
 
-  # fig
+
+#
+
+def image_grid(imgs, rows, cols):
+  # assert len(imgs) == rows*cols
+
+  w, h = imgs[0].size
+  grid = Image.new('RGB', size=(cols*w, rows*h))
+  grid_w, grid_h = grid.size
+  
+  for i, img in enumerate(imgs):
+      grid.paste(img, box=(i%cols*w, i//cols*h))
+  return grid
+  
+grid = image_grid(all_img_as_pil, rows=3, cols=3)
