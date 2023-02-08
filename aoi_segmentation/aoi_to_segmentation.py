@@ -45,7 +45,7 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
     return iou_score
 
 
-def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_off_pixel=None, hi_threshold=None, face_parse_mask=None):
+def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_off_pixel=None, hi_threshold=None, face_parse_mask=None, outdir=None):
     """
     Threshold a saliency heatmap to binary segmentation mask.
     Args:
@@ -61,6 +61,9 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         segmentation (np.ndarray): binary segmentation output
     """
 
+    if outdir is None: 
+        outdir = img_dir
+        
     # ! original code reads in pickle https://github.com/rajpurkarlab/cheXlocalize
     # if (len(cam_mask.size()) > 2):
     #     cam_mask = cam_mask.squeeze()
@@ -76,7 +79,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     # ! if input is numpy, then it should be 2D matrix on grayscale 0-255
     if type(cam_mask) == str: 
         if transparent_to_white: # https://stackoverflow.com/questions/50898034/how-replace-transparent-with-a-color-in-pillow/50898375#50898375
-            mask = Image.open(os.path.join(img_dir,cam_mask)).convert('L')
+            mask = Image.open(os.path.join(img_dir,cam_mask)).convert('L') # red-->white, transparent-->black
             mask = np.array(mask)
             # temp = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
             # temp.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
@@ -159,8 +162,11 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         segmentation = np.array(segmentation_output, dtype="int")//255 # mod 255 to bring back to 0/1 scale
 
     else:
-        mask = np.array(mask)/255.0 # @mask will have black background, and white spots, see "mask = 255 - mask"
-        segmentation = np.array(mask > threshold, dtype="int") # ! NOTE: use > if white is eye-signal, and use < if black (low value pixel) is eye-signal
+        mask = np.array(mask)
+        if np.max(mask) > 1: # need to scale down to 0/1 
+            mask = mask/255.0 # @mask will have black background, and white spots, see "mask = 255 - mask"
+        #
+        segmentation = np.array(mask > threshold, dtype="int") # ! NOTE: use mask>threshold if white is eye-signal, and use < if black (low value pixel) is eye-signal
         # if hi_threshold is not None: 
         #     segmentation = segmentation * np.array(mask > hi_threshold, dtype="int") # @hi_threshold remove super dark (original in red color) because everyone is looking at eyeballs/nose/mouth? 
 
@@ -170,7 +176,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         prefix = 'smoothk'+str(k) if smoothing else 'nosmooth'
         prefix = prefix + '-' + 'thresh'+str(threshold) if threshold is not None else 'otsu'
         temp = prefix + '-' + cam_mask.split('/')[-1]
-        segmentation_as_png.save(os.path.join(img_dir,temp))
+        segmentation_as_png.save(os.path.join(outdir,temp))
 
     # if face_parse_mask is not None: 
     #     segmentation = segmentation * face_parse_mask

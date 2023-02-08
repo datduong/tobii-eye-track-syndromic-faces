@@ -37,7 +37,7 @@ do
 
     # .2 .3 .4 .45 .5 
     
-    for round_to_int in .35
+    for round_to_int in .25
     do
     
     python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --scale_or_shift_ave_pixel .2 --round_to_int $round_to_int
@@ -82,7 +82,7 @@ for i1, folder1 in enumerate(slide_folders):
       continue
     #
     print (folder1,folder2)
-    for SUFFIX in ['Group1','Group2']:  # Group1
+    for SUFFIX in ['Group3','Group4']:  # Group1 'Group1','Group2'
       group_folder1 = os.path.join(folder1,SUFFIX)
       group_folder2 = os.path.join(folder2,SUFFIX)
       #
