@@ -78,22 +78,21 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     # ! read saliency image, or a numpy
     # ! if input is numpy, then it should be 2D matrix on grayscale 0-255
     if type(cam_mask) == str: 
-        if transparent_to_white: # https://stackoverflow.com/questions/50898034/how-replace-transparent-with-a-color-in-pillow/50898375#50898375
-            mask = Image.open(os.path.join(img_dir,cam_mask)).convert('L') # red-->white, transparent-->black
-            mask = np.array(mask)
-            # temp = Image.new("RGBA", (mask.size), "WHITE") # Create a white rgba background
-            # temp.paste(mask, (0, 0), mask)              # Paste the image on the background. Go to the links given below for details.
-            # mask = np.array(temp)  # https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
+        if transparent_to_white: 
+            mask = Image.open(os.path.join(img_dir,cam_mask)) 
+            # https://stackoverflow.com/questions/50898034/how-replace-transparent-with-a-color-in-pillow/50898375#50898375
+            temp = Image.new("RGBA", (mask.size), "WHITE")  # Create a white rgba background
+            temp.paste(mask, (0, 0), mask)                  # Paste the image on the background. Go to the links given below for details.
+            mask = np.array(temp)
+            # ! convert grayscale
+            # ! @mask will have white background, and black spots for eye tracks
+            mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY) # https://stackoverflow.com/questions/43232813/convert-opencv-image-format-to-pil-image-format
+            mask = 255 - mask # flip, white-->eye focus, black-->nothing
         else: 
-            # mask = cv2.imread(os.path.join(img_dir,cam_mask))
-            mask = Image.open(os.path.join(img_dir,cam_mask)).convert('L')
-            mask = np.array(mask)
-            mask = 255 - mask
-
-        # ! convert grayscale
-        # ! @mask will have white background, and black spots for eye tracks
-        # mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY) # in some dtype=np.uint8, need to call @np.array(mask) later
-    
+            # ! NOTE: THERE'S A PROBLEM, DARKEST RED WILL LOOK BLACK. DO NOT USE IF BACKGROUND IS TRANSPARENT
+            mask = np.array(Image.open(os.path.join(img_dir,cam_mask)).convert('L')) # red-->white, transparent-->black 
+            mask = 255 - mask # flip, white-->eye focus, black-->nothing
+            
     # ! read in numpy, so we set mask=cam_mask, set to uint8 for @cv2
     else: 
         mask = cam_mask # https://stackoverflow.com/questions/10965417/how-to-convert-a-numpy-array-to-pil-image-applying-matplotlib-colormap
@@ -106,8 +105,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     if cut_off_pixel is not None: 
         mask = np.array(mask)
         mask = np.where (mask < cut_off_pixel, mask, 255) # background is white=255. low @cut_off_pixel --> keep very few "black spot"
-        mask = np.array (mask,dtype=np.uint8)
-        
+
     if smoothing:
         # heatmap = cv2.applyColorMap(mask, cv2.COLORMAP_JET) # ! no reason to apply a color mapping to make @heatmap. we already have @heatmap in wanted color
         # gray_img = cv2.boxFilter(cv2.cvtColor(heatmap, cv2.COLOR_RGB2GRAY),
@@ -119,10 +117,8 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         img.show()
         
     # ---------------------------------------------------------------------------- #
-
-    # mask = 255 - mask # ! this flip 0 into 255 and 255 into 0. if use PIL.Image.convert('L'), then background will be black, color=white
+    
     formated_input_img_as_np = np.copy(np.array(mask)) # ! may need this later for bootstrap, this is the input image after resize and smoothing (if used)
-
     segmentation_output = None
     thresh = None
     
@@ -163,7 +159,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
 
     else:
         mask = np.array(mask)
-        if np.max(mask) > 1: # need to scale down to 0/1 
+        if int(np.max(mask)) > 1: # need to scale down to 0/1 
             mask = mask/255.0 # @mask will have black background, and white spots, see "mask = 255 - mask"
         #
         segmentation = np.array(mask > threshold, dtype="int") # ! NOTE: use mask>threshold if white is eye-signal, and use < if black (low value pixel) is eye-signal

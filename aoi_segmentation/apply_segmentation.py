@@ -78,21 +78,25 @@ def ave_of_segmentation (dict_segment,args=None):
 
   # average 
   arr = arr/N # ! @arr is matrix 720x720 (or so), has values 0-1. 1=white pixel
-  ave = np.array(arr,dtype=float)
-  
+
   if args.scale_or_shift_ave_pixel is not None:
     arr = scale_shift_ave_pixel_one_image (arr, target=args.scale_or_shift_ave_pixel) # ! put on same scale, so easier to compare between 2 groups
-    ave = scale_shift_ave_pixel_one_image (ave, target=args.scale_or_shift_ave_pixel)
-    
-  if args.if_smoothing: # ! SMOOTH? 
-    arr = cv2.boxFilter(arr, -1, (10, 10))
-    arr = np.array(arr)
 
-  if args.round_to_int is not None: # Round values in array and cast as 8-bit integer
-    arr = np.array(arr) # may not need it, but whatever
-    arr = np.where( arr > args.round_to_int, 1, 0) # ! we want 1=white spot to show up a lot, then set @args.round_to_int as a low number args.round_to_int=0
+  threshold_to_binary = args.round_to_int if args.scale_or_shift_ave_pixel is not None else args.threshold_group_1
+  seg_im, _ = aoi_to_segmentation.cam_to_segmentation(  cam_mask = arr, 
+                                                        threshold = threshold_to_binary, # ! should use same setting for both set? 
+                                                        smoothing = args.if_smoothing,
+                                                        k = args.k,
+                                                        img_dir = '',
+                                                        prefix = '', 
+                                                        transparent_to_white = False,
+                                                        resize = args.resize,
+                                                        plot_segmentation = False,
+                                                        cut_off_pixel = None, 
+                                                        hi_threshold = args.hi_threshold_group_1
+                                                        )
     
-  return arr, ave
+  return seg_im, np.array(arr,dtype=float)
 
 
 def average_image (dict_segment,size=(720,720),args=None): 
@@ -190,9 +194,11 @@ def diff_two_sets(dict1,dict2,args):
   Returns:
       _type_: _description_
   """
+  
   # average images in @dict1, compute @cam_to_segmentation of this average? 
   # average segmentation in @dict1, compute @cam_to_segmentation of this average? 
   # aoi_to_segmentation.calculate_iou
+  
   if args.boot_ave_segmentation: 
     seg_im1, _ = ave_of_segmentation(dict1, args=args)
     if args.compare_vs_this is None: 
