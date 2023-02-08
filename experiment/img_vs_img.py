@@ -65,7 +65,7 @@ main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack' 
 
 slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Slide2" ...
 
-slide_folders = [s for s in slide_folders if 'Slide' in s]
+slide_folders = [s for s in slide_folders if ('Slide' in s) and ('CompareGroup' not in s)]
 
 # slide_folders = ['Slide2','Slide3','Slide11','Slide14'] # , 'Slide3']
 
