@@ -118,9 +118,12 @@ def scale_shift_ave_pixel_one_image(arr,target=0.5,maxval=1,criteria_pixel=0,fli
   """_summary_
 
   Args:
-      arr (_type_): H x W matrix, should have value 0 to 1? 1=white 0=black pixel. 
-                      not need to be 0-1 though can be any other value?
-      target (int, optional): _description_. Defaults to 125.
+      arr (_type_): _description_
+      target (float, optional): _description_. Defaults to 0.5.
+      maxval (int, optional): _description_. Defaults to 1.
+      criteria_pixel (int, optional): _description_. Defaults to 0.
+      flip_01 (bool, optional): _description_. Defaults to False.
+      scale (bool, optional): _description_. Defaults to True.
 
   Returns:
       _type_: _description_
@@ -128,18 +131,22 @@ def scale_shift_ave_pixel_one_image(arr,target=0.5,maxval=1,criteria_pixel=0,fli
   arr = np.array(arr,dtype=float)
   if flip_01: 
     arr = maxval-arr
+  
   new_arr_no_0 = arr[np.where(arr!=criteria_pixel)] 
   new_arr_no_0 = np.mean(new_arr_no_0)
+  
   if scale: # ! works a lot better with tobii
     arr = np.where( arr!=criteria_pixel, arr*target/new_arr_no_0, criteria_pixel ) # ! scale so new mean without @criteria matches @target
   else: 
     amount = target - new_arr_no_0 
     arr = np.where( arr!=criteria_pixel, arr+amount, criteria_pixel )
-  #
+  
   arr = np.where( arr>maxval, maxval, arr) # bound so nothing goes over 255
   arr = np.where( arr<0, 0, arr) # bound at 0 from below
+  
   if flip_01:
     arr = maxval-arr
+  
   return arr
 
 
@@ -165,7 +172,7 @@ def segementation_of_ave (dict_segment,size,args):
                                                         transparent_to_white = False,
                                                         resize = args.resize,
                                                         plot_segmentation = False,
-                                                        cut_off_pixel = None, # ! don't need this if we already filter low pixel in individual img?
+                                                        cut_off_pixel = None, 
                                                         hi_threshold = args.hi_threshold_group_1
                                                         )
 
