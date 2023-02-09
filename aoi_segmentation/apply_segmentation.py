@@ -85,7 +85,7 @@ def ave_of_segmentation (dict_segment,args=None):
   threshold_to_binary = args.round_to_int if args.scale_or_shift_ave_pixel is not None else args.threshold_group_1
   seg_im, _ = aoi_to_segmentation.cam_to_segmentation(  cam_mask = arr, 
                                                         threshold = threshold_to_binary, # ! should use same setting for both set? 
-                                                        smoothing = args.if_smoothing,
+                                                        smoothing = True,
                                                         k = args.k,
                                                         img_dir = '',
                                                         prefix = '', 
@@ -169,7 +169,7 @@ def segementation_of_ave (dict_segment,size,args):
   threshold_to_binary = args.round_to_int if args.scale_or_shift_ave_pixel is not None else args.threshold_group_1 # ! scale ave pixel up to brighter value, need to use @round_to_int
   seg_im, _ = aoi_to_segmentation.cam_to_segmentation(  cam_mask = ave_im, 
                                                         threshold = threshold_to_binary, # ! should use same setting for both set? 
-                                                        smoothing = args.if_smoothing,
+                                                        smoothing = True,
                                                         k = args.k,
                                                         img_dir = '',
                                                         prefix = '', 
@@ -274,6 +274,7 @@ def average_over_data (group_name, segmentation_of_group, args):
   
   # ! process data of 1 group, create output name
   prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
+  prefix = prefix + '-rawpixcut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else prefix
   prefix = prefix + '-thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'-otsu'
   prefix = prefix + '-avepix'+str(args.scale_or_shift_ave_pixel) if args.scale_or_shift_ave_pixel is not None else prefix
   prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix

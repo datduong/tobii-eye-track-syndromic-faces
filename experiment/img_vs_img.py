@@ -30,17 +30,21 @@ mkdir $output_dir
 
 # ! may as well do this at tons of threshold to see what happens
 
+cut_off_pixel=90
+
 for this_k in 10 
 do
-  for this_thres in .1 
+  for this_thres in 0 
   do
 
-    # .2 .3 .4 .45 .5 
+    # 0.4 0.5 0.6 0.7 0.8 0.9
     
-    for round_to_int in .25
+    for round_to_int in 0.4 0.5 0.6 0.7 0.8 
     do
     
-    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --if_smoothing --scale_or_shift_ave_pixel .2 --round_to_int $round_to_int
+    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --scale_or_shift_ave_pixel 0.3 --round_to_int $round_to_int --cut_off_pixel $cut_off_pixel
+
+    # --if_smoothing 
     
     done 
     
@@ -82,7 +86,7 @@ for i1, folder1 in enumerate(slide_folders):
       continue
     #
     print (folder1,folder2)
-    for SUFFIX in ['Group3','Group4']:  # Group1 'Group1','Group2'
+    for SUFFIX in ['Group1','Group3']:  # Group1 'Group1','Group2'
       group_folder1 = os.path.join(folder1,SUFFIX)
       group_folder2 = os.path.join(folder2,SUFFIX)
       #

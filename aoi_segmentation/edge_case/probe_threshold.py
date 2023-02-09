@@ -26,10 +26,11 @@ def image_grid(imgs, rows, cols):
   return grid
 
 
-this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Slide2/Group3'
-outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//RemoveAveEyeTrack/Slide2/probe'
+SLIDE = 'Slide11'
+this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+SLIDE+'/Group1'
+outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//RemoveAveEyeTrack/'+SLIDE+'/probe3'
 
-# this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-has-mismatch-name-csv-no-ave'
+# this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave'
 # outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/probe_threshold'
 
 os.makedirs(outdir,exist_ok=True)
@@ -45,19 +46,26 @@ imlist = [i for i in imlist if 'POLR1C' not in i]
 
 # print (this_img)
 
+SINGLE_SEG_THRESHOLD = 0
+SINGLE_IMG_THRESHOLD = 90 # int(.5*255)
+
 img_arr = []
 seg_arr = []
 img_ave_pixel = []
+
 for cam_mask in imlist:
-  segment, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=0, smoothing=False, k=10, img_dir=this_path, prefix=None, transparent_to_white=True, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None, outdir=outdir)
-  img_arr.append ( np.array(img) )
-  seg_arr.append ( np.array(segment))
+  segment, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=SINGLE_SEG_THRESHOLD, smoothing=False, k=10, img_dir=this_path, prefix=None, transparent_to_white=True, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_off_pixel=SINGLE_IMG_THRESHOLD, outdir=outdir)
+  img_arr.append ( img )
+  seg_arr.append ( segment )
   img_ave_pixel.append ( np.mean(img[img>0]) ) 
+
 #
 
 # take average 
 
 ave_img = np.mean (img_arr,axis=0)
+print ('ave pix', np.mean(img_ave_pixel)) # ave pix 93.35937274461001 for all images, when use no threshold 
+
 ave_img_show=Image.fromarray(np.array(ave_img,dtype=np.uint8)).convert('L')
 
 seg_arr = np.mean (seg_arr, axis=0)
@@ -95,6 +103,6 @@ for th in try_these:
 
 all_img_as_pil = [ave_img_show, brighter] + plot_arr
 grid = image_grid(all_img_as_pil, rows=1, cols=2+len(try_these))
-grid.save(os.path.join(outdir,"probe_seg_of_ave.png"))
+grid.save(os.path.join(outdir,"probe_seg_of_ave_"+str(SINGLE_IMG_THRESHOLD)+".png"))
 
 

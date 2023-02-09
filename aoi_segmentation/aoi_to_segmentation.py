@@ -38,7 +38,7 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
         if np.sum(union) == 0: 
             # ! union has no overlapping, so return 0 intead of nan ??
             # ! at extreme threshold, this happens if we put in all black images (so 0 or 0 = 0)
-            iou_score = np.nan
+            iou_score = 0 # np.nan
         else:
             iou_score = np.sum(intersection) / (np.sum(union))
 
@@ -104,7 +104,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
 
     if cut_off_pixel is not None: 
         mask = np.array(mask)
-        mask = np.where (mask < cut_off_pixel, mask, 255) # background is white=255. low @cut_off_pixel --> keep very few "black spot"
+        mask = np.where (mask > cut_off_pixel, mask, 0) # keep pixel higher than this threshold. 
 
     if smoothing:
         # heatmap = cv2.applyColorMap(mask, cv2.COLORMAP_JET) # ! no reason to apply a color mapping to make @heatmap. we already have @heatmap in wanted color
@@ -118,7 +118,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         
     # ---------------------------------------------------------------------------- #
     
-    formated_input_img_as_np = np.copy(np.array(mask)) # ! may need this later for bootstrap, this is the input image after resize and smoothing (if used)
+    formated_input_img_as_np = np.copy(np.array(mask)) # ! may need this later for bootstrap, this is the input image after resize and smoothing and a bunch of other stuffs (if used)
     segmentation_output = None
     thresh = None
     

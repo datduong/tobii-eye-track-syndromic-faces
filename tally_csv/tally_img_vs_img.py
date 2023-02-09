@@ -28,17 +28,21 @@ df = pd.read_csv(os.path.join(this_path,df))
 
 slide_count = 17
 all_pval = np.ones((slide_count,slide_count))
-# Group1_smoothk10-thresh0.1-avepix0.2-round0.5.csv
+# Group1_nosmooth-thresh0.0-avepix0.3-round0.5.csv
 
-criteria_array = ['smoothk10-thresh0.1-avepix0.2-round0.5' , # .2 .3 .4 .45 .5 
-                  'smoothk10-thresh0.1-avepix0.2-round0.2' ,
-                  'smoothk10-thresh0.1-avepix0.2-round0.3' ,
-                  'smoothk10-thresh0.1-avepix0.2-round0.35' ,
-                  'smoothk10-thresh0.1-avepix0.2-round0.4' ,
-                  'smoothk10-thresh0.1-avepix0.2-round0.45' ,
-                  ]
+# 0.4 0.5 0.6 0.7 0.8 0.9
 
-group_array = ['Group1','Group2']
+# criteria_array = ['nosmooth-thresh0.0-avepix0.3-round0.5' , # .2 .3 .4 .45 .5 
+#                   'nosmooth-thresh0.0-avepix0.3-round0.2' ,
+#                   'nosmooth-thresh0.0-avepix0.3-round0.3' ,
+#                   'nosmooth-thresh0.0-avepix0.3-round0.35' ,
+#                   'nosmooth-thresh0.0-avepix0.3-round0.4' ,
+#                   'nosmooth-thresh0.0-avepix0.3-round0.45' ,
+#                   ]
+
+criteria_array = [ 'nosmooth-thresh0.0-avepix0.3-round' + str(i) for i in [0.4 ,0.5 ,0.6 ,0.7, 0.8, 0.9]]
+
+group_array = ['Group1','Group3']
 
 for group in group_array: 
   for criteria in criteria_array: 

@@ -13,7 +13,7 @@ columns = [ 'Syn vs Non Syn Correct',
             'Syn vs NonSyn Correct Syndrome name Incorrect']
 
 main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
-source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-has-mismatch-name-csv-no-ave'
+source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave'
 
 for slide_name in np.arange(1,18): 
 
@@ -66,7 +66,7 @@ for slide_name in np.arange(1,18):
 
 # ! all images 
 main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
-source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-has-mismatch-name-csv-no-ave'
+source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave'
 
 for image_id in np.arange(1,18): 
   slide_name = str(image_id)
