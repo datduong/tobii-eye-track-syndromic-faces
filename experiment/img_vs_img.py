@@ -39,7 +39,7 @@ do
 
     # 0.4 0.5 0.6 0.7 0.8 0.9
     
-    for round_to_int in 0.4 0.5 0.6 0.7 0.8 
+    for round_to_int in 0.2 0.25 0.3 0.35
     do
     
     python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --scale_or_shift_ave_pixel 0.3 --round_to_int $round_to_int --cut_off_pixel $cut_off_pixel

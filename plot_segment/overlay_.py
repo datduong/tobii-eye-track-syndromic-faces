@@ -75,16 +75,19 @@ use_face_seg_removal = True
 # slide_folders = ['Slide2','Slide11','Slide14','Slide12','Slide8'
 tobii_num = np.arange(2,18)
 
-this_group = 'Group1'
+this_group = 'Group3'
 
 # C:\Users\duongdb\Documents\Face11CondTobiiEyeTrack01112023\RemoveAveEyeTrack\Compare2Diseases\nosmooth-thresh0.0-avepix0.3-round0.7
 
-criteria = 'nosmooth-thresh0.0-avepix0.3-round'
+criteria = 'nosmooth-rawpixcut90.0-thresh0.0-avepix0.3-round'
 
-for threshold_used in [0.8]: 
+for threshold_used in [0.2,0.3,0.5,0.6]: 
     
   tobii_choice = criteria+str(threshold_used)+'_seg_ave' 
   tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/'+str(criteria)+str(threshold_used)
+  if not os.path.exists( tobii_dir ): 
+    continue
+  
   all_tobii_mask = os.listdir(tobii_dir)
 
   all_tobii_mask = [i for i in all_tobii_mask if tobii_choice in i]

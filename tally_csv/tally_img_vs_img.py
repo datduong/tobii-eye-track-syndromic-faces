@@ -26,27 +26,20 @@ this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAv
 df = 'all_results.csv'
 df = pd.read_csv(os.path.join(this_path,df))
 
-slide_count = 17
-all_pval = np.ones((slide_count,slide_count))
-# Group1_nosmooth-thresh0.0-avepix0.3-round0.5.csv
+# nosmooth-thresh0.0-avepix0.3-round
+# nosmooth-rawpixcut90.0-thresh0.0-avepix0.3-round
 
-# 0.4 0.5 0.6 0.7 0.8 0.9
-
-# criteria_array = ['nosmooth-thresh0.0-avepix0.3-round0.5' , # .2 .3 .4 .45 .5 
-#                   'nosmooth-thresh0.0-avepix0.3-round0.2' ,
-#                   'nosmooth-thresh0.0-avepix0.3-round0.3' ,
-#                   'nosmooth-thresh0.0-avepix0.3-round0.35' ,
-#                   'nosmooth-thresh0.0-avepix0.3-round0.4' ,
-#                   'nosmooth-thresh0.0-avepix0.3-round0.45' ,
-#                   ]
-
-criteria_array = [ 'nosmooth-thresh0.0-avepix0.3-round' + str(i) for i in [0.4 ,0.5 ,0.6 ,0.7, 0.8, 0.9]]
+criteria_array = [ 'nosmooth-thresh0.0-avepix0.3-round' + str(i) for i in [0.2, 0.3, 0.4 ,0.5 ,0.6 ,0.7, 0.8]]
 
 group_array = ['Group1','Group3']
+
+slide_count = 17
 
 for group in group_array: 
   for criteria in criteria_array: 
 
+    all_pval = np.ones((slide_count,slide_count))
+    
     df2 = df[df['type']==criteria ]
     df2 = df2[df2['group_name1'].str.contains(group) ]
 
