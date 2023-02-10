@@ -39,16 +39,18 @@ do
 
     # 0.4 0.5 0.6 0.7 0.8 0.9
     # 0.2 0.3 0.4 0.5 0.6 0.7 0.8
+
+    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff
+
+    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2
+
+    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave 
     
     for round_to_int in 0.2 0.3 0.4 0.5 0.6 0.7
     do
     
-    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --scale_or_shift_ave_pixel 0.2 --round_to_int $round_to_int --cut_off_pixel $cut_off_pixel
-
-    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --scale_or_shift_ave_pixel 0.2 --round_to_int $round_to_int 
-    
-    # --if_smoothing 
-    
+      python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave --round_to_int $round_to_int
+      
     done 
     
   done
@@ -74,7 +76,7 @@ slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Sl
 
 slide_folders = [s for s in slide_folders if ('Slide' in s) and ('CompareGroup' not in s)]
 
-# slide_folders = ['Slide2','Slide3','Slide11','Slide14'] # , 'Slide3']
+slide_folders = ['Slide2','Slide3','Slide11','Slide14', 'Slide4'] # , 'Slide3']
 
 # ---------------------------------------------------------------------------- #
 
@@ -92,6 +94,10 @@ for i1, folder1 in enumerate(slide_folders):
     for SUFFIX in ['Group1','Group3']:  # Group1 'Group1','Group2'
       group_folder1 = os.path.join(folder1,SUFFIX)
       group_folder2 = os.path.join(folder2,SUFFIX)
+      #
+      if (not os.path.exists(group_folder1)) or (not os.path.exists(group_folder2)): 
+        continue
+      #
       #
       script = re.sub('THIS_K',str(this_k),script_base)
       script = re.sub('THRESHOLD_GROUP_1',str(threshold_group_1),script)

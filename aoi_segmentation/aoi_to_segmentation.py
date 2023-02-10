@@ -45,8 +45,12 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
     return iou_score
 
 
-def calculate_simple_diff(pred_mask, gt_mask, true_pos_only):
+def calculate_simple_diff(pred_mask, gt_mask):
 
+    if int ( np.max (pred_mask) ) > 1: # not on 0/1 scale, so we divide 255
+        pred_mask = pred_mask/255.0
+        gt_mask = gt_mask/255.0
+        
     union = np.logical_or(pred_mask, gt_mask)
 
     simple_diff = abs(pred_mask - gt_mask)

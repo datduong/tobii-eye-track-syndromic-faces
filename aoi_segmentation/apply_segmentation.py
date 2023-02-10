@@ -165,22 +165,24 @@ def segementation_of_ave (dict_segment,size,args):
   Returns:
       _type_: _description_
   """
-  ave_im = average_image (dict_segment, size=size, args=args)
-  threshold_to_binary = args.round_to_int if args.scale_or_shift_ave_pixel is not None else args.threshold_group_1 # ! scale ave pixel up to brighter value, need to use @round_to_int
-  seg_im, _ = aoi_to_segmentation.cam_to_segmentation(  cam_mask = ave_im, 
-                                                        threshold = threshold_to_binary, # ! should use same setting for both set? 
-                                                        smoothing = True,
-                                                        k = args.k,
-                                                        img_dir = '',
-                                                        prefix = '', 
-                                                        transparent_to_white = False,
-                                                        resize = args.resize,
-                                                        plot_segmentation = False,
-                                                        cut_off_pixel = None, 
-                                                        hi_threshold = args.hi_threshold_group_1
-                                                        )
+  ave_im = average_image (dict_segment, size=size, args=args) 
+ 
+  threshold_to_binary = args.round_to_int if args.round_to_int is not None else None # ! scale ave pixel up to brighter value, need to use @round_to_int
 
-  return seg_im, ave_im
+  seg_im, ave_im = aoi_to_segmentation.cam_to_segmentation(   cam_mask = ave_im, 
+                                                              threshold = threshold_to_binary, # ! should use same setting for both set? 
+                                                              smoothing = args.smooth_ave,
+                                                              k = args.k,
+                                                              img_dir = '',
+                                                              prefix = '', 
+                                                              transparent_to_white = False,
+                                                              resize = args.resize,
+                                                              plot_segmentation = False,
+                                                              cut_off_pixel = None, 
+                                                              hi_threshold = args.hi_threshold_group_1
+                                                              )
+
+  return seg_im, ave_im # @ave_im will not original average if we use "smoothing" and so forth. 
 
   
 def diff_two_sets(dict1,dict2,args): 
@@ -200,23 +202,23 @@ def diff_two_sets(dict1,dict2,args):
   # aoi_to_segmentation.calculate_iou
   
   if args.boot_ave_segmentation: 
-    seg_im1, _ = ave_of_segmentation(dict1, args=args)
+    seg_im1, ave_im1 = ave_of_segmentation(dict1, args=args)
     if args.compare_vs_this is None: 
-      seg_im2, _ = ave_of_segmentation(dict2, args=args)
+      seg_im2, ave_im2 = ave_of_segmentation(dict2, args=args)
   else: 
-    seg_im1, _ = segementation_of_ave (dict1,size=(720,720),args=args)  
+    seg_im1, ave_im1 = segementation_of_ave (dict1,size=(720,720),args=args)  
     if args.compare_vs_this is None: 
-      seg_im2, _ = segementation_of_ave (dict2,size=(720,720),args=args)
+      seg_im2, ave_im2 = segementation_of_ave (dict2,size=(720,720),args=args)
 
   #
   if args.compare_vs_this is None: 
     if args.simple_diff: 
-      score = aoi_to_segmentation.calculate_simple_diff(seg_im1, seg_im2)
+      score = aoi_to_segmentation.calculate_simple_diff(ave_im1, ave_im2) # ! simple diff on 2 averages of 2 sets of images
     else:
       score = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) 
   else: 
     if args.simple_diff: 
-      score = aoi_to_segmentation.calculate_simple_diff(seg_im1, dict2['segmentation']) 
+      score = aoi_to_segmentation.calculate_simple_diff(ave_im1, dict2['image']) 
     else:
       score = aoi_to_segmentation.calculate_iou(seg_im1, dict2['segmentation'], true_pos_only=False) 
   return score
@@ -237,6 +239,7 @@ def one_bootstrap_sample (dict1, dict2, args):
   N2 = len(dict2)
   dict_arr = [dict1,dict2]
   prob_1_2 = np.array ([N1,N2]) / (N1+N2)
+  
   # create a bootstrap sample
   boot_sample = []
   for index, N in enumerate([N1,N2]): 
@@ -279,12 +282,14 @@ def average_over_data (group_name, segmentation_of_group, args):
   """
   
   # ! process data of 1 group, create output name
-  prefix = 'smoothk'+str(args.k) if args.if_smoothing else 'nosmooth'
-  prefix = prefix + '-rawpixcut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else prefix
+  prefix = 'k'+str(args.k) if args.if_smoothing else 'k0'
+  prefix = prefix + '-pixcut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else prefix
   prefix = prefix + '-thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'-otsu'
   prefix = prefix + '-avepix'+str(args.scale_or_shift_ave_pixel) if args.scale_or_shift_ave_pixel is not None else prefix
   prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
+  prefix = prefix + '-smoothave' if args.smooth_ave else prefix
   prefix = prefix + '-round'+str(args.round_to_int) if args.round_to_int is not None else prefix
+  prefix = prefix + '-diff' if args.simple_diff else prefix
 
   # ! take average of segmentation 
   if args.boot_ave_segmentation: 
@@ -297,7 +302,8 @@ def average_over_data (group_name, segmentation_of_group, args):
     save_img (img, os.path.join(args.output_dir,prefix+"_img_ave"+group_name+".png") ) # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
 
   # 
-  save_img (ave, os.path.join(args.output_dir,prefix+"_seg_ave"+group_name+".png"))
+  if args.simple_diff is False: 
+    save_img (ave, os.path.join(args.output_dir,prefix+"_seg_ave"+group_name+".png"))
 
   return ave, img, prefix
 
@@ -374,6 +380,10 @@ if __name__ == '__main__':
 
   parser.add_argument('--simple_diff', action='store_true', default= False,
                         help='')
+
+  parser.add_argument('--smooth_ave', action='store_true', default= False,
+                        help='')
+  
   
   
   
@@ -504,8 +514,6 @@ if __name__ == '__main__':
     else:
       prefix = prefix1 + prefix2
 
-    prefix = prefix+'-diff' if args.simple_diff else prefix
-      
     fout = open(os.path.join(args.output_dir,group_name1+'-vs-'+group_name2+'_'+prefix+'.csv'),'w')
     fout.write ('image_number,type,group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2\n')
     fout.write ( slide_number1+'+'+slide_number2+','+prefix+','+group_name1+','+group_name2 + ',' + ','.join ( [str(item) for item in [obs_stat,ave,std,boot_rank,args.boot_num,len(segmentation_group_1),len(segmentation_group_2)]] ) + '\n')
