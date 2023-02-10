@@ -26,8 +26,8 @@ def image_grid(imgs, rows, cols):
   return grid
 
 
-SLIDE = 'Slide11'
-this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+SLIDE+'/Group3'
+SLIDE = 'Slide4'
+this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+SLIDE+'/Group1'
 outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//RemoveAveEyeTrack/'+SLIDE+'/probe'
 
 name_add = this_path.split('/')[-1]
@@ -49,7 +49,7 @@ imlist = [i for i in imlist if 'POLR1C' not in i]
 # print (this_img)
 
 SINGLE_SEG_THRESHOLD = 0
-SINGLE_IMG_THRESHOLD = 90 # int(.5*255)
+SINGLE_IMG_THRESHOLD = 0 # int(.5*255)
 try_these = [0.4,0.5,0.6,0.7,0.8]
 
 img_arr = []

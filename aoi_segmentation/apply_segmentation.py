@@ -210,10 +210,16 @@ def diff_two_sets(dict1,dict2,args):
 
   #
   if args.compare_vs_this is None: 
-    mIOU = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) 
+    if args.simple_diff: 
+      score = aoi_to_segmentation.calculate_simple_diff(seg_im1, seg_im2)
+    else:
+      score = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) 
   else: 
-    mIOU = aoi_to_segmentation.calculate_iou(seg_im1, dict2['segmentation'], true_pos_only=False) 
-  return mIOU
+    if args.simple_diff: 
+      score = aoi_to_segmentation.calculate_simple_diff(seg_im1, dict2['segmentation']) 
+    else:
+      score = aoi_to_segmentation.calculate_iou(seg_im1, dict2['segmentation'], true_pos_only=False) 
+  return score
 
 
 def one_bootstrap_sample (dict1, dict2, args):
@@ -365,6 +371,11 @@ if __name__ == '__main__':
 
   parser.add_argument('--transparent_to_white', action='store_true', default= False,
                         help='')
+
+  parser.add_argument('--simple_diff', action='store_true', default= False,
+                        help='')
+  
+  
   
   # ---------------------------------------------------------------------------- #
   
@@ -492,6 +503,8 @@ if __name__ == '__main__':
       prefix = prefix1
     else:
       prefix = prefix1 + prefix2
+
+    prefix = prefix+'-diff' if args.simple_diff else prefix
       
     fout = open(os.path.join(args.output_dir,group_name1+'-vs-'+group_name2+'_'+prefix+'.csv'),'w')
     fout.write ('image_number,type,group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2\n')

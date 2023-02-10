@@ -45,6 +45,19 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
     return iou_score
 
 
+def calculate_simple_diff(pred_mask, gt_mask, true_pos_only):
+
+    union = np.logical_or(pred_mask, gt_mask)
+
+    simple_diff = abs(pred_mask - gt_mask)
+    keep_non_zero = simple_diff * union # only count differences where there are signals. 
+    
+    score = np.sum(keep_non_zero) / np.sum(union)
+
+    return score
+
+
+
 def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_off_pixel=None, hi_threshold=None, face_parse_mask=None, outdir=None):
     """
     Threshold a saliency heatmap to binary segmentation mask.

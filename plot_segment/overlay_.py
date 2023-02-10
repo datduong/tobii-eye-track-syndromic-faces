@@ -81,7 +81,7 @@ this_group = 'Group1'
 
 criteria = 'nosmooth-thresh0.0-avepix0.3-round'
 
-for threshold_used in [0.2,0.3,0.5,0.6]: 
+for threshold_used in [0.2,0.3,0.5,0.6,0.7]: 
     
   tobii_choice = criteria+str(threshold_used)+'_seg_ave' 
   tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+str(criteria)+str(threshold_used)
