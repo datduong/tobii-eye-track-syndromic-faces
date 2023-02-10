@@ -363,6 +363,9 @@ if __name__ == '__main__':
   parser.add_argument('--compare_vs_this', type=str, default=None, 
                         help='')
 
+  parser.add_argument('--transparent_to_white', action='store_true', default= False,
+                        help='')
+  
   # ---------------------------------------------------------------------------- #
   
   parser.add_argument('--metric', type=str,
@@ -408,7 +411,7 @@ if __name__ == '__main__':
   # ---------------------------------------------------------------------------- #
   
   # ! get segmentation of Tobii, group 1
-  segmentation_group_1 = apply_segmentation(args.img_dir_group_1, threshold=args.threshold_group_1, transparent_to_white=True, args=args)
+  segmentation_group_1 = apply_segmentation(args.img_dir_group_1, threshold=args.threshold_group_1, transparent_to_white=args.transparent_to_white, args=args)
   
   # ! process data group 1  
   ave1, _, prefix1 = average_over_data (group_name1, segmentation_group_1, args)
@@ -450,7 +453,7 @@ if __name__ == '__main__':
   else:
 
     # ! get segmentation of Tobii, group 2, or, we get deep learning heatmap as segmentation 
-    segmentation_group_2 = apply_segmentation(args.img_dir_group_2, threshold=args.threshold_group_2, transparent_to_white=True, args=args)
+    segmentation_group_2 = apply_segmentation(args.img_dir_group_2, threshold=args.threshold_group_2, transparent_to_white=args.transparent_to_white, args=args)
 
     # ---------------------------------------------------------------------------- #
  

@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023'
 
-imdir = "C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-has-mismatch-name-to-csv/"
+imdir = "C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-to-csv/"
 
 
 imlist = os.listdir(imdir)
@@ -46,24 +46,39 @@ for im in imlist:
   arr=arr+imarr/N
 
 # Round values in array and cast as 8-bit integer
-arr=np.array(np.round(arr),dtype=np.uint8)
 average_image_array = np.array(arr) # ! 4 dimension not 3. 
-
-out=Image.fromarray(np.array(arr)).convert('L')
-
-
-out.save(os.path.join(outdir,"total_average_25radius.jpg"))
+arr= Image.fromarray (np.array(np.round(arr),dtype=np.uint8))
 
 
-outdir = "C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-has-mismatch-name-csv-no-ave/"
-# os.makedirs(outdir)
+# https://stackoverflow.com/questions/50898034/how-replace-transparent-with-a-color-in-pillow/50898375#50898375
+out = Image.new("RGBA", ((720,720)), "WHITE")  # Create a white rgba background
+out.paste(arr, (0, 0), arr)                  # Paste the image on the background. Go to the links given below for details.       
+out = cv2.cvtColor(np.array(out), cv2.COLOR_BGR2GRAY) 
+cv2.imwrite(os.path.join(outdir,"total_average_25radius.png"), 255-out)
+
+
+# ---------------------------------------------------------------------------- #
+
+# ! take out average 
+outdir = "C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg/"
+
+os.makedirs(outdir,exist_ok=True)
 
 for im in imlist:
   imarr=np.array(Image.open(os.path.join(imdir,im)),dtype=float)
-  imarr = imarr - average_image_array
+  imarr = imarr - average_image_array # ! take out average 
   imarr = np.where(imarr<0,0,imarr)
-  out=Image.fromarray(np.array(imarr,dtype=np.uint8),mode='RGBA')
-  out.save(os.path.join(outdir,im))
+  this_img=Image.fromarray(np.array(imarr,dtype=np.uint8),mode='RGBA')
+  
+  # ! convert into true black/white
+  temp = Image.new("RGBA", ((720,720)), "WHITE")  # Create a white rgba background
+  temp.paste(this_img, (0, 0), this_img)                  # Paste the image on the background. Go to the links given below for details.       
+  temp = cv2.cvtColor(np.array(temp), cv2.COLOR_BGR2GRAY) 
+
+  temp = Image.fromarray(np.array(temp), mode='L')
+  temp.save(os.path.join(outdir,im))
+  if 'GTF2I' in im: 
+    print (os.path.join(outdir,im))
 
   
 # ---------------------------------------------------------------------------- #
@@ -84,7 +99,7 @@ import matplotlib.pyplot as plt
 
 
 # ! average of a few images after remove the "common consensus"
-# imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-has-mismatch-name-csv-no-ave/'
+# imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave/'
 
 imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Slide11/Group1'
 imlist = os.listdir(imdir)

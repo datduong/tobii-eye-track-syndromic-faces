@@ -27,10 +27,12 @@ def image_grid(imgs, rows, cols):
 
 
 SLIDE = 'Slide11'
-this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+SLIDE+'/Group1'
-outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//RemoveAveEyeTrack/'+SLIDE+'/probe3'
+this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+SLIDE+'/Group3'
+outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//RemoveAveEyeTrack/'+SLIDE+'/probe'
 
-# this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave'
+name_add = this_path.split('/')[-1]
+
+# this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg'
 # outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/probe_threshold'
 
 os.makedirs(outdir,exist_ok=True)
@@ -48,13 +50,14 @@ imlist = [i for i in imlist if 'POLR1C' not in i]
 
 SINGLE_SEG_THRESHOLD = 0
 SINGLE_IMG_THRESHOLD = 90 # int(.5*255)
+try_these = [0.4,0.5,0.6,0.7,0.8]
 
 img_arr = []
 seg_arr = []
 img_ave_pixel = []
 
 for cam_mask in imlist:
-  segment, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=SINGLE_SEG_THRESHOLD, smoothing=False, k=10, img_dir=this_path, prefix=None, transparent_to_white=True, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_off_pixel=SINGLE_IMG_THRESHOLD, outdir=outdir)
+  segment, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=SINGLE_SEG_THRESHOLD, smoothing=False, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_off_pixel=SINGLE_IMG_THRESHOLD, outdir=outdir)
   img_arr.append ( img )
   seg_arr.append ( segment )
   img_ave_pixel.append ( np.mean(img[img>0]) ) 
@@ -64,7 +67,7 @@ for cam_mask in imlist:
 # take average 
 
 ave_img = np.mean (img_arr,axis=0)
-print ('ave pix', np.mean(img_ave_pixel)) # ave pix 93.35937274461001 for all images, when use no threshold 
+print ('ave pix', np.mean(img_ave_pixel)) # ave pix 94.02328958247313 for all images, when use no threshold 
 
 ave_img_show=Image.fromarray(np.array(ave_img,dtype=np.uint8)).convert('L')
 
@@ -74,35 +77,35 @@ ave_seg_arr_show=Image.fromarray(np.array(seg_arr*255,dtype=np.uint8)).convert('
 # ---------------------------------------------------------------------------- #
 
 # ! take average of many segmentations
-out = scale_shift_ave_pixel_one_image(seg_arr,target=0.5,maxval=1,criteria_pixel=0,flip_01=False,scale=True) 
-brighter = Image.fromarray(np.array(out* 255,dtype=np.uint8)).convert('L')
-try_these = [0.4,0.5,0.6,0.7,0.8,0.9]
+# out = scale_shift_ave_pixel_one_image(seg_arr,target=0.5,maxval=1,criteria_pixel=0,flip_01=False,scale=True) 
+# brighter = Image.fromarray(np.array(out* 255,dtype=np.uint8)).convert('L')
+
 plot_arr = []
 for th in try_these: 
-  segment, temp = aoi_to_segmentation.cam_to_segmentation(out, threshold=th, smoothing=True, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None, outdir=outdir)
+  segment, temp = aoi_to_segmentation.cam_to_segmentation(seg_arr, threshold=th, smoothing=True, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None, outdir=outdir)
   out_show=Image.fromarray(np.array(segment* 255,dtype=np.uint8)).convert('L')
   plot_arr.append(out_show)
 
 
 all_img_as_pil = [ave_img_show, ave_seg_arr_show] + plot_arr
-grid = image_grid(all_img_as_pil, rows=1, cols=2+len(try_these))
-grid.save(os.path.join(outdir,"probe_ave_of_seg.png"))
+grid = image_grid(all_img_as_pil, rows=1, cols=len(all_img_as_pil))
+grid.save(os.path.join(outdir,name_add+"probe_ave_of_seg"+str(SINGLE_IMG_THRESHOLD)+"cut"+str(SINGLE_SEG_THRESHOLD)+".png"))
 
 # ---------------------------------------------------------------------------- #
 
 # ! take segmentation of average
-out = scale_shift_ave_pixel_one_image(ave_img/255.0,target=0.3,maxval=1,criteria_pixel=0,flip_01=False,scale=True) * 255
-brighter = Image.fromarray(np.array(out,dtype=np.uint8)).convert('L')
-try_these = [0.4,0.5,0.6,0.7,0.8,0.9]
+ave_img = scale_shift_ave_pixel_one_image(ave_img/255.0,target=0.2,maxval=1,criteria_pixel=0,flip_01=False,scale=True) * 255
+brighter = Image.fromarray(np.array(ave_img,dtype=np.uint8)).convert('L')
+
 plot_arr = []
 for th in try_these: 
-  segment, temp = aoi_to_segmentation.cam_to_segmentation(out, threshold=th, smoothing=True, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None, outdir=outdir)
+  segment, temp = aoi_to_segmentation.cam_to_segmentation(ave_img, threshold=th, smoothing=True, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None, outdir=outdir)
   out_show=Image.fromarray(np.array(segment* 255,dtype=np.uint8)).convert('L')
   plot_arr.append(out_show)
 
 
-all_img_as_pil = [ave_img_show, brighter] + plot_arr
-grid = image_grid(all_img_as_pil, rows=1, cols=2+len(try_these))
-grid.save(os.path.join(outdir,"probe_seg_of_ave_"+str(SINGLE_IMG_THRESHOLD)+".png"))
+all_img_as_pil = [ave_img_show,brighter] + plot_arr
+grid = image_grid(all_img_as_pil, rows=1, cols=len(all_img_as_pil))
+grid.save(os.path.join(outdir,name_add+"probe_seg_of_ave_rawpix"+str(SINGLE_IMG_THRESHOLD)+"cut"+str(SINGLE_SEG_THRESHOLD)+".png"))
 
 

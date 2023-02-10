@@ -5,6 +5,8 @@ import numpy as np
 # probably not every important 
 # move images around 
 
+# C:\Users\duongdb\Documents\Face11CondTobiiEyeTrack01112023\25radius-fix-mismatch-name-csv-no-ave-whtbg
+
 df = pd.read_csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/TableEyeTrackingSimple.csv').fillna('')
 
 columns = [ 'Syn vs Non Syn Correct',
@@ -13,9 +15,9 @@ columns = [ 'Syn vs Non Syn Correct',
             'Syn vs NonSyn Correct Syndrome name Incorrect']
 
 main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
-source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave'
+source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg'
 
-for slide_name in [17]: # np.arange(1,18)
+for slide_name in np.arange(1,18): # np.arange(1,18) [17]
 
   temp_df = df [ df['Image']==slide_name ]
   
@@ -66,7 +68,7 @@ for slide_name in [17]: # np.arange(1,18)
 
 # ! all images 
 main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
-source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave'
+source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg'
 
 for image_id in np.arange(1,18): 
   slide_name = str(image_id)
@@ -82,13 +84,3 @@ for image_id in np.arange(1,18):
     os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
 
 
-
-
-slide 17
-['CREBBP', 'GTF2I', 'LIMK1', 'PDGFRa', 'TCOF1', 'WHSC1'] ['17_BAF60a_25r.png', '17_BRD4_25r.png', '17_CREBBP_25r.png', '17_EP300_25r.png', '17_GTF21_25r.png', '17_KMT2_25r.png', '17_PDGFRa_25r.png', '17_PTPN11_25r.png', '17_RAD21_25r.png', '17_RITI_25r.png', '17_SMAD1_25r.png', '17_TBX1_25r.png', '17_TCOF1_25.png', '17_WHSC1_25r.png']
-slide 17
-['BAF60a', 'BRD4', 'EP300', 'KMT2', 'POLR1C', 'PTPN11', 'RAD21', 'RIT1', 'SMAD1', 'TBX1'] ['17_BAF60a_25r.png', '17_BRD4_25r.png', '17_CREBBP_25r.png', '17_EP300_25r.png', '17_GTF21_25r.png', '17_KMT2_25r.png', '17_PDGFRa_25r.png', '17_PTPN11_25r.png', '17_RAD21_25r.png', '17_RITI_25r.png', '17_SMAD1_25r.png', '17_TBX1_25r.png', '17_TCOF1_25.png', '17_WHSC1_25r.png']
-slide 17
-['PDGFRa'] ['17_BAF60a_25r.png', '17_BRD4_25r.png', '17_CREBBP_25r.png', '17_EP300_25r.png', '17_GTF21_25r.png', '17_KMT2_25r.png', '17_PDGFRa_25r.png', '17_PTPN11_25r.png', '17_RAD21_25r.png', '17_RITI_25r.png', '17_SMAD1_25r.png', '17_TBX1_25r.png', '17_TCOF1_25.png', '17_WHSC1_25r.png']
-slide 17
-['CREBBP', 'GTF2I', 'LIMK1', 'TCOF1', 'WHSC1'] ['17_BAF60a_25r.png', '17_BRD4_25r.png', '17_CREBBP_25r.png', '17_EP300_25r.png', '17_GTF21_25r.png', '17_KMT2_25r.png', '17_PDGFRa_25r.png', '17_PTPN11_25r.png', '17_RAD21_25r.png', '17_RITI_25r.png', '17_SMAD1_25r.png', '17_TBX1_25r.png', '17_TCOF1_25.png', '17_WHSC1_25r.png']

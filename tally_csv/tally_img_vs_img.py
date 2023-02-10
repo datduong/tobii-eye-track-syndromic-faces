@@ -22,7 +22,7 @@ if os.path.exists(this_path):
 
 # ---------------------------------------------------------------------------- #
 
-this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases'
+this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images'
 df = 'all_results.csv'
 df = pd.read_csv(os.path.join(this_path,df))
 

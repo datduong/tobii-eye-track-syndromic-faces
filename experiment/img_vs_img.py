@@ -38,12 +38,15 @@ do
   do
 
     # 0.4 0.5 0.6 0.7 0.8 0.9
+    # 0.2 0.3 0.4 0.5 0.6 0.7 0.8
     
-    for round_to_int in 0.2 0.25 0.3 0.35
+    for round_to_int in 0.2 0.3 0.4 0.5 0.6 0.7
     do
     
-    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --scale_or_shift_ave_pixel 0.3 --round_to_int $round_to_int --cut_off_pixel $cut_off_pixel
+    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --scale_or_shift_ave_pixel 0.2 --round_to_int $round_to_int --cut_off_pixel $cut_off_pixel
 
+    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --boot_num 1000 --scale_or_shift_ave_pixel 0.2 --round_to_int $round_to_int 
+    
     # --if_smoothing 
     
     done 
@@ -104,7 +107,7 @@ for i1, folder1 in enumerate(slide_folders):
       fout = open(script_name,'w')
       fout.write(script)
       fout.close()
-      os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=4 ' + script_name )
+      os.system('sbatch --time=00:45:00 --mem=4g --cpus-per-task=4 ' + script_name )
 
         
 #

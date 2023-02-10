@@ -59,7 +59,7 @@ use_face_seg_removal = True
 # slide_folders = ['Slide2','Slide11','Slide14','Slide12','Slide8'
 tobii_num = [2,11,14,12,8]
 tobii_choice = 'smoothk10-thresh0.1-avepix0.2-round0.3_seg_ave' 
-tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Diseases/thresh0.1-avepix0.2-round0.3_seg_ave'
+tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/thresh0.1-avepix0.2-round0.3_seg_ave'
 all_tobii_mask = os.listdir(tobii_dir)
 all_tobii_mask = [i for i in all_tobii_mask if tobii_choice in i]
 

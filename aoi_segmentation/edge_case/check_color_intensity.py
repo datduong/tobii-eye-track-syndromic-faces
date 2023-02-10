@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 # ! average of a few images after remove the "common consensus"
-# imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-has-mismatch-name-csv-no-ave/'
+# imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave/'
 
 
 def scale_shift_ave_pixel_one_image(arr,target=0.5,maxval=1,criteria_pixel=0,flip_01=False,scale=True): 
