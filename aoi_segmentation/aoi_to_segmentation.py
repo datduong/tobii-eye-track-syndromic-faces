@@ -170,24 +170,31 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     #     segmentation = np.array(segmentation_output, dtype="int")//255 # mod 255 to bring back to 0/1 scale
 
     # else:
-    mask = np.array(mask)
-    if int(np.max(mask)) > 1: # need to scale down to 0/1 
-        mask = mask/255.0 # @mask will have black background, and white spots, see "mask = 255 - mask"
-    # ! NOTE: use mask>threshold if white is eye-signal, and use < if black (low value pixel) is eye-signal
-    segmentation = np.array(mask > threshold, dtype="int") 
 
+    segmentation = None
+    if threshold is not None: 
+        mask = np.array(mask)
+        if int(np.max(mask)) > 1: # need to scale down to 0/1 
+            mask = mask/255.0 # @mask will have black background, and white spots, see "mask = 255 - mask"
+        # ! NOTE: use mask>threshold if white is eye-signal, and use < if black (low value pixel) is eye-signal
+        segmentation = np.array(mask > threshold, dtype="int") 
+
+        
     if face_parse_mask is not None: 
-        segmentation = segmentation * face_parse_mask
-    
-    if plot_segmentation: # ! plot
+        segmentation = segmentation * face_parse_mask # ! apply face parser to look at just the eyes
+
+
+    if segmentation is not None: 
+        # ! segmentation must be strict 0/1
+        assert np.count_nonzero((segmentation!=0) & (segmentation!=1))==0 # https://stackoverflow.com/questions/40595967/fast-way-to-check-if-a-numpy-array-is-binary-contains-only-0-and-1
+
+
+    if plot_segmentation and (segmentation is not None): # ! plot ? why not
         segmentation_as_png = Image.fromarray(np.uint8(segmentation*255), 'L') 
         prefix = 'smoothk'+str(k) if smoothing else 'nosmooth'
         prefix = prefix + '-' + 'thresh'+str(threshold) if threshold is not None else 'otsu'
         temp = prefix + '-' + cam_mask.split('/')[-1]
         segmentation_as_png.save(os.path.join(outdir,temp))
-   
-    # ! segmentation must be strict 0/1
-    assert np.count_nonzero((segmentation!=0) & (segmentation!=1))==0 # https://stackoverflow.com/questions/40595967/fast-way-to-check-if-a-numpy-array-is-binary-contains-only-0-and-1
 
     return segmentation, formated_input_img_as_np
 

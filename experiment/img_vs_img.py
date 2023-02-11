@@ -128,7 +128,7 @@ for i1, folder1 in enumerate(slide_folders):
       fout = open(script_name,'w')
       fout.write(script)
       fout.close()
-      os.system('sbatch --time=00:45:00 --mem=4g --cpus-per-task=4 ' + script_name )
+      os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=4 ' + script_name )
 
         
 #
