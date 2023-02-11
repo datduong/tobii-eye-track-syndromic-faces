@@ -121,7 +121,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
 
     # mask_01_use_after_smooth = None
     if cut_pixel_per_img is not None: 
-        if cut_pixel_per_img < 1: 
+        if (0 < cut_pixel_per_img) and (cut_pixel_per_img < 1): 
             sys.exit('cut off pix is on raw scale 0-255')
         #
         mask = np.array(mask)

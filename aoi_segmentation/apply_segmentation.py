@@ -81,7 +81,7 @@ def ave_of_segmentation (dict_segment,args=None):
   if args.scale_or_shift_ave_pixel is not None:
     arr = scale_shift_ave_pixel_one_image (arr, target=args.scale_or_shift_ave_pixel) # ! put on same scale, so easier to compare between 2 groups
 
-  threshold_to_binary = args.round_to_int if args.scale_or_shift_ave_pixel is not None else args.cut_seg_to_binary_1
+  threshold_to_binary = args.cut_ave_img_to_binary if args.scale_or_shift_ave_pixel is not None else args.cut_seg_to_binary_1
   seg_im, _ = aoi_to_segmentation.cam_to_segmentation(  cam_mask = arr, 
                                                         threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                         smoothing = True,
@@ -166,7 +166,7 @@ def segementation_of_ave (dict_segment,size,args):
 
   threshold_to_binary = None # ! if we do simple diff, then we don't need @seg_im because @threshold_to_binary acts on @seg_img
   if not args.simple_diff: 
-    threshold_to_binary = args.round_to_int if args.round_to_int is not None else None # ! scale ave pixel up to brighter value, need to use @round_to_int
+    threshold_to_binary = args.cut_ave_img_to_binary if args.cut_ave_img_to_binary is not None else None # ! scale ave pixel up to brighter value, need to use @cut_ave_img_to_binary
 
   seg_im, ave_im = aoi_to_segmentation.cam_to_segmentation(   cam_mask = ave_im, 
                                                               threshold = threshold_to_binary, # ! should use same setting for both set? 
@@ -288,7 +288,7 @@ def average_over_data (group_name, segmentation_of_group, args):
   prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
   prefix = prefix + '-smoothave' if args.smooth_ave else prefix
   prefix = prefix + '-pixcutave'+str(args.cut_pixel_ave_img) if args.cut_pixel_ave_img is not None else prefix
-  prefix = prefix + '-round'+str(args.round_to_int) if args.round_to_int is not None else prefix
+  prefix = prefix + '-round'+str(args.cut_ave_img_to_binary) if args.cut_ave_img_to_binary is not None else prefix
   prefix = prefix + '-diff' if args.simple_diff else prefix
 
   # ! take average of segmentation 
@@ -369,7 +369,7 @@ if __name__ == '__main__':
   parser.add_argument('--scale_or_shift_ave_pixel', type=float, default=None,
                         help='')
 
-  parser.add_argument('--round_to_int', type=float, default=None, 
+  parser.add_argument('--cut_ave_img_to_binary', type=float, default=None, 
                         help='')
 
   parser.add_argument('--compare_vs_this', type=str, default=None, 
