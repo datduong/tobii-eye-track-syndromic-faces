@@ -119,14 +119,20 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     if resize is not None: 
         mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
 
+    mask_01_use_after_smooth = None
     if cut_pixel_per_img is not None: 
         if cut_pixel_per_img < 1: 
             sys.exit('cut off pix is on raw scale 0-255')
+        #
         mask = np.array(mask)
-        mask = np.where (mask > cut_pixel_per_img, mask, 0) # keep pixel higher than this threshold. 
+        mask = np.where (mask > cut_pixel_per_img, mask, 0) # keep pixel higher than this threshold.
+        mask_01_use_after_smooth = np.where(mask>0,1,0) 
+        
 
     if smoothing:
         mask = cv2.boxFilter(mask, -1, (k, k)) # ! smoothing on original grayscale image. 
+        if mask_01_use_after_smooth is not None: 
+            mask = mask * mask_01_use_after_smooth # ! smooth will add in non-zero, so @cut_pixel_per_img is not a true cutoff anymore 
 
     # ---------------------------------------------------------------------------- #
     
