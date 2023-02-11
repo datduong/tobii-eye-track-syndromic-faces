@@ -50,5 +50,5 @@ for th in [0.1,0.2,0.3,0.4,0.5]:
     face_mask = np.array(Image.open(face_mask).convert('L'))
     face_mask = np.where (face_mask==0,0,1)
     
-    seg, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=th, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_off_pixel=None, face_parse_mask=face_mask)
+    seg, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=th, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, face_parse_mask=face_mask)
 

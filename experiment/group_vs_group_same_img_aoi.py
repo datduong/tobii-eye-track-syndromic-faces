@@ -94,8 +94,8 @@ for folder in slide_folders:
         g2_name = ','.join(g2_name)
         #
         script = re.sub('SLIDEPAIR',str(this_k),script_base)
-        script = re.sub('THRESHOLD_GROUP_1',str(threshold_group_1),script)
-        script = re.sub('THRESHOLD_GROUP_2',str(threshold_group_2),script)
+        script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script)
+        script = re.sub('THRESHOLD_GROUP_2',str(cut_seg_to_binary_2),script)
         script = re.sub('SLIDE_NUM',str(folder),script)
         script = re.sub('GROUP1',g1,script)
         script = re.sub('GROUP2',g2,script)

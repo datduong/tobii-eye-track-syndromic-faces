@@ -23,14 +23,14 @@ img_dir_group_1=$main_data_dir/Prelim/KS_25rad_01072023/IndividualFirstSecond_On
 img_dir_group_2=$main_data_dir/Prelim/KS_25rad_01072023/EfficientNetOcclusion
 
 this_k=20
-threshold_group_1=.7 # lower --> more "high" signal (strong focus)
-threshold_group_2=.7
+cut_seg_to_binary_1=.7 # lower --> more "high" signal (strong focus)
+cut_seg_to_binary_2=.7
 
 # output_dir=$main_data_dir/Prelim/KS_25rad_01072023/ # mean_vs_model.csv
 
 # python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing 
 
-# --threshold_group_1 $threshold_group_1 --threshold_group_2 $threshold_group_2
+# --cut_seg_to_binary_1 $cut_seg_to_binary_1 --cut_seg_to_binary_2 $cut_seg_to_binary_2
 
 # if_smoothing
 
@@ -45,7 +45,7 @@ mkdir $output_dir
 
 python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 
 
-# --threshold_group_1 $threshold_group_1 --threshold_group_2 $threshold_group_2
+# --cut_seg_to_binary_1 $cut_seg_to_binary_1 --cut_seg_to_binary_2 $cut_seg_to_binary_2
 
-python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 --threshold_group_1 $threshold_group_1 --threshold_group_2 $threshold_group_2
+python3 apply_segmentation.py --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --plot_segmentation --if_smoothing --boot_num 100 --cut_seg_to_binary_1 $cut_seg_to_binary_1 --cut_seg_to_binary_2 $cut_seg_to_binary_2
 

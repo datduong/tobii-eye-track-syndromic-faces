@@ -30,7 +30,7 @@ mkdir $output_dir
 
 # ! may as well do this at tons of threshold to see what happens
 
-cut_off_pixel=90
+cut_pixel_per_img=90
 
 for this_k in 10 
 do
@@ -40,19 +40,26 @@ do
     # 0.4 0.5 0.6 0.7 0.8 0.9
     # 0.2 0.3 0.4 0.5 0.6 0.7 0.8
 
-    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff
+    # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff
 
-    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2
+    # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2
 
-    python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave 
+    # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave 
     
-    for round_to_int in 0.2 0.3 0.4 0.5 0.6 0.7
+    # for round_to_int in 0.2 0.3 0.4 0.5 0.6 0.7
+    # do
+    
+    #   python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave --round_to_int $round_to_int
+      
+    # done 
+
+    for cut_pixel_ave_img in 45 90 135 170
     do
     
-      python3 apply_segmentation.py --threshold_group_1 $this_thres --threshold_group_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave --round_to_int $round_to_int
+      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img
       
     done 
-    
+
   done
 done 
 
@@ -63,8 +70,8 @@ done
 # threshold=.5, smoothing=True, k=3
 
 this_k = 10 # 20 # ! lower-->rough shape, higher-->more smooth
-threshold_group_1 = .5 # ! higher-->more white spot. lower-->less white spot
-threshold_group_2 = .5 
+cut_seg_to_binary_1 = .5 # ! higher-->more white spot. lower-->less white spot
+cut_seg_to_binary_2 = .5 
 
 # ---------------------------------------------------------------------------- #
 
@@ -100,8 +107,8 @@ for i1, folder1 in enumerate(slide_folders):
       #
       #
       script = re.sub('THIS_K',str(this_k),script_base)
-      script = re.sub('THRESHOLD_GROUP_1',str(threshold_group_1),script)
-      script = re.sub('THRESHOLD_GROUP_2',str(threshold_group_2),script)
+      script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script)
+      script = re.sub('THRESHOLD_GROUP_2',str(cut_seg_to_binary_2),script)
       script = re.sub('SLIDE_NUM1',str(folder1),script)
       script = re.sub('SLIDE_NUM2',str(folder2),script)
       script = re.sub('GROUP1',SUFFIX,script)

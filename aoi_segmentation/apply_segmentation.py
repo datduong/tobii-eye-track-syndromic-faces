@@ -50,7 +50,7 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
                                                       transparent_to_white = transparent_to_white,
                                                       resize = args.resize,
                                                       plot_segmentation = args.plot_segmentation,
-                                                      cut_off_pixel = args.cut_off_pixel, 
+                                                      cut_pixel_per_img = args.cut_pixel_per_img, 
                                                       hi_threshold = args.hi_threshold_group_1
                                                       )
 
@@ -82,7 +82,7 @@ def ave_of_segmentation (dict_segment,args=None):
   if args.scale_or_shift_ave_pixel is not None:
     arr = scale_shift_ave_pixel_one_image (arr, target=args.scale_or_shift_ave_pixel) # ! put on same scale, so easier to compare between 2 groups
 
-  threshold_to_binary = args.round_to_int if args.scale_or_shift_ave_pixel is not None else args.threshold_group_1
+  threshold_to_binary = args.round_to_int if args.scale_or_shift_ave_pixel is not None else args.cut_seg_to_binary_1
   seg_im, _ = aoi_to_segmentation.cam_to_segmentation(  cam_mask = arr, 
                                                         threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                         smoothing = True,
@@ -92,7 +92,7 @@ def ave_of_segmentation (dict_segment,args=None):
                                                         transparent_to_white = False,
                                                         resize = args.resize,
                                                         plot_segmentation = False,
-                                                        cut_off_pixel = None, 
+                                                        cut_pixel_per_img = None, 
                                                         hi_threshold = args.hi_threshold_group_1
                                                         )
     
@@ -166,8 +166,10 @@ def segementation_of_ave (dict_segment,size,args):
       _type_: _description_
   """
   ave_im = average_image (dict_segment, size=size, args=args) 
- 
-  threshold_to_binary = args.round_to_int if args.round_to_int is not None else None # ! scale ave pixel up to brighter value, need to use @round_to_int
+
+  threshold_to_binary = None # ! if we do simple diff, then we don't need @seg_im because @threshold_to_binary acts on @seg_img
+  if not args.simple_diff: 
+    threshold_to_binary = args.round_to_int if args.round_to_int is not None else None # ! scale ave pixel up to brighter value, need to use @round_to_int
 
   seg_im, ave_im = aoi_to_segmentation.cam_to_segmentation(   cam_mask = ave_im, 
                                                               threshold = threshold_to_binary, # ! should use same setting for both set? 
@@ -178,11 +180,11 @@ def segementation_of_ave (dict_segment,size,args):
                                                               transparent_to_white = False,
                                                               resize = args.resize,
                                                               plot_segmentation = False,
-                                                              cut_off_pixel = None, 
+                                                              cut_pixel_per_img = args.cut_pixel_ave_img, 
                                                               hi_threshold = args.hi_threshold_group_1
                                                               )
 
-  return seg_im, ave_im # @ave_im will not original average if we use "smoothing" and so forth. 
+  return seg_im, ave_im # @ave_im will not be original average if we use "smoothing" and so forth. 
 
   
 def diff_two_sets(dict1,dict2,args): 
@@ -283,11 +285,12 @@ def average_over_data (group_name, segmentation_of_group, args):
   
   # ! process data of 1 group, create output name
   prefix = 'k'+str(args.k) if args.if_smoothing else 'k0'
-  prefix = prefix + '-pixcut'+str(args.cut_off_pixel) if args.cut_off_pixel is not None else prefix
-  prefix = prefix + '-thresh'+str(args.threshold_group_1) if args.threshold_group_1 is not None else prefix+'-otsu'
+  prefix = prefix + '-pixcut'+str(args.cut_pixel_per_img) if args.cut_pixel_per_img is not None else prefix
+  prefix = prefix + '-thresh'+str(args.cut_seg_to_binary_1) if args.cut_seg_to_binary_1 is not None else prefix+'-otsu'
   prefix = prefix + '-avepix'+str(args.scale_or_shift_ave_pixel) if args.scale_or_shift_ave_pixel is not None else prefix
   prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
   prefix = prefix + '-smoothave' if args.smooth_ave else prefix
+  prefix = prefix + '-pixcutave'+str(args.cut_pixel_ave_img) if args.cut_pixel_ave_img is not None else prefix
   prefix = prefix + '-round'+str(args.round_to_int) if args.round_to_int is not None else prefix
   prefix = prefix + '-diff' if args.simple_diff else prefix
 
@@ -327,10 +330,10 @@ if __name__ == '__main__':
                               if_smoothing to True, otherwise no smoothing would \
                               be performed.')
 
-  parser.add_argument('--threshold_group_1', type=float, default= None,
+  parser.add_argument('--cut_seg_to_binary_1', type=float, default= None,
                         help="threshold heatmap, will not use otsu")
 
-  parser.add_argument('--threshold_group_2', type=float, default= None,
+  parser.add_argument('--cut_seg_to_binary_2', type=float, default= None,
                         help="threshold heatmap, will not use otsu")
 
   parser.add_argument('--hi_threshold_group_1', type=float, default= None,
@@ -363,7 +366,7 @@ if __name__ == '__main__':
   parser.add_argument('--boot_ave_segmentation', action='store_true', default= False,
                         help='')
 
-  parser.add_argument('--cut_off_pixel', type=float, default=None, 
+  parser.add_argument('--cut_pixel_per_img', type=float, default=None, 
                         help='')
 
   parser.add_argument('--scale_or_shift_ave_pixel', type=float, default=None,
@@ -383,8 +386,10 @@ if __name__ == '__main__':
 
   parser.add_argument('--smooth_ave', action='store_true', default= False,
                         help='')
-  
-  
+
+  parser.add_argument('--cut_pixel_ave_img', type=float, default=None, 
+                        help='')
+                        
   
   
   # ---------------------------------------------------------------------------- #
@@ -422,6 +427,16 @@ if __name__ == '__main__':
   if args.resize is not None: 
     args.resize = (args.resize, args.resize)
 
+  if args.cut_pixel_ave_img is not None: 
+    if args.cut_pixel_ave_img < 1: 
+      sys.exit("raw pixel cut off from 0-255")   
+
+  if args.cut_pixel_per_img is not None: 
+    if args.cut_pixel_per_img < 1: 
+      sys.exit("raw pixel cut off from 0-255")  
+
+  
+      
   # ---------------------------------------------------------------------------- #
   slide_number1 = args.img_dir_group_1.split('/')[-2] # @slide_number expects input /path/SlideXYZ/GroupABC
   group_name1 = slide_number1 + args.img_dir_group_1.split('/')[-1]
@@ -432,7 +447,7 @@ if __name__ == '__main__':
   # ---------------------------------------------------------------------------- #
   
   # ! get segmentation of Tobii, group 1
-  segmentation_group_1 = apply_segmentation(args.img_dir_group_1, threshold=args.threshold_group_1, transparent_to_white=args.transparent_to_white, args=args)
+  segmentation_group_1 = apply_segmentation(args.img_dir_group_1, threshold=args.cut_seg_to_binary_1, transparent_to_white=args.transparent_to_white, args=args)
   
   # ! process data group 1  
   ave1, _, prefix1 = average_over_data (group_name1, segmentation_group_1, args)
@@ -474,7 +489,7 @@ if __name__ == '__main__':
   else:
 
     # ! get segmentation of Tobii, group 2, or, we get deep learning heatmap as segmentation 
-    segmentation_group_2 = apply_segmentation(args.img_dir_group_2, threshold=args.threshold_group_2, transparent_to_white=args.transparent_to_white, args=args)
+    segmentation_group_2 = apply_segmentation(args.img_dir_group_2, threshold=args.cut_seg_to_binary_2, transparent_to_white=args.transparent_to_white, args=args)
 
     # ---------------------------------------------------------------------------- #
  

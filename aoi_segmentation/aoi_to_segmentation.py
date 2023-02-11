@@ -62,7 +62,7 @@ def calculate_simple_diff(pred_mask, gt_mask):
 
 
 
-def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_off_pixel=None, hi_threshold=None, face_parse_mask=None, outdir=None):
+def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_pixel_per_img=None, hi_threshold=None, face_parse_mask=None, outdir=None):
     """
     Threshold a saliency heatmap to binary segmentation mask.
     Args:
@@ -119,35 +119,24 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     if resize is not None: 
         mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
 
-    if cut_off_pixel is not None: 
+    if cut_pixel_per_img is not None: 
+        if cut_pixel_per_img < 1: 
+            sys.exit('cut off pix is on raw scale 0-255')
         mask = np.array(mask)
-        mask = np.where (mask > cut_off_pixel, mask, 0) # keep pixel higher than this threshold. 
+        mask = np.where (mask > cut_pixel_per_img, mask, 0) # keep pixel higher than this threshold. 
 
     if smoothing:
-        # heatmap = cv2.applyColorMap(mask, cv2.COLORMAP_JET) # ! no reason to apply a color mapping to make @heatmap. we already have @heatmap in wanted color
-        # gray_img = cv2.boxFilter(cv2.cvtColor(heatmap, cv2.COLOR_RGB2GRAY),
-        #                          -1, (k, k)) # ! no reason to convert grayscale if read in as grayscale
         mask = cv2.boxFilter(mask, -1, (k, k)) # ! smoothing on original grayscale image. 
 
-    if plot_grayscale_map: 
-        img = Image.fromarray(np.array(mask), 'L') # plot original image as grayscale
-        img.show()
-        
     # ---------------------------------------------------------------------------- #
     
     formated_input_img_as_np = np.copy(np.array(mask)) # ! may need this later for bootstrap, this is the input image after resize and smoothing and a bunch of other stuffs (if used)
-    segmentation_output = None
-    thresh = None
-    
+
     # ---------------------------------------------------------------------------- #
     
     # use Otsu's method to find threshold if no threshold is passed in
     if threshold is None:
         
-        # mask = np.uint8(255 * mask) # ! grayscale should already be on 0-255 unit scale
-        # mask = 255 - mask # ! this flip 0 into 255 and 255 into 0. 
-
-        # maxval = np.max(mask) 
         maxval = 255 # ! grayscale uses 0 to 255
         thresh = cv2.threshold(mask, 0, maxval, cv2.THRESH_OTSU)[1] # ! this should not differ from @segmentation_output ?? @thres looks same as @segmentation
 
@@ -178,10 +167,8 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         mask = np.array(mask)
         if int(np.max(mask)) > 1: # need to scale down to 0/1 
             mask = mask/255.0 # @mask will have black background, and white spots, see "mask = 255 - mask"
-        #
-        segmentation = np.array(mask > threshold, dtype="int") # ! NOTE: use mask>threshold if white is eye-signal, and use < if black (low value pixel) is eye-signal
-        # if hi_threshold is not None: 
-        #     segmentation = segmentation * np.array(mask > hi_threshold, dtype="int") # @hi_threshold remove super dark (original in red color) because everyone is looking at eyeballs/nose/mouth? 
+        # ! NOTE: use mask>threshold if white is eye-signal, and use < if black (low value pixel) is eye-signal
+        segmentation = np.array(mask > threshold, dtype="int") 
 
     if face_parse_mask is not None: 
         segmentation = segmentation * face_parse_mask
@@ -193,51 +180,8 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
         temp = prefix + '-' + cam_mask.split('/')[-1]
         segmentation_as_png.save(os.path.join(outdir,temp))
    
-    # segmentation must be strict 0/1
+    # ! segmentation must be strict 0/1
     assert np.count_nonzero((segmentation!=0) & (segmentation!=1))==0 # https://stackoverflow.com/questions/40595967/fast-way-to-check-if-a-numpy-array-is-binary-contains-only-0-and-1
 
     return segmentation, formated_input_img_as_np
 
-
-# ---------------------------------------------------------------------------- #
-
-# William Syndrome, Image 2, Syndrome vs Non Synrome Correct, Syndrome Name Incorrect
-# '22q11.2DS, Image 14, Syndromic vs non syndromic Correct, Syndrome name Correct.png'
- 
-# k = 20 # ! play around with this. 
-# threshold = .8 # np.nan # .5 # np.nan
-# smoothing = True
-
-
-# img_dir = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/Classify/b4ns448wlEqualss10lr3e-05dp0.2b64ntest1NormalNotAsUnaff/EvalTestImgLabelIndex4/AverageAttr_test_Occlusion2.0/'
-# img_name = 'KSSlide133_heatmappositiveAverage.png'
-# segmentation_occ, segmentation_output, thresh = cam_to_segmentation(img_name, threshold=threshold, smoothing=smoothing, k=k, img_dir=img_dir, prefix='smoothk10_', transparent_to_white=False,resize=(720,720))
-
-# # ---------------------------------------------------------------------------- #
-
-# k = 20 # ! play around with this. 
-# threshold = np.nan # .5 # np.nan
-# smoothing = True
-
-# img_dir = 'C:/Users/duongdb/Documents/OneDrive_2022-12-28/Eye Tracking aggregates 2/'
-
-# # for threshold in [.95,.9,.75]:    
-# #     print ('thres',threshold)  
-
-# img_name = 'Kabuki Syndrome, Image 11, Syndromic vs Non Syndromic Correct_2.png'
-
-# segmentation, segmentation_output, thresh = cam_to_segmentation(img_name, threshold=threshold, smoothing=smoothing, k=k, img_dir=img_dir, prefix='smoothk10_', transparent_to_white=True)
-
-# # np.count_nonzero((segmentation!=0) & (segmentation!=1))==0 # https://stackoverflow.com/questions/40595967/fast-way-to-check-if-a-numpy-array-is-binary-contains-only-0-and-1
-
-# img_name = 'Kabuki Syndrome, Image 11, Syndromic vs Non Syndromic Incorrect_2.png'
-# segmentation2, segmentation_output, thresh = cam_to_segmentation(img_name, threshold=threshold, smoothing=smoothing, k=k, img_dir=img_dir, prefix='smoothk10_', transparent_to_white=True)
-
-# mIoU = calculate_iou(segmentation, segmentation2, true_pos_only=False) 
-# print (mIoU)
-
-# mIoU = calculate_iou(segmentation, segmentation_occ, true_pos_only=False) 
-# print (mIoU)
-
-# mIoU = calculate_iou(segmentation2, segmentation_occ, true_pos_only=False) 
-# print (mIoU)
