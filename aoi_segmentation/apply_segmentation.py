@@ -76,7 +76,6 @@ def ave_of_segmentation (dict_segment,args=None):
   for im in imlist:
     arr=arr+dict_segment[im]['segmentation']
 
-  # average 
   arr = arr/N # ! @arr is matrix 720x720 (or so), has values 0-1. 1=white pixel
 
   if args.scale_or_shift_ave_pixel is not None:
@@ -107,14 +106,12 @@ def average_image (dict_segment,size=(720,720),args=None):
   for im in imlist:  
     arr=arr+np.array(dict_segment[im]['image'],dtype=float) # may not need np.array if img is already in np.
 
-  # average 
-  arr = arr/N
+  arr = arr/N # average 
 
   if args.scale_or_shift_ave_pixel is not None: 
     arr = 255 * scale_shift_ave_pixel_one_image (arr/255, target=args.scale_or_shift_ave_pixel) # ! DOES NOT WORK WELL? # put everything in 0/1 scale # bring back to 0/255
 
-  # Round values 
-  arr=np.array(np.round(arr),dtype=np.uint8)
+  arr=np.array(np.round(arr),dtype=np.uint8) # Round values into proper 0-255
   return arr 
 
 
@@ -390,8 +387,6 @@ if __name__ == '__main__':
   parser.add_argument('--cut_pixel_ave_img', type=float, default=None, 
                         help='')
                         
-  
-  
   # ---------------------------------------------------------------------------- #
   
   parser.add_argument('--metric', type=str,
@@ -424,6 +419,7 @@ if __name__ == '__main__':
 
 
   # ---------------------------------------------------------------------------- #
+  
   if args.resize is not None: 
     args.resize = (args.resize, args.resize)
 
@@ -436,8 +432,8 @@ if __name__ == '__main__':
       sys.exit("raw pixel cut off from 0-255")  
 
   
-      
   # ---------------------------------------------------------------------------- #
+  
   slide_number1 = args.img_dir_group_1.split('/')[-2] # @slide_number expects input /path/SlideXYZ/GroupABC
   group_name1 = slide_number1 + args.img_dir_group_1.split('/')[-1]
 
