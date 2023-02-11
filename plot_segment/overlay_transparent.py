@@ -79,15 +79,15 @@ this_group = 'Group1'
 
 # C:\Users\duongdb\Documents\Face11CondTobiiEyeTrack01112023\RemoveAveEyeTrack\Compare2Images\nosmooth-thresh0.0-avepix0.3-round0.7
 
-criteria = 'nosmooth-thresh0.0-avepix0.2-diff'
+criteria = 'k0-thresh0.0-avepix0.2-smoothave-pixcutave135.0-round'
 
-for threshold_used in [0] : # [0.2,0.3,0.5,0.6,0.7]: 
+for threshold_used in ['0.0'] : # [0.2,0.3,0.5,0.6,0.7]: 
     
   # tobii_choice = criteria+str(threshold_used)+'_seg_ave' 
   # tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+str(criteria)+str(threshold_used)
 
-  tobii_choice = criteria
-  tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+str(criteria)
+  tobii_choice = criteria+str(threshold_used)+'_img_ave'
+  tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+str(criteria)+str(threshold_used)
 
   
   if not os.path.exists( tobii_dir ): 

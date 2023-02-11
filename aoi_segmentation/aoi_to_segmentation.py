@@ -119,20 +119,20 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     if resize is not None: 
         mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
 
-    mask_01_use_after_smooth = None
+    # mask_01_use_after_smooth = None
     if cut_pixel_per_img is not None: 
         if cut_pixel_per_img < 1: 
             sys.exit('cut off pix is on raw scale 0-255')
         #
         mask = np.array(mask)
         mask = np.where (mask > cut_pixel_per_img, mask, 0) # keep pixel higher than this threshold.
-        mask_01_use_after_smooth = np.where(mask>0,1,0) 
+        # mask_01_use_after_smooth = np.where(mask>0,1,0) 
         
 
     if smoothing:
         mask = cv2.boxFilter(mask, -1, (k, k)) # ! smoothing on original grayscale image. 
-        if mask_01_use_after_smooth is not None: 
-            mask = mask * mask_01_use_after_smooth # ! smooth will add in non-zero, so @cut_pixel_per_img is not a true cutoff anymore 
+        # if mask_01_use_after_smooth is not None: 
+        #     mask = mask * mask_01_use_after_smooth # ! smooth will add in non-zero, so @cut_pixel_per_img is not a true cutoff anymore 
 
     # ---------------------------------------------------------------------------- #
     
@@ -141,40 +141,40 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     # ---------------------------------------------------------------------------- #
     
     # use Otsu's method to find threshold if no threshold is passed in
-    if threshold is None:
+    # if (threshold is None) :
         
-        maxval = 255 # ! grayscale uses 0 to 255
-        thresh = cv2.threshold(mask, 0, maxval, cv2.THRESH_OTSU)[1] # ! this should not differ from @segmentation_output ?? @thres looks same as @segmentation
+    #     maxval = 255 # ! grayscale uses 0 to 255
+    #     thresh = cv2.threshold(mask, 0, maxval, cv2.THRESH_OTSU)[1] # ! this should not differ from @segmentation_output ?? @thres looks same as @segmentation
 
-        if plot_default_otsu: # ! plot
-            img = Image.fromarray(np.uint8(thresh), 'L')
-            img.show()
+    #     if plot_default_otsu: # ! plot
+    #         img = Image.fromarray(np.uint8(thresh), 'L')
+    #         img.show()
 
-        # draw out contours
-        cnts = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        cnts = cnts[0] if len(cnts) == 2 else cnts[1]
-        polygons = []
-        for cnt in cnts:
-            if len(cnt) > 1:
-                polygons.append([list(pt[0]) for pt in cnt])
+    #     # draw out contours
+    #     cnts = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    #     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    #     polygons = []
+    #     for cnt in cnts:
+    #         if len(cnt) > 1:
+    #             polygons.append([list(pt[0]) for pt in cnt])
 
-        # create segmentation based on contour
-        img_dims = (mask.shape[1], mask.shape[0])
-        segmentation_output = Image.new("L", img_dims, "#000000") # ! using "Image.new('1', img_dims)" creates a black image. # https://pillow.readthedocs.io/en/stable/reference/Image.html
-        for polygon in polygons:
-            coords = [(point[0], point[1]) for point in polygon]
-            ImageDraw.Draw(segmentation_output).polygon(coords,
-                                                        outline=255,
-                                                        fill=255) # ! fill=1 fills in white spots, color image 0=black, 255=white
+    #     # create segmentation based on contour
+    #     img_dims = (mask.shape[1], mask.shape[0])
+    #     segmentation_output = Image.new("L", img_dims, "#000000") # ! using "Image.new('1', img_dims)" creates a black image. # https://pillow.readthedocs.io/en/stable/reference/Image.html
+    #     for polygon in polygons:
+    #         coords = [(point[0], point[1]) for point in polygon]
+    #         ImageDraw.Draw(segmentation_output).polygon(coords,
+    #                                                     outline=255,
+    #                                                     fill=255) # ! fill=1 fills in white spots, color image 0=black, 255=white
             
-        segmentation = np.array(segmentation_output, dtype="int")//255 # mod 255 to bring back to 0/1 scale
+    #     segmentation = np.array(segmentation_output, dtype="int")//255 # mod 255 to bring back to 0/1 scale
 
-    else:
-        mask = np.array(mask)
-        if int(np.max(mask)) > 1: # need to scale down to 0/1 
-            mask = mask/255.0 # @mask will have black background, and white spots, see "mask = 255 - mask"
-        # ! NOTE: use mask>threshold if white is eye-signal, and use < if black (low value pixel) is eye-signal
-        segmentation = np.array(mask > threshold, dtype="int") 
+    # else:
+    mask = np.array(mask)
+    if int(np.max(mask)) > 1: # need to scale down to 0/1 
+        mask = mask/255.0 # @mask will have black background, and white spots, see "mask = 255 - mask"
+    # ! NOTE: use mask>threshold if white is eye-signal, and use < if black (low value pixel) is eye-signal
+    segmentation = np.array(mask > threshold, dtype="int") 
 
     if face_parse_mask is not None: 
         segmentation = segmentation * face_parse_mask
