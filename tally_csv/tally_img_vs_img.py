@@ -29,9 +29,14 @@ df = pd.read_csv(os.path.join(this_path,df))
 # nosmooth-thresh0.0-avepix0.3-round
 # nosmooth-rawpixcut90.0-thresh0.0-avepix0.3-round
 
-criteria_array = [ 'nosmooth-thresh0.0-avepix0.3-round' + str(i) for i in [0.2, 0.3, 0.4 ,0.5 ,0.6 ,0.7, 0.8]]
+# criteria_array = [ 'nosmooth-thresh0.0-avepix0.3-round' + str(i) for i in [0.2, 0.3, 0.4 ,0.5 ,0.6 ,0.7, 0.8]]
 
-group_array = ['Group1','Group3']
+criteria_array = ['k0-thresh0.0-avepix0.2-smoothave-pixcutave'+s+'-round0.3' for s in '45.0 70.0 90.0 110.0 135.0 170.0 190.0'.split() ]
+
+group_array = ['Group1','Group3','Group2','Group4','all']
+
+group_array = ['Group1','all']
+
 
 slide_count = 17
 

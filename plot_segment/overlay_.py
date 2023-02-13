@@ -75,80 +75,81 @@ use_face_seg_removal = True
 # slide_folders = ['Slide2','Slide11','Slide14','Slide12','Slide8'
 tobii_num = np.arange(2,18)
 
-this_group = 'Group1'
 
 # C:\Users\duongdb\Documents\Face11CondTobiiEyeTrack01112023\RemoveAveEyeTrack\Compare2Images\nosmooth-thresh0.0-avepix0.3-round0.7
 
-criteria = 'k0-thresh0.0-avepix0.2-smoothave-pixcutave135.0-round'
+criteria = 'k0-thresh0.0-avepix0.2-smoothave-pixcutave45.0-round'
 
 # C:\Users\duongdb\Documents\Face11CondTobiiEyeTrack01112023\RemoveAveEyeTrack\Compare2Images\k0-thresh0.0-avepix0.2-smoothave-pixcutave135.0-round0.0
 
-for threshold_used in [0.0,0.2,0.3,0.5,0.6,0.7]: 
-    
-  tobii_choice = criteria+str(threshold_used)+'_img_ave'  # '_seg_ave' 
-  tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+str(criteria)+str(threshold_used)
-  if not os.path.exists( tobii_dir ): 
-    continue
-  
-  all_tobii_mask = os.listdir(tobii_dir)
+for this_group in ['Group3'] : # ['Group1', 'all'] : 
 
-  all_tobii_mask = [i for i in all_tobii_mask if tobii_choice in i]
-  all_tobii_mask = [i for i in all_tobii_mask if this_group in i]
-
-  all_img_as_pil = []
-
-  for tobii_index, this_tobii in enumerate(tobii_num) : 
-
-    image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG'
-
-    disease_english_name = id_to_english[this_tobii]
-    output_name = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+model_choice+disease_english_name+'_overlay.png'
-
-    image = Image.open(image).convert("L")
-    image = np.array(image)
-
-    this_tobii_mask = [i for i in all_tobii_mask if 'Slide'+str(this_tobii)+'G' in i]
-    if len(this_tobii_mask) == 0: 
+  for threshold_used in [0.3]: 
+      
+    tobii_choice = criteria+str(threshold_used)+'_seg_ave'  # '_seg_ave'  _img_ave
+    tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+str(criteria)+str(threshold_used)
+    if not os.path.exists( tobii_dir ): 
       continue
-    #
-    this_tobii_mask = this_tobii_mask[0]
-
-    mask_as_img = [
-                  os.path.join(tobii_dir,this_tobii_mask)
-                  ]
-
-
-    masks = []
-    for this_mask in mask_as_img: 
-      this_mask = Image.open(this_mask).convert("L")
-      
-      if use_face_seg_removal: 
-        face_remove = Image.open(os.path.join(face_seg_dir,'Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG')).convert("L")
-        face_remove = np.array (face_remove)
-        face_remove = np.where (face_remove==0,0,1)
-        this_mask = np.array(this_mask)
-        this_mask = this_mask * face_remove 
-        
-      this_mask = np.array(this_mask,dtype="bool") # should be pure black/white style ??
-      masks.append(this_mask)
-      
-    # [Optional] prepare labels
-    # mask_labels = [f"Mask_{i}" for i in range(len(masks))]
-
-    # [Optional] prepare colors
-    # https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
-    cmap = plt.cm.tab10(np.arange(6)) # np.arange(len(mask_labels))
-    cmap = cmap[[2],:]
-    # Laminate your image!
-    # fig = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.5) # matplotlib.figure.Figure
-    # Do with that image whatever you want to do.
-    # fig.savefig(output_name, bbox_inches="tight", dpi=300)
     
-    pil_img = overlay_masks(image, masks, labels=['none'], colors=cmap, mask_alpha=0.4, return_pil_image=True) # matplotlib.figure.Figure
-    all_img_as_pil.append(pil_img)
+    all_tobii_mask = os.listdir(tobii_dir)
+
+    all_tobii_mask = [i for i in all_tobii_mask if tobii_choice in i]
+    all_tobii_mask = [i for i in all_tobii_mask if this_group in i]
+
+    all_img_as_pil = []
+
+    for tobii_index, this_tobii in enumerate(tobii_num) : 
+
+      image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG'
+
+      disease_english_name = id_to_english[this_tobii]
+      output_name = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+model_choice+disease_english_name+'_overlay.png'
+
+      image = Image.open(image).convert("L")
+      image = np.array(image)
+
+      this_tobii_mask = [i for i in all_tobii_mask if 'Slide'+str(this_tobii) in i]
+      if len(this_tobii_mask) == 0: 
+        continue
+      #
+      this_tobii_mask = this_tobii_mask[0]
+
+      mask_as_img = [
+                    os.path.join(tobii_dir,this_tobii_mask)
+                    ]
 
 
-  #
-  grid = image_grid(all_img_as_pil, rows=4, cols=4)
-  grid.save(os.path.join(tobii_dir,this_group+"tobii_overlay.png"))
+      masks = []
+      for this_mask in mask_as_img: 
+        this_mask = Image.open(this_mask).convert("L")
+        
+        if use_face_seg_removal: 
+          face_remove = Image.open(os.path.join(face_seg_dir,'Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG')).convert("L")
+          face_remove = np.array (face_remove)
+          face_remove = np.where (face_remove==0,0,1)
+          this_mask = np.array(this_mask)
+          this_mask = this_mask * face_remove 
+          
+        this_mask = np.array(this_mask,dtype="bool") # should be pure black/white style ??
+        masks.append(this_mask)
+        
+      # [Optional] prepare labels
+      # mask_labels = [f"Mask_{i}" for i in range(len(masks))]
+
+      # [Optional] prepare colors
+      # https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
+      cmap = plt.cm.tab10(np.arange(6)) # np.arange(len(mask_labels))
+      cmap = cmap[[2],:]
+      # Laminate your image!
+      # fig = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.5) # matplotlib.figure.Figure
+      # Do with that image whatever you want to do.
+      # fig.savefig(output_name, bbox_inches="tight", dpi=300)
+      
+      pil_img = overlay_masks(image, masks, labels=['none'], colors=cmap, mask_alpha=0.4, return_pil_image=True) # matplotlib.figure.Figure
+      all_img_as_pil.append(pil_img)
+
+
+    #
+    grid = image_grid(all_img_as_pil, rows=4, cols=4)
+    grid.save(os.path.join(tobii_dir,this_group+"tobii_overlay.png"))
 
