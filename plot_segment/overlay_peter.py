@@ -78,11 +78,12 @@ tobii_num = np.arange(2,18)
 
 # C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/nosmooth-thresh0.0-avepix0.3-round0.7
 
-criteria = 'k0-thresh0.0-avepix0.2-smoothave-pixcutave45.0-round'
+criteria = 'k0-thresh0.0-avepix0.2-smoothave-pixcutave135.0-round'
 
+# k0-thresh0.0-avepix0.2-smoothave-pixcutave110.0-round0.3
 # C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/k0-thresh0.0-avepix0.2-smoothave-pixcutave135.0-round0.0
 
-for this_group in ['Group3'] : # ['Group1', 'all'] : 
+for this_group in ['all'] : # ['Group1', 'all'] : 
 
   for threshold_used in [0.3]: 
       
@@ -90,6 +91,10 @@ for this_group in ['Group3'] : # ['Group1', 'all'] :
     tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+str(criteria)+str(threshold_used)
     if not os.path.exists( tobii_dir ): 
       continue
+
+    #
+    peter_data_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Compare2Images/'+str(criteria)+str(threshold_used)
+    # 
     
     all_tobii_mask = os.listdir(tobii_dir)
 
@@ -103,6 +108,7 @@ for this_group in ['Group3'] : # ['Group1', 'all'] :
       image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG'
 
       disease_english_name = id_to_english[this_tobii]
+      
       output_name = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+model_choice+disease_english_name+'_overlay.png'
 
       image = Image.open(image).convert("L")
@@ -114,21 +120,25 @@ for this_group in ['Group3'] : # ['Group1', 'all'] :
       #
       this_tobii_mask = this_tobii_mask[0]
 
-      this_model_mask = [i for i in all_model_mask if disease_english_name+'Slide' in i]
+      # this_model_mask = [i for i in all_model_mask if disease_english_name+'Slide' in i]
 
-      if len(this_model_mask)==0:
-        continue
+      # if len(this_model_mask)==0:
+      #   continue
        
-      this_model_mask = this_model_mask[0]
-  
+      # this_model_mask = this_model_mask[0]
+
+      if not os.path.exists(os.path.join(peter_data_dir,this_tobii_mask)): 
+        print (os.path.join(peter_data_dir,this_tobii_mask))
+        continue
+      
       mask_as_img = [
-                os.path.join(model_dir,this_model_mask), 
-                os.path.join(tobii_dir,this_tobii_mask)
+                os.path.join(tobii_dir,this_tobii_mask),
+                os.path.join(peter_data_dir,this_tobii_mask), 
                 ]
 
       mask_labels = [
-                'Model', 
-                'Human'
+                'NIH particip.',
+                'Peter particip.',    
                 ]
         
       masks = []
@@ -151,17 +161,17 @@ for this_group in ['Group3'] : # ['Group1', 'all'] :
       # [Optional] prepare colors
       # https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
       cmap = plt.cm.tab10(np.arange(6)) # np.arange(len(mask_labels))
-      cmap = cmap[[3,2],:]
+      cmap = cmap[[2,3],:]
       # Laminate your image!
       # fig = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.5) # matplotlib.figure.Figure
       # Do with that image whatever you want to do.
       # fig.savefig(output_name, bbox_inches="tight", dpi=300)
       
-      pil_img = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.3, return_pil_image=True) # matplotlib.figure.Figure
+      pil_img = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.4, return_pil_image=True) # matplotlib.figure.Figure
       all_img_as_pil.append(pil_img)
 
 
     #
     grid = image_grid(all_img_as_pil, rows=4, cols=4)
-    grid.save(os.path.join(tobii_dir,this_group+"tobii_overlay.png"))
+    grid.save(os.path.join(tobii_dir,this_group+"tobii_overlay_peter.png"))
 

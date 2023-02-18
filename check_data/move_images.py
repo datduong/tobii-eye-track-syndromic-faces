@@ -2,22 +2,38 @@ import os,sys,re,pickle
 import pandas as pd
 import numpy as np 
 
-# probably not every important 
-# move images around 
+# ---------------------------------------------------------------------------- #
 
-# C:\Users\duongdb\Documents\Face11CondTobiiEyeTrack01112023\25radius-fix-mismatch-name-csv-no-ave-whtbg
+main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
 
-df = pd.read_csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/TableEyeTrackingSimple.csv').fillna('')
+source = '25radius-no-ave-whtbg-peter' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
 
+final_output_dir = 'RemoveAveEyeTrackPeter' # RemoveAveEyeTrack
+
+df = 'TableEyeTrackingSimplePeter.csv'
+
+# ---------------------------------------------------------------------------- #
+
+source = os.path.join(main_dir,source)
+
+# ---------------------------------------------------------------------------- #
+
+df = pd.read_csv(os.path.join(main_dir,df)).fillna('')
 columns = [ 'Syn vs Non Syn Correct',
             'Syn vs Non Syn Incorrect', 	 
             'Syn vs NonSyn Correct Syndrome Name Correct',
             'Syn vs NonSyn Correct Syndrome name Incorrect']
 
-main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
-source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg'
+# ---------------------------------------------------------------------------- #
+# # remove white spaces
+# for col in columns: 
+#   temp = df[col].values 
+#   temp = [str(i).strip() for i in temp]
+#   df[col] = temp 
 
-for slide_name in np.arange(1,18): # np.arange(1,18) [17]
+# ---------------------------------------------------------------------------- #
+
+for slide_name in np.arange(1,18) : # np.arange(1,18) [17]
 
   temp_df = df [ df['Image']==slide_name ]
   
@@ -43,9 +59,9 @@ for slide_name in np.arange(1,18): # np.arange(1,18) [17]
       continue
 
     print ('slide', slide_name)
-    print (key_name,im)
+    print (key_name,'\n',im)
     
-    final_dir = os.path.join(main_dir,'RemoveAveEyeTrack','Slide'+slide_name,'Group'+str(index+1))
+    final_dir = os.path.join(main_dir,final_output_dir,'Slide'+slide_name,'Group'+str(index+1))
     if not os.path.exists(final_dir): 
       os.makedirs(final_dir)
 
@@ -54,7 +70,7 @@ for slide_name in np.arange(1,18): # np.arange(1,18) [17]
       
     for i in im: 
       for k in key_name: 
-        if k in i : 
+        if ('_'+k+'.png') in i : # ! CHECK NAMING CONVENTION 
           os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
           # ! move their results from slide 1 --> can later use as baseline 
           # user = i.split('_')[1] # user name 
@@ -67,15 +83,13 @@ for slide_name in np.arange(1,18): # np.arange(1,18) [17]
 # ---------------------------------------------------------------------------- #
 
 # ! all images 
-main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
-source='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg'
 
 for image_id in np.arange(1,18): 
   slide_name = str(image_id)
   im = os.listdir(source)
   im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
   
-  final_dir = os.path.join(main_dir,'RemoveAveEyeTrack','Slide'+slide_name,'all')
+  final_dir = os.path.join(main_dir,final_output_dir,'Slide'+slide_name,'all')
   if not os.path.exists(final_dir): 
     os.makedirs(final_dir)
     
