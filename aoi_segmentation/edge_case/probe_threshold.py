@@ -34,8 +34,8 @@ def image_grid(imgs, rows, cols):
 
 # name_add = this_path.split('/')[-1]
 
-this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg'
-outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/probe_threshold'
+this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-no-ave-whtbg-peter'
+outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/probe_threshold_peter'
 name_add = 'all'
 
 # ---------------------------------------------------------------------------- #
@@ -73,7 +73,7 @@ for cam_mask in imlist:
 
 ave_img = np.mean (img_arr,axis=0)
 print ('ave pix', np.mean(img_ave_pixel)) # ave pix 94.02328958247313 for all images, when use no threshold 
-print ('std', np.mean(img_ave_pixel)) # ave pix 94.02328958247313 for all images, when use no threshold 
+print ('std', np.std(img_ave_pixel)) # ave pix 94.02328958247313 for all images, when use no threshold 
 print ('std', np.quantile(img_ave_pixel, [.1,.25,.5,.75,.9])) # ave pix 94.02328958247313 for all images, when use no threshold 
 
 ave_img_show=Image.fromarray(np.array(ave_img,dtype=np.uint8)).convert('L')

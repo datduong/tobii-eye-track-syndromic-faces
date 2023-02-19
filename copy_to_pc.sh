@@ -2,9 +2,9 @@
 
 mkdir /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Compare2Images
 cd /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Compare2Images
-criteria=k0-thresh0.0-avepix0.2-smoothave-pixcutave135.0-round0.3
+criteria=k0-thresh0.0-avepix0.2-smoothave-pixcutave170.0-round0.3
 
-# k0-thresh0.0-avepix0.2-smoothave-pixcutave45.0-round0.3
+# k0-thresh0.0-avepix0.2-smoothave-pixcutave170.0-round0.3
 # 110
 
 mkdir $criteria
@@ -15,7 +15,7 @@ scp -r $helix:$datadir/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Co
 
 mkdir /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images
 cd /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images
-criteria=k0-thresh0.0-avepix0.2-smoothave-pixcutave110.0-round0.3
+criteria=k0-thresh0.0-avepix0.2-smoothave-pixcutave170.0-round0.3
 
 # k0-thresh0.0-avepix0.2-smoothave-pixcutave45.0-round0.3
 # 110

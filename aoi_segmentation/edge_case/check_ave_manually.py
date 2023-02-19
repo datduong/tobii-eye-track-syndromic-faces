@@ -16,9 +16,9 @@ import matplotlib.pyplot as plt
 # ! average of a few images after remove the "common consensus"
 # imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave/'
 
-imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Slide2/Group1'
+imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KeepAveEyeTrackPeter/Slide6/all'
 # total_average_no_totave_25radius_slide_11_group1
-outputname = 'PeterSlide2Group1'
+outputname = 'PeterSlide6AllKeepAve'
 
 imlist = os.listdir(imdir)
 

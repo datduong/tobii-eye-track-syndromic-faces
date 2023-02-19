@@ -78,12 +78,12 @@ tobii_num = np.arange(2,18)
 
 # C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/nosmooth-thresh0.0-avepix0.3-round0.7
 
-criteria = 'k0-thresh0.0-avepix0.2-smoothave-pixcutave135.0-round'
+criteria = 'k0-thresh0.0-avepix0.2-smoothave-pixcutave170.0-round'
 
 # k0-thresh0.0-avepix0.2-smoothave-pixcutave110.0-round0.3
 # C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/k0-thresh0.0-avepix0.2-smoothave-pixcutave135.0-round0.0
 
-for this_group in ['all'] : # ['Group1', 'all'] : 
+for this_group in ['Group1','Group3','all'] : # ['Group1', 'all'] : 
 
   for threshold_used in [0.3]: 
       

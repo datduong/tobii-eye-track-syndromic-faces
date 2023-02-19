@@ -6,9 +6,9 @@ import numpy as np
 
 main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
 
-source = '25radius-no-ave-whtbg-peter' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
+source = '25radius-keep-ave-whtbg-peter' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
 
-final_output_dir = 'RemoveAveEyeTrackPeter' # RemoveAveEyeTrack
+final_output_dir = 'KeepAveEyeTrackPeter' # RemoveAveEyeTrack
 
 df = 'TableEyeTrackingSimplePeter.csv'
 
