@@ -35,7 +35,7 @@ def image_grid(imgs, rows, cols):
 # name_add = this_path.split('/')[-1]
 
 this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-no-ave-whtbg-peter'
-outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/probe_threshold_peter'
+outdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/probe_threshold_our'
 name_add = 'all'
 
 # ---------------------------------------------------------------------------- #
@@ -80,6 +80,23 @@ ave_img_show=Image.fromarray(np.array(ave_img,dtype=np.uint8)).convert('L')
 
 seg_arr = np.mean (seg_arr, axis=0)
 ave_seg_arr_show=Image.fromarray(np.array(seg_arr*255,dtype=np.uint8)).convert('L') # ! raw segmentation average
+
+# ---------------------------------------------------------------------------- #
+
+# peter data
+# ave pix 103.34141253298583
+# std 10.67015229954374
+# std [ 88.24093877  97.24918663 105.58500716 110.42567875 114.90847804]
+
+thisimg = Image.open('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Compare2Images/k0-thresh0.0-diff/k0-thresh0.0-diff_img_aveSlide6all.png') 
+thisimg = np.array(thisimg)
+np.quantile(thisimg[thisimg>0].flatten(),[.1,.25,.5,.75,.9]) 
+# array([ 2.,  5.,  8., 20., 38.])
+
+thisimg = Image.open('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/k0-thresh0.0-diff/k0-thresh0.0-diff_img_aveSlide6all.png') 
+thisimg = np.array(thisimg)
+np.quantile(thisimg[thisimg>0].flatten(),[.1,.25,.5,.75,.9]) 
+# array([ 2.,  6., 15., 31., 47.])
 
 # ---------------------------------------------------------------------------- #
 

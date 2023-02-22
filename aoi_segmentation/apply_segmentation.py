@@ -108,6 +108,9 @@ def average_image (dict_segment,size=(720,720),args=None):
 
   arr = arr/N # average 
 
+  if args.remove_low_before_scale is not None: 
+    arr = np.where(arr>args.remove_low_before_scale, arr, 0) # remove very faint low signal, too many low faint signal will make "visible signals" very bright 
+    
   if args.scale_or_shift_ave_pixel is not None: 
     arr = 255 * scale_shift_ave_pixel_one_image (arr/255, target=args.scale_or_shift_ave_pixel) # ! DOES NOT WORK WELL? # put everything in 0/1 scale # bring back to 0/255
 
@@ -284,10 +287,11 @@ def average_over_data (group_name, segmentation_of_group, args):
   prefix = 'k'+str(args.k) if args.if_smoothing else 'k0'
   prefix = prefix + '-pixcut'+str(args.cut_pixel_per_img) if args.cut_pixel_per_img is not None else prefix
   prefix = prefix + '-thresh'+str(args.cut_seg_to_binary_1) if args.cut_seg_to_binary_1 is not None else prefix+'-otsu'
+  prefix = prefix + '-cutbfscale'+str(args.remove_low_before_scale) if args.remove_low_before_scale is not None else prefix
   prefix = prefix + '-avepix'+str(args.scale_or_shift_ave_pixel) if args.scale_or_shift_ave_pixel is not None else prefix
   prefix = prefix + '-bootseg' if args.boot_ave_segmentation else prefix
   prefix = prefix + '-smoothave' if args.smooth_ave else prefix
-  prefix = prefix + '-pixcutave'+str(args.cut_pixel_ave_img) if args.cut_pixel_ave_img is not None else prefix
+  prefix = prefix + '-pixcutave'+str(args.cut_pixel_ave_img) if args.cut_pixel_ave_img is not None else prefix # smoothing introduce extra "signal" where there wasn't signal, so we need this.
   prefix = prefix + '-round'+str(args.cut_ave_img_to_binary) if args.cut_ave_img_to_binary is not None else prefix
   prefix = prefix + '-diff' if args.simple_diff else prefix
 
@@ -386,7 +390,11 @@ if __name__ == '__main__':
 
   parser.add_argument('--cut_pixel_ave_img', type=float, default=None, 
                         help='')
-                        
+
+  parser.add_argument('--remove_low_before_scale', type=float, default=None, 
+                        help='before scale color intensity up, we remove random noise signals (e.g. very low pixel values)') 
+  
+  
   # ---------------------------------------------------------------------------- #
   
   parser.add_argument('--metric', type=str,

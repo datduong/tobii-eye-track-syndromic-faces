@@ -6,11 +6,17 @@ import numpy as np
 
 main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
 
-source = '25radius-keep-ave-whtbg-peter' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
+# ---------------------------------------------------------------------------- #
 
-final_output_dir = 'KeepAveEyeTrackPeter' # RemoveAveEyeTrack
+source = '25radius-fix-mismatch-name-csv-no-ave-whtbg' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
+final_output_dir = 'RemoveAveEyeTrack' # RemoveAveEyeTrack
+df = 'TableEyeTrackingSimple.csv'
 
-df = 'TableEyeTrackingSimplePeter.csv'
+# ---------------------------------------------------------------------------- #
+
+# source = '25radius-keep-ave-whtbg-peter' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
+# final_output_dir = 'KeepAveEyeTrackPeter' # RemoveAveEyeTrack
+# df = 'TableEyeTrackingSimplePeter.csv'
 
 # ---------------------------------------------------------------------------- #
 
@@ -33,7 +39,7 @@ columns = [ 'Syn vs Non Syn Correct',
 
 # ---------------------------------------------------------------------------- #
 
-for slide_name in np.arange(1,18) : # np.arange(1,18) [17]
+for slide_name in np.arange(1,18) : # np.arange(1,18) : # np.arange(1,18) [17]
 
   temp_df = df [ df['Image']==slide_name ]
   
@@ -59,7 +65,7 @@ for slide_name in np.arange(1,18) : # np.arange(1,18) [17]
       continue
 
     print ('slide', slide_name)
-    print (key_name,'\n',im)
+    # print (key_name,'\n',im)
     
     final_dir = os.path.join(main_dir,final_output_dir,'Slide'+slide_name,'Group'+str(index+1))
     if not os.path.exists(final_dir): 
@@ -70,7 +76,9 @@ for slide_name in np.arange(1,18) : # np.arange(1,18) [17]
       
     for i in im: 
       for k in key_name: 
-        if ('_'+k+'.png') in i : # ! CHECK NAMING CONVENTION 
+        # ! peter naming is using 1_G[number].png, we're using "1_[alphabet]_25r"
+        # if ('_'+k+'.png') in i : # ! CHECK NAMING CONVENTION... 
+        if ('_'+k) in i : # ! CHECK NAMING CONVENTION... 
           os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
           # ! move their results from slide 1 --> can later use as baseline 
           # user = i.split('_')[1] # user name 

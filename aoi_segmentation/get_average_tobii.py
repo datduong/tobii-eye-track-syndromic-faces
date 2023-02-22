@@ -20,9 +20,15 @@ import matplotlib.pyplot as plt
 # ---------------------------------------------------------------------------- #
 
 main_datadir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023'
-imdir = 'Peter25radiusTobiiHeatmap' # "25radius-fix-mismatch-name-to-csv/"
-outputname = 'total_average_25_radiusPeter.png' # "total_average_25radius.png"
-where_to_save_formated_individual = '25radius-keep-ave-whtbg-peter' # 25radius-fix-mismatch-name-csv-no-ave-whtbg/
+
+# imdir = 'Peter25radiusTobiiHeatmap' # "25radius-fix-mismatch-name-to-csv/"
+# outputname = 'total_average_25_radiusPeter.png' # "total_average_25radius.png"
+# where_to_save_formated_individual = '25radius-keep-ave-whtbg-peter' # 25radius-fix-mismatch-name-csv-no-ave-whtbg/
+
+
+imdir = '25radius-fix-mismatch-name-to-csv' # "25radius-fix-mismatch-name-to-csv/"
+outputname = 'total_average_25radius.png' # "total_average_25radius.png"
+where_to_save_formated_individual = '25radius-fix-mismatch-name-csv-no-ave-whtbg' # 25radius-fix-mismatch-name-csv-no-ave-whtbg/
 
 # ---------------------------------------------------------------------------- #
 
@@ -67,13 +73,18 @@ cv2.imwrite(os.path.join(main_datadir,outputname), 255-out)
 # ---------------------------------------------------------------------------- #
 
 # ! take out average 
-outdir = os.path.join(main_datadir,where_to_save_formated_individual) #  "C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg/"
-
+outdir = os.path.join(main_datadir,where_to_save_formated_individual) # save output dir
 os.makedirs(outdir,exist_ok=True)
 
 for im in imlist:
   imarr=np.array(Image.open(os.path.join(imdir,im)),dtype=float)
-  # imarr = imarr - average_image_array # ! take out average 
+
+  # ---------------------------------------------------------------------------- #
+
+  imarr = imarr - average_image_array # ! take out average 
+
+  # ---------------------------------------------------------------------------- #
+  
   imarr = np.where(imarr<0,0,imarr)
   this_img=Image.fromarray(np.array(imarr,dtype=np.uint8),mode='RGBA')
   

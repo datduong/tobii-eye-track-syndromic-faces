@@ -30,7 +30,9 @@ mkdir $output_dir
 
 # ! may as well do this at tons of threshold to see what happens
 
-cut_pixel_per_img=90
+cut_pixel_per_img=20 # ! if use, should be pixel value at 80 (about bottom 10%)
+
+remove_low_before_scale=10
 
 for this_k in 10 
 do
@@ -40,39 +42,29 @@ do
     # 0.4 0.5 0.6 0.7 0.8 0.9
     # 0.2 0.3 0.4 0.5 0.6 0.7 0.8
 
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff 
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff
+    
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --remove_low_before_scale $remove_low_before_scale
 
     # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --smooth_ave
 
     # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2
 
-    # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave 
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --remove_low_before_scale $remove_low_before_scale
     
-    # for cut_ave_img_to_binary in 0.2 0.3 0.4 0.5 0.6 0.7
-    # do
-    
-    #   python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave --cut_ave_img_to_binary $cut_ave_img_to_binary
-      
-    # done 
-
-    # 45 90 135 150 170
 
     # ! --cut_ave_img_to_binary 0.3 seems to work well. 
-
-    # 155
     
-    # for cut_pixel_ave_img in 45 70 90 110 135 170 190 
-    # do
+    # 45 70 90 110 135 170 190 
     
-    #   python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.2 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img 
+    for cut_pixel_ave_img in 70 90 110   
+    do
+    
+      # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --remove_low_before_scale $remove_low_before_scale
 
-    #   # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --scale_or_shift_ave_pixel 0.2 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.25
+      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
 
-    #   python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --scale_or_shift_ave_pixel 0.2 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3
-
-    #   # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --scale_or_shift_ave_pixel 0.2 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.05
-      
-    # done 
+    done 
 
   done
 done 
@@ -97,7 +89,8 @@ slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Sl
 
 slide_folders = [s for s in slide_folders if ('Slide' in s) and ('CompareGroup' not in s)]
 
-# slide_folders = ['Slide2','Slide3','Slide11','Slide14', 'Slide4'] # , 'Slide3']
+# slide_folders = ['Slide2','Slide3','Slide11','Slide14', 'Slide4', 'Slide6'] # , 'Slide3']
+slide_folders = ['Slide2', 'Slide11', 'Slide6'] # , 'Slide3']
 
 # ---------------------------------------------------------------------------- #
 
@@ -112,7 +105,7 @@ for i1, folder1 in enumerate(slide_folders):
       continue
     #
     print (folder1,folder2)
-    for SUFFIX in ['Group1','Group3','Group2','Group4','all']:  # Group1 'Group1','Group2'
+    for SUFFIX in ['all'] :  # ['Group1','Group3','Group2','Group4','all']:  # Group1 'Group1','Group2'
       group_folder1 = os.path.join(folder1,SUFFIX)
       group_folder2 = os.path.join(folder2,SUFFIX)
       #
@@ -134,7 +127,7 @@ for i1, folder1 in enumerate(slide_folders):
       fout = open(script_name,'w')
       fout.write(script)
       fout.close()
-      os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=4 ' + script_name )
+      os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=2 ' + script_name )
 
         
 #
