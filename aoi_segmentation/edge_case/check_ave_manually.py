@@ -11,14 +11,14 @@ from PIL import Image, ImageDraw
 import sys, re
 
 import matplotlib.pyplot as plt
-
+from matplotlib import cm
 
 # ! average of a few images after remove the "common consensus"
 # imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave/'
 
-imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KeepAveEyeTrackPeter/Slide6/all'
+imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Slide6/all'
 # total_average_no_totave_25radius_slide_11_group1
-outputname = 'PeterSlide6AllKeepAve'
+outputname = 'PeterSlide6Allcmap'
 
 imlist = os.listdir(imdir)
 
@@ -42,9 +42,14 @@ for im in imlist:
   imarr=np.array(Image.open(os.path.join(imdir,im)),dtype=float)
   arr=arr+imarr/N
 
-# Round values in array and cast as 8-bit integer
-arr=np.array(np.round(arr),dtype=np.uint8)
+#
+arr = 255 - cm.gray(arr/255) * 255 # ! scale 0=true_black and 1=white, what about in the middle? 
 
-out=Image.fromarray(np.array(arr)).convert('L')
+arr = np.array(np.round(arr),dtype=np.uint8) # Round values in array and cast as 8-bit integer
+out = Image.fromarray(np.array(arr)).convert('L')
+
 out.save(os.path.join('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023',outputname+".jpg"))
+
+
+
 

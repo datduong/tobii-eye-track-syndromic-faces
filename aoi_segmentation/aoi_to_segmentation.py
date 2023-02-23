@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 import sys
 
 import matplotlib.pyplot as plt
+from matplotlib import cm
 
 # ---------------------------------------------------------------------------- #
 
@@ -62,7 +63,7 @@ def calculate_simple_diff(pred_mask, gt_mask):
 
 
 
-def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_pixel_per_img=None, hi_threshold=None, face_parse_mask=None, outdir=None):
+def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_pixel_per_img=None, hi_threshold=None, face_parse_mask=None, outdir=None, matplotlib_cm=False):
     """
     Threshold a saliency heatmap to binary segmentation mask.
     Args:
@@ -119,21 +120,22 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     if resize is not None: 
         mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
 
-    # mask_01_use_after_smooth = None
+
     if cut_pixel_per_img is not None: 
         if (0 < cut_pixel_per_img) and (cut_pixel_per_img < 1): 
             sys.exit('cut off pix is on raw scale 0-255')
         #
         mask = np.array(mask)
         mask = np.where (mask > cut_pixel_per_img, mask, 0) # keep pixel higher than this threshold.
-        # mask_01_use_after_smooth = np.where(mask>0,1,0) 
-        
+
+    if matplotlib_cm: # https://stackoverflow.com/questions/10965417/how-to-convert-a-numpy-array-to-pil-image-applying-matplotlib-colormap
+        mask = cm.gray(mask/255) * 255 # ! scale 0=true_black and 1=white, what about in the middle? 
 
     if smoothing:
-        mask = cv2.boxFilter(mask, -1, (k, k)) # ! smoothing on original grayscale image. 
-        # if mask_01_use_after_smooth is not None: 
-        #     mask = mask * mask_01_use_after_smooth # ! smooth will add in non-zero, so @cut_pixel_per_img is not a true cutoff anymore 
-
+        # ! smoothing on original grayscale image. 
+        # ! smooth will add in non-zero, so @cut_pixel_per_img is not a true cutoff anymore 
+        mask = cv2.boxFilter(mask, -1, (k, k)) 
+        
     # ---------------------------------------------------------------------------- #
     
     formated_input_img_as_np = np.copy(np.array(mask)) # ! may need this later for bootstrap, this is the input image after resize and smoothing and a bunch of other stuffs (if used)
