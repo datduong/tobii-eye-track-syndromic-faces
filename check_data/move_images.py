@@ -76,9 +76,11 @@ for slide_name in np.arange(1,18) : # np.arange(1,18) : # np.arange(1,18) [17]
       
     for i in im: 
       for k in key_name: 
+        
         # ! peter naming is using 1_G[number].png, we're using "1_[alphabet]_25r"
         # if ('_'+k+'.png') in i : # ! CHECK NAMING CONVENTION... 
         if ('_'+k) in i : # ! CHECK NAMING CONVENTION... 
+          
           os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
           # ! move their results from slide 1 --> can later use as baseline 
           # user = i.split('_')[1] # user name 

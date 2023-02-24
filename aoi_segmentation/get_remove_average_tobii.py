@@ -62,8 +62,8 @@ arr= Image.fromarray (np.array(np.round(arr),dtype=np.uint8))
 
 
 # https://stackoverflow.com/questions/50898034/how-replace-transparent-with-a-color-in-pillow/50898375#50898375
-out = Image.new("RGBA", ((720,720)), "WHITE")  # Create a white rgba background
-out.paste(arr, (0, 0), arr)                  # Paste the image on the background. Go to the links given below for details.       
+out = Image.new("RGBA", ((720,720)), "WHITE")  
+out.paste(arr, (0, 0), arr)                  
 out = cv2.cvtColor(np.array(out), cv2.COLOR_BGR2GRAY) 
 cv2.imwrite(os.path.join(main_datadir,outputname), 255-out)
 
@@ -89,8 +89,8 @@ for im in imlist:
   this_img=Image.fromarray(np.array(imarr,dtype=np.uint8),mode='RGBA')
   
   # ! convert into true black/white
-  temp = Image.new("RGBA", ((720,720)), "WHITE")  # Create a white rgba background
-  temp.paste(this_img, (0, 0), this_img)                  # Paste the image on the background. Go to the links given below for details.       
+  temp = Image.new("RGBA", ((720,720)), "WHITE")  
+  temp.paste(this_img, (0, 0), this_img)                 
   temp = cv2.cvtColor(np.array(temp), cv2.COLOR_BGR2GRAY) 
 
   temp = Image.fromarray(np.array(temp), mode='L')
