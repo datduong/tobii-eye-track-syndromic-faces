@@ -38,22 +38,24 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
 
 
 
-select_criteria_human = ''
-select_criteria_model = ''
+select_criteria_1 = ''
+select_criteria_2 = ''
 
-human_mask_dir = ''
-model_mask_dir = ''
 
-human_mask = [os.path.join(human_mask_dir,i) for i in os.listdir(human_mask_dir) if select_criteria_human in i ]
-print (human_mask)
+mask_dir_1 = ''
+mask_dir_2 = ''
 
-model_mask = [os.path.join(model_mask_dir,i) for i in os.listdir(model_mask_dir) if select_criteria_model in i ]
-print (model_mask)
 
-this_model = np.array(Image.open(model_mask[0]).convert("L"))
+mask_set_1 = [os.path.join(mask_dir_1,i) for i in os.listdir(mask_dir_1) if select_criteria_1 in i ]
+# print (mask_set_1)
+
+mask_set_2 = [os.path.join(mask_dir_2,i) for i in os.listdir(mask_dir_2) if select_criteria_2 in i ]
+# print (mask_set_2)
+
+this_model = np.array(Image.open(mask_set_2[0]).convert("L"))
 
 all_iou = []
-for this_human in human_mask: 
+for this_human in mask_set_1: 
   this_human = np.array(Image.open(this_human).convert("L"))
   iou = calculate_iou (this_human,this_model)
   all_iou.append(iou)

@@ -103,8 +103,9 @@ os.makedirs(output_dir,exist_ok=True)
 # k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-diff     
 # k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-diff     
 
-TOBII_CHOICE = ['k0-thresh0.0-diff',
-                'k0-thresh0.0-cutbfscale10.0-diff',
+TOBII_CHOICE = [
+                # 'k0-thresh0.0-diff',
+                # 'k0-thresh0.0-cutbfscale10.0-diff',
                 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff',
                 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-diff',    
                 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-diff',      
@@ -163,13 +164,13 @@ for this_group in ['all','Group1', 'Group2', 'Group3', 'Group4']: # 'all','Group
         # 
         # convert mask into an image 
         # https://stackoverflow.com/questions/10965417/how-to-convert-a-numpy-array-to-pil-image-applying-matplotlib-colormap
-        this_mask = cm.magma(this_mask/255)
+        this_mask = cm.magma((255-this_mask)/255)
         this_mask = Image.fromarray(np.uint8(this_mask*255)).convert("RGBA")
         masks.append(this_mask)
         
 
       for i,foreground in enumerate(masks) : 
-        blend_image = Image.blend (image, foreground, alpha=0.4)
+        blend_image = Image.blend (image, foreground, alpha=0.3)
         if i == 0: 
           our_img.append(blend_image)
         if i ==1: 

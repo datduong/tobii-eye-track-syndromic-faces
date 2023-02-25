@@ -7,6 +7,7 @@ from pathlib import Path
 import pickle
 from PIL import Image, ImageDraw
 import sys, re
+from matplotlib import cm
 
 
 # ---------------------------------------------------------------------------- #
@@ -32,11 +33,11 @@ main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
 
 # ---------------------------------------------------------------------------- #
 
-# imdir = '25radius-fix-mismatch-name-csv-no-ave-whtbg' 
-# outputname = "ave_over_image_same_person.png"
+imdir = '25radius-fix-mismatch-name-csv-no-ave-whtbg' 
+outputname = "ave_over_image_same_person.png"
 
-imdir = '25radius-no-ave-whtbg-peter'
-outputname = "peter_ave_over_image_same_person.png"
+# imdir = '25radius-no-ave-whtbg-peter'
+# outputname = "peter_ave_over_image_same_person.png"
 
 # ---------------------------------------------------------------------------- #
 
@@ -51,13 +52,16 @@ len(user_name_arr)
 all_img_as_pil = []
 for user in user_name_arr: 
   these_img = [i for i in img_arr if ('_'+user) in i]
-  these_img = [np.array(Image.open(os.path.join(main_dir,imdir,im)),dtype=float) for im in these_img]
+  these_img = [np.array(Image.open(os.path.join(main_dir,imdir,im)).convert('L'),dtype=float) for im in these_img]
   these_img = np.mean(these_img, axis=0)
-  these_img = Image.fromarray( np.uint8 (np.array(these_img)) , mode='L')
+  # these_img = 255 - these_img # flip, so white is main focus, later apply color map ?
+  these_img = 255 * cm.magma(these_img/255) 
+  these_img = Image.fromarray( np.uint8 (np.array(these_img)) ) #  , mode='L'
   all_img_as_pil.append(these_img)
 
 # ---------------------------------------------------------------------------- #
 
-grid = image_grid(all_img_as_pil, rows=5, cols=5)
-grid.save(os.path.join(main_dir,outputname))
+user_name_arr
+# grid = image_grid(all_img_as_pil, rows=5, cols=5) # row=3 or 5? 
+# grid.save(os.path.join(main_dir,outputname))
 

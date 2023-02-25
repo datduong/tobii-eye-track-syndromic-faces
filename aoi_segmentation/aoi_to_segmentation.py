@@ -120,6 +120,8 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
     if resize is not None: 
         mask = cv2.resize(mask, resize, interpolation = cv2.INTER_AREA)
 
+    if face_parse_mask is not None: 
+        mask = np.array(mask) * face_parse_mask # ! apply face parser to remove random noise
 
     if cut_pixel_per_img is not None: 
         if (0 < cut_pixel_per_img) and (cut_pixel_per_img < 1): 
@@ -183,7 +185,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
 
         
     if face_parse_mask is not None: 
-        segmentation = segmentation * face_parse_mask # ! apply face parser to look at just the eyes
+        segmentation = segmentation * face_parse_mask # ! apply face parser to remove random noise
 
 
     if segmentation is not None: 
@@ -193,7 +195,7 @@ def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=
 
     if plot_segmentation and (segmentation is not None): # ! plot ? why not
         segmentation_as_png = Image.fromarray(np.uint8(segmentation*255), 'L') 
-        prefix = 'smoothk'+str(k) if smoothing else 'nosmooth'
+        prefix = 'k'+str(k) if smoothing else 'nosmooth'
         prefix = prefix + '-' + 'thresh'+str(threshold) if threshold is not None else 'otsu'
         temp = prefix + '-' + cam_mask.split('/')[-1]
         segmentation_as_png.save(os.path.join(outdir,temp))

@@ -64,14 +64,16 @@ slide_folders = [s for s in slide_folders if 'Slide' in s]
 
 slide_folders = ['Slide2','Slide11','Slide14','Slide12','Slide8'] # , 'Slide3']
 
+
 compare_vs_this = {
-  'Slide2': 'smoothk20-thresh0.3-WSSlide316_heatmappositiveAverage.png',
-  # 'Slide3': 'smoothk20-thresh0.3-WSSlide316_heatmappositiveAverage.png',
-  'Slide11': 'smoothk20-thresh0.3-KSSlide133_heatmappositiveAverage.png',
-  'Slide14': 'smoothk20-thresh0.3-22q11DSSlide150v2_heatmappositiveAverage.png',
-  'Slide12': 'smoothk20-thresh0.3-NSSlide7_heatmappositiveAverage.png',
-  'Slide8' : 'smoothk20-thresh0.3-CdLSSlide124_heatmappositiveAverage.png',
+  'Slide2': 'WSSlide316_heatmappositiveAverage.png',
+  'Slide11': 'KSSlide133_heatmappositiveAverage.png',
+  'Slide14': '22q11DSSlide150v2_heatmappositiveAverage.png',
+  'Slide12': 'NSSlide7_heatmappositiveAverage.png',
+  'Slide8' : 'CdLSSlide124_heatmappositiveAverage.png',
+  
 }
+
 # ---------------------------------------------------------------------------- #
 
 # ! for each slide1, slide2 (as a folder)
