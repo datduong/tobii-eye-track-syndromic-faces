@@ -68,6 +68,7 @@ for criteria in criteria_arr:
   df_long.to_csv(os.path.join(foutpath,'Eb4Occ-'+criteria+'.csv'), index=False)
 
 
+# ---------------------------------------------------------------------------- #
 
 for s in slide: 
   this_path = os.path.join(path,'saliency-vs-'+s+'')

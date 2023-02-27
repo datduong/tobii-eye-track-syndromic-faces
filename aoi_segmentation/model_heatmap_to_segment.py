@@ -123,7 +123,7 @@ for cut_pixel_per_img in [0,50,70]:
     # ! scale pixel value up down? 
     this_img = np.array(img) 
     this_img = 255*scale_shift_ave_pixel_one_image ( this_img/255, target=0.3 )
-    this_img = cm.magma(this_img/255)*255
+    this_img = cm.magma((255-this_img)/255)*255 # flip color scale
     this_img = Image.fromarray(np.uint8(this_img)).convert("RGBA")
     blend_image = Image.blend (original_image, this_img, alpha=0.3)
     temp = 'overlay-' + prefix + '-' + cam_mask.split('/')[-1]

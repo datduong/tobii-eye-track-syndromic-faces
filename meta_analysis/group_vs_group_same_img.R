@@ -22,9 +22,10 @@ for (i in c(1:4)) {
 
   this_title = paste ( 'Participants correctly identify image as affected, threshold', threshold )
   windows() 
-  forest(res, slab=paste(gsub('Group1','', dat$tobii ) , sep = ","), main=this_title, alim=c(-0.05,0.4), xlim=c(-.25,.75))
+  forest(res, slab=paste(gsub('Group1','', dat$tobii ) , sep = ","), main=this_title, alim=c(-0.05,0.45), xlim=c(-.25,.75))
 
 }
+
 
 # forest(dat$observed_stat, sei=dat$std, slab=paste(dat$tobii, sep = ","), refline=0)
 
@@ -38,3 +39,4 @@ for (i in c(1:4)) {
 #        order, subset, transf, atransf, targs, rows,
 #        efac=1, pch, psize, plim=c(0.5,1.5), col,
 #        lty, fonts, cex, cex.lab, cex.axis, ...)
+
