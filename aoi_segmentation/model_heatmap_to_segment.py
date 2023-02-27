@@ -63,11 +63,11 @@ face_seg_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Surve
 
 this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/EfficientNetOccSegment'
 
-this_img = [i for i in os.listdir(this_path)]
-this_img = [i for i in this_img if 'smooth' not in i]
-this_img = [i for i in this_img if 'thres' not in i]
-this_img = [i for i in this_img if 'mask' not in i]
-print (this_img)
+this_img_arr = [i for i in os.listdir(this_path)]
+this_img_arr = [i for i in this_img_arr if 'smooth' not in i]
+this_img_arr = [i for i in this_img_arr if 'thres' not in i]
+this_img_arr = [i for i in this_img_arr if 'mask' not in i]
+print (this_img_arr)
 
 # ---------------------------------------------------------------------------- #
 
@@ -76,47 +76,57 @@ original_image_dir = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/surv
 
 # ---------------------------------------------------------------------------- #
 
-for th in [.1, .15, 0.2,0.3,0.35, 0.4]: # 0.1,0.2,0.3,0.4,0.5
+# for th in [.1, .15, 0.2,0.3,0.35, 0.4]: # 0.1,0.2,0.3,0.4,0.5
   
-  for cam_mask in this_img:
+#   for cam_mask in this_img_arr:
 
-    face_mask = os.path.join(face_seg_dir, match_model_heatmap_to_face_seg[cam_mask.split('/')[-1]])
+#     face_mask = os.path.join(face_seg_dir, match_model_heatmap_to_face_seg[cam_mask.split('/')[-1]])
     
-    face_mask = np.array(Image.open(face_mask).convert('L'))
-    face_mask = np.where (face_mask==0,0,1) # ! remove background, keep everything else. 
+#     face_mask = np.array(Image.open(face_mask).convert('L'))
+#     face_mask = np.where (face_mask==0,0,1) # ! remove background, keep everything else. 
     
-    seg, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=th, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, face_parse_mask=face_mask)
+#     seg, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=th, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, face_parse_mask=face_mask)
 
 # ---------------------------------------------------------------------------- #
 
-for cut_pixel_per_img in [10, 50,25,75]: 
+for cut_pixel_per_img in [0,50,70]: 
     
-  for cam_mask in this_img:
+  for cam_mask in this_img_arr:
 
     face_mask = os.path.join(face_seg_dir, match_model_heatmap_to_face_seg[cam_mask.split('/')[-1]])
     
     face_mask = np.array(Image.open(face_mask).convert('L'))
     face_mask = np.where (face_mask==0,0,1) # ! remove background, keep everything else. 
-    
-    seg, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=0, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
 
+    if cut_pixel_per_img==0: 
+      threshold = 0
+    else: 
+      threshold = 0.1
+      
+    seg, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=threshold, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
+
+    prefix = 'k20-thresh'+str(threshold)+'-pixcut'+str(cut_pixel_per_img)
+    
     img = Image.fromarray(np.uint8(img), 'L') 
-    prefix = 'k20-thresh0-pixcut'+str(cut_pixel_per_img)
     temp = prefix + '-' + cam_mask.split('/')[-1]
     img.save(os.path.join(this_path,temp))
 
+    seg = Image.fromarray(np.uint8(seg*255), 'L') # ! seg is 1 hot
+    temp = prefix + '-seg-' + cam_mask.split('/')[-1]
+    seg.save(os.path.join(this_path,temp))
+
     # overlay 
-    if cut_pixel_per_img == 10: 
-      original_image = os.path.join(original_image_dir, match_model_heatmap_to_face_seg[cam_mask.split('/')[-1]])
-      image = os.path.join(this_path,original_image)
-      image = Image.open(image).convert("RGBA")
-      this_mask = np.array(img)
-      # ! scale pixel value up down? 
-      
-      this_mask = cm.magma((255-this_mask)/255)
-      this_mask = Image.fromarray(np.uint8(this_mask*255)).convert("RGBA")
-      blend_image = Image.blend (image, this_mask, alpha=0.5)
-      temp = 'overlay-' + prefix + '-' + cam_mask.split('/')[-1]
-      blend_image.save(os.path.join(this_path,temp))
+    original_image = os.path.join(original_image_dir, match_model_heatmap_to_face_seg[cam_mask.split('/')[-1]])
+    original_image = os.path.join(this_path,original_image)
+    original_image = Image.open(original_image).convert("RGBA")
+
+    # ! scale pixel value up down? 
+    this_img = np.array(img) 
+    this_img = 255*scale_shift_ave_pixel_one_image ( this_img/255, target=0.3 )
+    this_img = cm.magma(this_img/255)*255
+    this_img = Image.fromarray(np.uint8(this_img)).convert("RGBA")
+    blend_image = Image.blend (original_image, this_img, alpha=0.3)
+    temp = 'overlay-' + prefix + '-' + cam_mask.split('/')[-1]
+    blend_image.save(os.path.join(this_path,temp))
 
 

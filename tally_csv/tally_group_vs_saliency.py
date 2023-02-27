@@ -50,13 +50,24 @@ id_to_english = {
 
 
 path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Saliency/k20-thresh0.1-pixcut70-seg'
-
+foutpath = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Saliency'
+criteria_arr = ['k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3',
+                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3', 
+                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3',
+                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3', 
+                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3'
+                ]
 
 slide = ['Slide' + str(i) for i in np.arange(1,18)]
-# slide = ['Slide2','Slide11','Slide14','Slide12','Slide8']
 
-all_df_wide = []
-all_df_long = []
+for criteria in criteria_arr: 
+  csv = [i for i in os.listdir(path) if i.endswith('csv')]
+  csv = [i for i in csv if criteria in i]
+  csv = [ pd.read_csv(os.path.join(path,c) ) for c in csv ] 
+  df_long = pd.concat (csv)
+  df_long.to_csv(os.path.join(foutpath,'Eb4Occ-'+criteria+'.csv'), index=False)
+
+
 
 for s in slide: 
   this_path = os.path.join(path,'saliency-vs-'+s+'')

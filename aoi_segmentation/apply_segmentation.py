@@ -486,8 +486,8 @@ if __name__ == '__main__':
     # save as csv 
     model_name = args.compare_vs_this.split('/')[-1]
     fout = open(os.path.join(args.output_dir,'saliency-vs-'+group_name1+'_'+prefix+'.csv'),'w')
-    fout.write ('saliency,tobii,observed_stat,mean,std\n')
-    fout.write ( model_name + ',' + group_name1 + ',' + ','.join ( [str(item) for item in boot_output] ) + '\n')
+    fout.write ('saliency,tobii,observed_stat,mean,std,group_size\n')
+    fout.write ( model_name + ',' + group_name1 + ',' + ','.join ( [str(item) for item in boot_output] ) + ',' + str(len(segmentation_group_1)) + '\n')
     fout.close()
 
   else:
