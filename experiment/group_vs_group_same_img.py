@@ -76,57 +76,51 @@ slide_folders = [s for s in slide_folders if ('Slide' in s) and ('CompareGroup' 
 
 os.chdir(main_folder)
 
+GROUP_TO_USE = ['Group1','Group2','Group3','Group4']
+
 for folder in slide_folders: 
-  for SUFFIX in ['Group']: # ,'OnSlide1']: 
-    # if len(SUFFIX)>0: 
-    group_folder = [f for f in os.listdir(folder) if re.match(r'^'+SUFFIX,f) ]
-    # else: 
-    #   group_folder = [f for f in os.listdir(folder) if 'OnSlide1' not in f] # kinda dumb... whatever
-    #
-		#
-    group_folder = [g for g in group_folder if 'Result' not in g]
-    group_folder = [g for g in group_folder if 'all' not in g]
-    group_folder = [g for g in group_folder if os.path.isdir(os.path.join(main_folder,folder,g))]
-    print (folder, group_folder)
-		#
-    for i,g1 in enumerate(group_folder):
-      for j,g2 in enumerate(group_folder): 
-        if j<=i: 
-          continue
-        print (g1,g2)
-        if g1=='Group1' and g2=='Group3': 
-          continue
-        if g1=='Group1' and g2=='Group4': 
-          continue
-        # if g1=='Group2' and g2=='Group3': 
-        #   continue
-        # if g1=='Group2' and g2=='Group4': 
-        #   continue
-        # if g1=='Group1OnSlide1' and g2=='Group3OnSlide1': 
-        #   continue
-        # if g1=='Group1OnSlide1' and g2=='Group4OnSlide1': 
-        #   continue
-        # if g1=='Group2OnSlide1' and g2=='Group3OnSlide1': 
-        #   continue
-        # if g1=='Group2OnSlide1' and g2=='Group4OnSlide1': 
-        #   continue
-        #
-        script = re.sub('THIS_K',str(this_k),script_base)
-        script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script)
-        script = re.sub('THRESHOLD_GROUP_2',str(cut_seg_to_binary_2),script)
-        script = re.sub('SLIDE_NUM',str(folder),script)
-        script = re.sub('GROUP1',g1,script)
-        script = re.sub('GROUP2',g2,script)
-				#
-        time.sleep( 1.5 )
-        now = datetime.now() # current date and time
-        script_name = os.path.join(script_path,'script'+'-'+now.strftime("%m-%d-%H-%M-%S")+'.sh')
-        fout = open(script_name,'w')
-        fout.write(script)
-        fout.close()
-        os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=4 ' + script_name )
-        # exit()
-				
+  #
+  group_folder = [g for g in GROUP_TO_USE if os.path.isdir(os.path.join(main_folder,folder,g))]
+  print (folder, group_folder)
+  #
+  for i,g1 in enumerate(group_folder):
+    for j,g2 in enumerate(group_folder): 
+      if j<=i: 
+        continue
+      print (g1,g2)
+      if g1=='Group1' and g2=='Group3': 
+        continue
+      if g1=='Group1' and g2=='Group4': 
+        continue
+      # if g1=='Group2' and g2=='Group3': 
+      #   continue
+      # if g1=='Group2' and g2=='Group4': 
+      #   continue
+      # if g1=='Group1OnSlide1' and g2=='Group3OnSlide1': 
+      #   continue
+      # if g1=='Group1OnSlide1' and g2=='Group4OnSlide1': 
+      #   continue
+      # if g1=='Group2OnSlide1' and g2=='Group3OnSlide1': 
+      #   continue
+      # if g1=='Group2OnSlide1' and g2=='Group4OnSlide1': 
+      #   continue
+      #
+      script = re.sub('THIS_K',str(this_k),script_base)
+      script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script)
+      script = re.sub('THRESHOLD_GROUP_2',str(cut_seg_to_binary_2),script)
+      script = re.sub('SLIDE_NUM',str(folder),script)
+      script = re.sub('GROUP1',g1,script)
+      script = re.sub('GROUP2',g2,script)
+      #
+      time.sleep( 1.5 )
+      now = datetime.now() # current date and time
+      script_name = os.path.join(script_path,'script'+'-'+now.strftime("%m-%d-%H-%M-%S")+'.sh')
+      fout = open(script_name,'w')
+      fout.write(script)
+      fout.close()
+      os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=4 ' + script_name )
+      # exit()
+      
 #
 
 

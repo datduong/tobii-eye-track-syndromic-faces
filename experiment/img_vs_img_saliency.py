@@ -48,8 +48,12 @@ do
       
     for cut_pixel_ave_img in 50 70 90 110 130 150  
     do
-    
-      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 100 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale --compare_vs_this $compare_vs_this
+
+      # ! USE SIMPLE DIFFERENCE, SO CHECK @SALIENCYCRITERIA
+      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --remove_low_before_scale $remove_low_before_scale --compare_vs_this $compare_vs_this
+
+      # ! USE SIMPLE OVERLAP AREA, SO CHECK @SALIENCYCRITERIA
+      # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 100 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale --compare_vs_this $compare_vs_this
 
     done 
 
@@ -74,10 +78,6 @@ script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
 main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack' # @main_folder is where we save all the data
 
-slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Slide2" ...
-
-slide_folders = [s for s in slide_folders if 'Slide' in s]
-
 compare_vs_this = {
   'Slide14': '22q11DSSlide150v2_heatmappositiveAverage.png',
   'Slide17': 'BWSSlide17v2_heatmappositiveAverage.png',
@@ -91,7 +91,7 @@ compare_vs_this = {
   'Slide4' : 'RSTS1Slide57v2_heatmappositiveAverage.png',
 }
 
-criteria = 'k20-thresh0.1-pixcut70-seg'
+criteria = 'k20-thresh0.1-pixcut70' # 'k20-thresh0.1-pixcut70-seg'
 
 for k,v in compare_vs_this.items(): 
   compare_vs_this[k] = criteria+'-'+v
@@ -100,6 +100,8 @@ for k,v in compare_vs_this.items():
 # slide_folders = ['Slide2','Slide11'] # , 'Slide3']
 
 slide_folders = list ( compare_vs_this.keys() ) 
+
+k20-thresh0.1-pixcut70-22q11DSSlide150v2_heatmappositiveAverage.png
 
 # ---------------------------------------------------------------------------- #
 

@@ -459,7 +459,10 @@ if __name__ == '__main__':
   if args.compare_vs_this is not None: 
     # get name 
     prefix = prefix1
-    segmentation_group_2 = {'segmentation': np.array (Image.open(args.compare_vs_this).convert("L"), dtype=int) } # save both
+
+    single_img = np.array (Image.open(args.compare_vs_this).convert("L"), dtype=int)
+    segmentation_group_2 = {'segmentation': single_img, 
+                            'image': single_img } # duplicate both
 
     observed_mIOU = diff_two_sets ( segmentation_group_1, segmentation_group_2 , args )
 
