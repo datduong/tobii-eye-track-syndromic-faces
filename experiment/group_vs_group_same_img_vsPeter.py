@@ -91,7 +91,11 @@ slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
 os.chdir(main_folder)
 
 for folder in slide_folders:
-  for group in ['all']: 
+  for group in ['Group2']: 
+    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack',folder,group)):
+      continue
+    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter',folder,group)):
+      continue
     script = re.sub('THIS_K',str(this_k),script_base)
     script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script)
     script = re.sub('THRESHOLD_GROUP_2',str(cut_seg_to_binary_2),script)

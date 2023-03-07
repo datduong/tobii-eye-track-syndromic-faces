@@ -18,33 +18,50 @@ library('metafor')
 #   'VsPeter-k0-thresh0.0-diff.csv',                                                      
 # )
 
+# mod = c(  
+#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv',  
+#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3.csv', 
+#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3.csv',  
+#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv',  
+#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
+#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv'                                                     
+# )
+
 mod = c(  
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv',  
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3.csv', 
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3.csv',  
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv',  
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv'                                                     
+  'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv',  
+  'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
+  'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv'                                                     
 )
+
 
 for (i in c(1:length((mod)))) {
 
   dat = read.csv(paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/',mod[i]))
 
+  # dat = dat[dat$group_size1>1,]
+  # dat = dat[dat$group_size2>1,]
+
   # res <- rma(observed_stat, sei=std, data=dat, test="knha", weights=group_size)
   res <- rma(obs_stat, sei=boot_std, data=dat, test="knha")
 
-  if (i==1) { threshold = 110 }
-  if (i==2) { threshold = 130 }
-  if (i==3) { threshold = 150 }
-  if (i==4) { threshold = 70 }
-  if (i==5) { threshold = 90 }
-  if (i==6) { threshold = 0 }
+  # if (i==1) { threshold = 110 }
+  # if (i==2) { threshold = 130 }
+  # if (i==3) { threshold = 150 }
+  # if (i==4) { threshold = 70 }
+  # if (i==5) { threshold = 90 }
+  # if (i==6) { threshold = 0 }
 
-  this_title = paste ( 'NIH vs. Peter Participants correctly identify\nimage as affected, IoU, threshold', threshold )
-  windows() 
-  forest(res, slab=paste(gsub('Group1','', dat$group_name1 ) , sep = ","), main=this_title, xlim=c(-.4,1.25))
+  if (i==1) { threshold = 70 }
+  if (i==2) { threshold = 90 }
+  if (i==3) { threshold = 0 }
 
+  # this_title = paste ( 'Group2 NIH vs. Peter Participants correctly identify\nimage as affected, IoU, threshold', threshold )
+
+  this_title = paste ( 'Group2 NIH vs. Peter Participants\nIoU, threshold', threshold )
+
+  png(file=paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/Group2-NIH-Peter-IoU-thr',threshold,'.png'))
+  forest(res, slab=paste(gsub('Group2','', dat$group_name1 ) , sep = ","), main=this_title, xlim=c(-.4,1.25))
+  dev.off()
 }
 
 
