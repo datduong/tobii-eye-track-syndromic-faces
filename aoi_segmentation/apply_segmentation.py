@@ -456,13 +456,11 @@ if __name__ == '__main__':
   # ! process data group 1  
   ave1, _, prefix1 = average_over_data (group_name1, segmentation_group_1, args)
 
-  if args.compare_vs_this is not None: 
-    # get name 
-    prefix = prefix1
-
-    single_img = np.array (Image.open(args.compare_vs_this).convert("L"), dtype=int)
+  if args.compare_vs_this is not None: # ! compare a group of participant to a FIXED constant saliency heatmap (for example, from resnet)
+    
+    single_img = np.array (Image.open(args.compare_vs_this).convert("L"), dtype=int) # @single_img is considered a fixed constant for our bootstrap
     segmentation_group_2 = {'segmentation': single_img, 
-                            'image': single_img } # duplicate both
+                            'image': single_img } # ! duplicate both so we don't change data struct; @single_img should be a saliency heatmap (or a segmentation of saliency heatmap. )
 
     observed_mIOU = diff_two_sets ( segmentation_group_1, segmentation_group_2 , args )
 
@@ -488,7 +486,7 @@ if __name__ == '__main__':
     
     # save as csv 
     model_name = args.compare_vs_this.split('/')[-1]
-    fout = open(os.path.join(args.output_dir,'saliency-vs-'+group_name1+'_'+prefix+'.csv'),'w')
+    fout = open(os.path.join(args.output_dir,'saliency-vs-'+group_name1+'_'+prefix1+'.csv'),'w')
     fout.write ('saliency,tobii,observed_stat,mean,std,group_size\n')
     fout.write ( model_name + ',' + group_name1 + ',' + ','.join ( [str(item) for item in boot_output] ) + ',' + str(len(segmentation_group_1)) + '\n')
     fout.close()
@@ -528,7 +526,7 @@ if __name__ == '__main__':
     # 
     ave = np.nanmean ( np.array(boot_stat) ) 
     std = np.nanstd (np.array(boot_stat))
-    boot_rank = np.sum( boot_stat > obs_stat)/args.boot_num # ! very high rank --> high pval --> signif (same apply for very low rank)
+    boot_rank = np.sum( boot_stat > obs_stat)/args.boot_num # ! very high rank --> high pval --> signif (same idea applies for very low rank)
     
     #
     if prefix1==prefix2: 
