@@ -99,7 +99,16 @@ def ave_of_segmentation (dict_segment,args=None):
 
 
 def average_image (dict_segment,size=(720,720),args=None): 
+  """_summary_
 
+  Args:
+      dict_segment (_type_): _description_
+      size (tuple, optional): _description_. Defaults to (720,720).
+      args (_type_, optional): _description_. Defaults to None.
+
+  Returns:
+      _type_: _description_
+  """
   imlist = list ( dict_segment.keys() ) 
   N = len(imlist)*1.0 # float
   arr=np.zeros((size),float) # make empty array of 0
@@ -264,6 +273,13 @@ def one_bootstrap_sample (dict1, dict2, args):
 
 
 def save_img (image,outname,mode="L"): 
+  """ # ! images can be 1-hot format, or 0-255 format, we auto detect format and save image.
+
+  Args:
+      image (_type_): _description_
+      outname (_type_): _description_
+      mode (str, optional): _description_. Defaults to "L".
+  """
   if np.max(np.array(image)) <= 1: 
     image = image*255
   #
@@ -396,7 +412,8 @@ if __name__ == '__main__':
   
   
   # ---------------------------------------------------------------------------- #
-  
+
+  # ! things which were copied from https://github.com/rajpurkarlab/cheXlocalize, and are not used
   parser.add_argument('--metric', type=str,
                       help='options are: iou or hitmiss')
   parser.add_argument('--gt_path', type=str,
@@ -405,18 +422,18 @@ if __name__ == '__main__':
   parser.add_argument('--pred_path', type=str,
                       help='json path where predicted segmentations are saved \
                             (if metric = iou) or directory with pickle files \
-              containing heat maps (if metric = hitmiss and \
+                            containing heat maps (if metric = hitmiss and \
                             if_human_benchmark = false) or json path with \
                             human annotations for most representative points \
                             (if metric = hitmiss and if_human_benchmark = \
                             true)')
   parser.add_argument('--true_pos_only', type=str, default='True',
                       help='if true, run evaluation only on the true positive \
-                      slice of the dataset (CXRs that contain predicted and \
-                      ground-truth segmentations); if false, also include cxrs \
-                      with a predicted segmentation but without a ground-truth \
-                      segmentation, and include cxrs with a ground-truth\
-                      segmentation but without a predicted segmentation.')
+                            slice of the dataset (CXRs that contain predicted and \
+                            ground-truth segmentations); if false, also include cxrs \
+                            with a predicted segmentation but without a ground-truth \
+                            segmentation, and include cxrs with a ground-truth\
+                            segmentation but without a predicted segmentation.')
   parser.add_argument('--save_dir', default='.',
                       help='where to save evaluation results')
   parser.add_argument('--if_human_benchmark', type=str, default='False',
