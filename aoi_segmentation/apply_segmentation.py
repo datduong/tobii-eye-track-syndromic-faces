@@ -363,46 +363,46 @@ if __name__ == '__main__':
                         help='resize images, before doing this, make sure faces are properly aligned')
 
   parser.add_argument('--img_dir_group_1', type=str,
-                        help='')
+                        help='heatmaps of group 1')
 
   parser.add_argument('--filter_by_word', type=str, default=None, 
-                        help='')
+                        help='keep heatmaps where keywords are in the file names')
 
   parser.add_argument('--img_dir_group_2', type=str,
-                        help='')
+                        help='heatmaps of group 2')
 
   parser.add_argument('--output_dir', type=str,
-                        help='')
+                        help='where to save output')
 
   parser.add_argument('--plot_segmentation', action='store_true', default=False,
-                        help='')
+                        help='plot segmentation of each heatmap; probably not useful, so not need to use')
 
   parser.add_argument('--boot_num', type=int, default=None, 
-                        help='')
+                        help='how many bootstrap samples')
 
   parser.add_argument('--boot_ave_segmentation', action='store_true', default= False,
-                        help='')
+                        help='take average segmentation, and do bootstrap on that observed statistics')
 
   parser.add_argument('--cut_pixel_per_img', type=float, default=None, 
                         help='')
 
   parser.add_argument('--scale_or_shift_ave_pixel', type=float, default=None,
-                        help='')
+                        help='must be 0-1 (so scale down 0-255 range to 0-1). target value where we scale the average (of one image) color intensity')
 
   parser.add_argument('--cut_ave_img_to_binary', type=float, default=None, 
-                        help='')
+                        help='threshold that truncates pixel into black vs white (0/1 value)')
 
   parser.add_argument('--compare_vs_this', type=str, default=None, 
-                        help='')
+                        help='a single image or a single saliency heatmap from some image model')
 
   parser.add_argument('--transparent_to_white', action='store_true', default= False,
-                        help='')
+                        help='if input heatmapt has transparent background, convert it into white')
 
   parser.add_argument('--simple_diff', action='store_true', default= False,
-                        help='')
+                        help='simply subtract 2 averages, this is not the usual intersection-over-union')
 
   parser.add_argument('--smooth_ave', action='store_true', default= False,
-                        help='')
+                        help='smooth the average image (average can be rough because people look at differen places)')
 
   parser.add_argument('--cut_pixel_ave_img', type=float, default=None, 
                         help='')
