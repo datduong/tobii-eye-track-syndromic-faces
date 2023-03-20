@@ -335,7 +335,7 @@ def average_over_data (group_name, segmentation_of_group, args):
 if __name__ == '__main__':
   parser = ArgumentParser()
   parser.add_argument('--img_dir', type=str,
-                        help='path to images')
+                        help='path to images, not used, this is legacy')
 
   parser.add_argument('--if_smoothing', action='store_true',
                         help='If true, smooth the pixelated heatmaps using box \
@@ -384,7 +384,7 @@ if __name__ == '__main__':
                         help='take average segmentation, and do bootstrap on that observed statistics')
 
   parser.add_argument('--cut_pixel_per_img', type=float, default=None, 
-                        help='')
+                        help='for a given image, we can remove pixel below this input, the removed values are probably low noise signal')
 
   parser.add_argument('--scale_or_shift_ave_pixel', type=float, default=None,
                         help='must be 0-1 (so scale down 0-255 range to 0-1). target value where we scale the average (of one image) color intensity')
@@ -405,7 +405,7 @@ if __name__ == '__main__':
                         help='smooth the average image (average can be rough because people look at differen places)')
 
   parser.add_argument('--cut_pixel_ave_img', type=float, default=None, 
-                        help='')
+                        help='keep pixels over this input, so we will compare only possbily important pixels')
 
   parser.add_argument('--remove_low_before_scale', type=float, default=None, 
                         help='before scale color intensity up, we remove random noise signals (e.g. very low pixel values)') 
