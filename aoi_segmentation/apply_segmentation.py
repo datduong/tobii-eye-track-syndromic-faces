@@ -213,20 +213,20 @@ def diff_two_sets(dict1,dict2,args):
   # aoi_to_segmentation.calculate_iou
   
   if args.boot_ave_segmentation: 
-    seg_im1, ave_im1 = ave_of_segmentation(dict1, args=args)
+    seg_im1, ave_im1 = ave_of_segmentation(dict1, args=args) # ! compute the average seg of each image, and then compare the 2 groups
     if args.compare_vs_this is None: 
       seg_im2, ave_im2 = ave_of_segmentation(dict2, args=args)
   else: 
-    seg_im1, ave_im1 = segementation_of_ave (dict1,size=(720,720),args=args)  
+    seg_im1, ave_im1 = segementation_of_ave (dict1,size=(720,720),args=args)  # ! compute the average, then segmentation of the average, then compare 2 groups. 
     if args.compare_vs_this is None: 
       seg_im2, ave_im2 = segementation_of_ave (dict2,size=(720,720),args=args)
 
   #
   if args.compare_vs_this is None: 
     if args.simple_diff: 
-      score = aoi_to_segmentation.calculate_simple_diff(ave_im1, ave_im2) # ! simple diff on 2 averages of 2 sets of images
+      score = aoi_to_segmentation.calculate_simple_diff(ave_im1, ave_im2) # ! simple diff (subtraction) on 2 averages of 2 sets of images
     else:
-      score = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) 
+      score = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) # ! intersection over union. 
   else: 
     if args.simple_diff: 
       score = aoi_to_segmentation.calculate_simple_diff(ave_im1, dict2['image']) 
@@ -239,8 +239,8 @@ def one_bootstrap_sample (dict1, dict2, args):
   """_summary_
 
   Args:
-      dict1 (_type_): _description_
-      dict2 (_type_): _description_
+      dict1 (_type_): some set of user {user1: [image, segmentation]}
+      dict2 (_type_): some set of user {user10: [image, segmentation]}
       args (_type_): _description_
 
   Returns:
@@ -266,7 +266,7 @@ def one_bootstrap_sample (dict1, dict2, args):
     #
     boot_sample.append( boot_dict )
 
-  # 
+  # ! after randomly sample people into 2 new dictionaries, compare the overlap. 
   boot_statistics = diff_two_sets(boot_sample[0],boot_sample[1],args)
 
   return boot_statistics

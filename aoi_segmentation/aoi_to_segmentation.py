@@ -22,7 +22,7 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
     Calculate IoU score between two segmentation masks.
 
     Args:
-        pred_mask (np.array): binary segmentation mask
+        pred_mask (np.array 720x720): binary segmentation mask (should only use np.array with 0/1 entires)
         gt_mask (np.array): binary segmentation mask
     Returns:
         iou_score (np.float64)
@@ -46,7 +46,7 @@ def calculate_iou(pred_mask, gt_mask, true_pos_only):
     return iou_score
 
 
-def calculate_simple_diff(pred_mask, gt_mask):
+def calculate_simple_diff(pred_mask, gt_mask): # ! doing subtraction between 2 images. 
 
     if int ( np.max (pred_mask) ) > 1: # not on 0/1 scale, so we divide 255
         pred_mask = pred_mask/255.0

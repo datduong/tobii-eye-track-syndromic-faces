@@ -7,7 +7,7 @@ import pandas as pd
 # ! filter rows/cols for nice visual
 
 
-match_powerpoint_to_tobii = {
+match_powerpoint_to_tobii = { # ! in Suzanna's original powerpoint, the images are not in the same order as Chris's ordering on Tobii. 
   1:3, 
   2:5, 
   3:7, 

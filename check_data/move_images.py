@@ -2,15 +2,45 @@ import os,sys,re,pickle
 import pandas as pd
 import numpy as np 
 
-# ---------------------------------------------------------------------------- #
-
-main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
+from argparse import ArgumentParser
 
 # ---------------------------------------------------------------------------- #
 
-source = '25radius-fix-mismatch-name-csv-no-ave-whtbg' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
-final_output_dir = 'RemoveAveEyeTrack' # RemoveAveEyeTrack
-df = 'TableEyeTrackingSimple.csv'
+
+parser = ArgumentParser()
+
+parser.add_argument('--main_dir', type=str, default='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023',
+                      help='')
+
+parser.add_argument('--source', type=str,
+                      help='name of input image folder')
+
+parser.add_argument('--final_output_dir', type=str,
+                      help='name of new image folder')
+
+parser.add_argument('--df', type=str,
+                      help='csv where we keep info on the 4 groups based on their accuracy')
+
+parser.add_argument('--add_file_name_pattern', type=str, default=None, 
+                      help='add .png to file name when looking at files to move') # 
+
+# ---------------------------------------------------------------------------- #
+args = parser.parse_args()
+
+# ---------------------------------------------------------------------------- #
+if args.add_file_name_pattern is None: 
+  args.add_file_name_pattern = ''
+  
+# ---------------------------------------------------------------------------- #
+
+# main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
+
+# ---------------------------------------------------------------------------- #
+
+# source = '25radius-fix-mismatch-name-csv-no-ave-whtbg' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
+# final_output_dir = 'RemoveAveEyeTrack' # RemoveAveEyeTrack
+# df = 'TableEyeTrackingSimple.csv'
+# add_file_name_pattern = '.png'
 
 # ---------------------------------------------------------------------------- #
 
@@ -20,11 +50,11 @@ df = 'TableEyeTrackingSimple.csv'
 
 # ---------------------------------------------------------------------------- #
 
-source = os.path.join(main_dir,source)
+source = os.path.join(args.main_dir,args.source)
 
 # ---------------------------------------------------------------------------- #
 
-df = pd.read_csv(os.path.join(main_dir,df)).fillna('')
+df = pd.read_csv(os.path.join(args.main_dir,args.df)).fillna('')
 columns = [ 'Syn vs Non Syn Correct',
             'Syn vs Non Syn Incorrect', 	 
             'Syn vs NonSyn Correct Syndrome Name Correct',
@@ -67,7 +97,7 @@ for slide_name in np.arange(1,18) : # np.arange(1,18) : # np.arange(1,18) [17]
     print ('slide', slide_name)
     # print (key_name,'\n',im)
     
-    final_dir = os.path.join(main_dir,final_output_dir,'Slide'+slide_name,'Group'+str(index+1))
+    final_dir = os.path.join(args.main_dir,args.final_output_dir,'Slide'+slide_name,'Group'+str(index+1))
     if not os.path.exists(final_dir): 
       os.makedirs(final_dir)
 
@@ -79,7 +109,7 @@ for slide_name in np.arange(1,18) : # np.arange(1,18) : # np.arange(1,18) [17]
         
         # ! peter naming is using 1_G[number].png, we're using "1_[alphabet]_25r"
         # if ('_'+k+'.png') in i : # ! CHECK NAMING CONVENTION... 
-        if ('_'+k) in i : # ! CHECK NAMING CONVENTION... 
+        if ('_'+k+args.add_file_name_pattern) in i : # ! CHECK NAMING CONVENTION... 
           
           os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
           # ! move their results from slide 1 --> can later use as baseline 
@@ -99,7 +129,7 @@ for image_id in np.arange(1,18):
   im = os.listdir(source)
   im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
   
-  final_dir = os.path.join(main_dir,final_output_dir,'Slide'+slide_name,'all')
+  final_dir = os.path.join(args.main_dir,args.final_output_dir,'Slide'+slide_name,'all')
   if not os.path.exists(final_dir): 
     os.makedirs(final_dir)
     
