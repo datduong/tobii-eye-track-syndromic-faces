@@ -287,18 +287,22 @@ def save_img (image,outname,mode="L"):
   out.save(outname)
   
   
-def average_over_data (group_name, segmentation_of_group, args): 
+def average_over_data (group_name, segmentation_of_group, args, suffix_to_add=""): 
   """_summary_
 
   Args:
       group_name (_type_): _description_
+      suffix_to_add (_type_): when compare group1-NIH vs group1-Peter, group_name=Group1 in both sets, so we need @suffix_to_add
       segmentation_of_group (_type_): _description_
       args (_type_): _description_
 
   Returns:
       _type_: _description_
   """
-  
+
+  if suffix_to_add is None: # ! throughout the code, we sort of use None interchangeably with empty string ""
+    suffix_to_add = ""
+    
   # ! process data of 1 group, create output name
   prefix = 'k'+str(args.k) if args.if_smoothing else 'k0'
   prefix = prefix + '-pixcut'+str(args.cut_pixel_per_img) if args.cut_pixel_per_img is not None else prefix
@@ -314,16 +318,16 @@ def average_over_data (group_name, segmentation_of_group, args):
   # ! take average of segmentation 
   if args.boot_ave_segmentation: 
     ave, img = ave_of_segmentation(segmentation_of_group,  args=args)
-    save_img ( img, os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name+".png") )
+    save_img ( img, os.path.join(args.output_dir,prefix+"_seg_raw_ave"+group_name+suffix_to_add+".png") )
 
   # ! average image, then take segmentation of average 
   else: 
     ave, img = segementation_of_ave (segmentation_of_group, size=(720,720), args=args)
-    save_img (img, os.path.join(args.output_dir,prefix+"_img_ave"+group_name+".png") ) # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
+    save_img (img, os.path.join(args.output_dir,prefix+"_img_ave"+group_name+suffix_to_add+".png") ) # ! if use np.array(img*255,dtype=np.unit8) then get a black background. 
 
-  # 
+  # ! segmentation of the average image. 
   if args.simple_diff is False: 
-    save_img (ave, os.path.join(args.output_dir,prefix+"_seg_ave"+group_name+".png"))
+    save_img (ave, os.path.join(args.output_dir,prefix+"_seg_ave"+group_name+suffix_to_add+".png"))
 
   return ave, img, prefix
 
@@ -409,6 +413,12 @@ if __name__ == '__main__':
 
   parser.add_argument('--remove_low_before_scale', type=float, default=None, 
                         help='before scale color intensity up, we remove random noise signals (e.g. very low pixel values)') 
+
+  parser.add_argument('--name_suffix_1', type=str, default=None, 
+                        help='without this, output will be called group1, with this, we can say group1-nih') 
+
+  parser.add_argument('--name_suffix_2', type=str, default=None, 
+                        help='add english suffix name to group2')
   
   
   # ---------------------------------------------------------------------------- #
@@ -471,7 +481,7 @@ if __name__ == '__main__':
   segmentation_group_1 = apply_segmentation(args.img_dir_group_1, threshold=args.cut_seg_to_binary_1, transparent_to_white=args.transparent_to_white, args=args)
   
   # ! process data group 1  
-  ave1, _, prefix1 = average_over_data (group_name1, segmentation_group_1, args)
+  ave1, _, prefix1 = average_over_data (group_name1, segmentation_group_1, args, suffix_to_add=args.name_suffix_1)
 
   if args.compare_vs_this is not None: # ! compare a group of participant to a FIXED constant saliency heatmap (for example, from resnet)
     
@@ -516,7 +526,7 @@ if __name__ == '__main__':
     # ---------------------------------------------------------------------------- #
  
     # ! process data group 2
-    ave2, _, prefix2 = average_over_data (group_name2, segmentation_group_2, args)
+    ave2, _, prefix2 = average_over_data (group_name2, segmentation_group_2, args, suffix_to_add=args.name_suffix_2)
 
     # ---------------------------------------------------------------------------- #
 

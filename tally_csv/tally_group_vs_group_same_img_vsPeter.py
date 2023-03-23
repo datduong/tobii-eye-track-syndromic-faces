@@ -70,7 +70,7 @@ criteria_arr = ['k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-r
 
 slide = ['Slide' + str(i) for i in np.arange(2,18)]
 
-for this_group in ['Group1','Group2']:
+for this_group in ['Group1']:
   for criteria in criteria_arr: 
     df_arr = []
     for this_slide in slide: 

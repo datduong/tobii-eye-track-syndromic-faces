@@ -46,24 +46,24 @@ do
     # ! @this_k control smoothing parameter to smooth out the dots in the heatmap 
     # ! @this_thres remove pixel values in the indidivual person (0=not doing anything). we may need this if there are super noisy dots in the corners of the image. 
 
-    # ! compare simple average images of 2 groups, using simple subtraction
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff
+    # ! compare simple average images of 2 groups NIH vs Peter, using simple subtraction
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --simple_diff
 
     # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes) hence @remove_low_before_scale argument, use using simple subtraction
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --remove_low_before_scale $remove_low_before_scale
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --remove_low_before_scale $remove_low_before_scale
 
     # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use intersection-over-union hence @cut_ave_img_to_binary argument 
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
 
     # ! start removing very low signal (hence use only high signal to compare 2 sets of participants)
     for cut_pixel_ave_img in 50 70 90 110 130 150  
     do
 
       # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use using simple subtraction
-      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --remove_low_before_scale $remove_low_before_scale
+      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --remove_low_before_scale $remove_low_before_scale
 
       # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use intersection-over-union hence @cut_ave_img_to_binary argument 
-      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
+      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
 
     done 
     
@@ -90,6 +90,8 @@ slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
 
 # slide_folders = ['Slide2', 'Slide11', 'Slide6']
 
+slide_folders = ['Slide1']
+
 # ---------------------------------------------------------------------------- #
 
 # ! for each slide1, slide2 (as a folder)
@@ -98,7 +100,7 @@ slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
 os.chdir(main_folder)
 
 for folder in slide_folders:
-  for group in ['Group1','Group3']: 
+  for group in ['Group1']: 
     # @group: 
     # Group1 = NIH vs Peter, participant who answer "correct affected vs not" 
     # Group2 = NIH vs Peter, participant who answer "incorrect affected vs not" 
@@ -117,12 +119,13 @@ for folder in slide_folders:
     #
     time.sleep( 1.5 )
     now = datetime.now() # current date and time
+    # ! make a bunch of bash script
     script_name = os.path.join(script_path,'script'+'-'+now.strftime("%m-%d-%H-%M-%S")+'.sh')
     fout = open(script_name,'w')
     fout.write(script)
     fout.close()
     # ! @sbatch is used to submit jobs
-    # os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=4 ' + script_name ) 
+    os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=4 ' + script_name ) 
 
         
 # end
