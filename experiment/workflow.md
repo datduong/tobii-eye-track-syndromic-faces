@@ -43,7 +43,7 @@ Output will be saved at the variable `$output_dir` in `group_vs_group_same_img_v
 
 See example output below. 
 
-![example](img/ExampleOutputDir.PNG)
+![example](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleOutputDir.PNG)
 
 
 ### Combine all the csv outputs into a single place to analyze 
