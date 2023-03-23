@@ -54,6 +54,10 @@ python tally_group_vs_group_same_img_vsPeter.py # need to change paths inside th
 
 ### Make meta-analysis plot in R
 
-We do this on local computer. Use `meta_analysis/group_vs_group_same_imgVsPeter.R`
+We do this on local computer. Use `meta_analysis/group_vs_group_same_imgVsPeter.R`. We need to change paths inside this code. 
+
+### Plot Tobii heatmap on top the original image. 
+
+We will add more instruction soon. 
 
 
