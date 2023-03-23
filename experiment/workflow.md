@@ -41,7 +41,7 @@ After this step, we will see the heatmap averaged over nih participants (and lik
 
 Output will be saved at the variable `$output_dir` in `group_vs_group_same_img_vsPeter.py`; for example, output dir can be `/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/Slide1`
 
-See example output below. 
+See example output below. The png outputs are the heatmaps averaged over NIH group1 (and like wise Peter group1). The csv outputs compare the differences between the average of the NIH group1 vs Peter group1. We use many different settings to smooth and scale the Tobii heatmap, and these settings are shown the output names. See more comments about these settings in `Tobii-AOI-FaceSyndromes/experiment/group_vs_group_same_img_vsPeter.py`. 
 
 ![example](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleOutputDir.PNG)
 
