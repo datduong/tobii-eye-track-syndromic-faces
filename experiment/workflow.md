@@ -41,6 +41,9 @@ After this step, we will see the heatmap averaged over nih participants (and lik
 
 Output will be saved at the variable `$output_dir` in `group_vs_group_same_img_vsPeter.py`; for example, output dir can be `/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/Slide1`
 
+See example output below. 
+
+![example](img/ExampleOutputDir.PNG)
 
 
 ### Combine all the csv outputs into a single place to analyze 
