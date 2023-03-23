@@ -28,32 +28,32 @@ python move_images.py --main_dir C:/Users/duongdb/Documents/Face11CondTobiiEyeTr
 
 ### Compare 2 sets of participants 
 
-We should do this on server, we don't need cuda, simple cpu will work fast enough (2-3 hours at most). All path will now be with respect to server path instead of local pc computer c:/user/something.
+We should do this on server, we don't need cuda, simple cpu will work fast enough (2-3 hours at most). All paths will now be with respect to server path instead of local pc computer c:/user/something.
 
-We run python code to create a bunch of bash script, this python will auto submit the bash script. we need to provide command to submit job according to the server specification.
+We run python code to create a bunch of bash script, this code will auto submit the bash script. We need to provide command to submit job according to the server specification (see line with `os.system` in this code).
 
 ```bash
 cd Tobii-AOI-FaceSyndromes/experiment
-group_vs_group_same_img_vsPeter.py # should just copy/paste code into the terminal, don't need to make this a script. 
+python group_vs_group_same_img_vsPeter.py # need to change paths inside this code
 ```
  
-After this step, we will see the heatmap averaged over nih participants (and likewise for peter's group). The averaged heatmap will be with respect to the specific setting to smooth images and scale color intesity and so forth. 
+After this step, we will see the heatmap averaged over nih participants (and likewise for peter's group). The average heatmap will be with respect to the specific setting to smooth images and scale color intesity and so forth. 
 
 Output will be saved at the variable `$output_dir` in `group_vs_group_same_img_vsPeter.py`; for example, output dir can be `/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/Slide1`
 
 
 
-# ! combine all the csv outputs into a single place to analyze 
-# ! it's much easier to create the forest plot (from meta-analysis) if we combine all the individual csv into a single larger csv. 
+### Combine all the csv outputs into a single place to analyze 
 
+It's much easier to create the forest plot (from meta-analysis) if we combine all the individual csv into a single larger csv. 
+
+```bash
 cd Tobii-AOI-FaceSyndromes/tally_csv
-tally_group_vs_group_same_img_vsPeter.py # should just copy/paste into the terminal, don't need to make this a script. 
+python tally_group_vs_group_same_img_vsPeter.py # need to change paths inside this code
+```
 
-# ! to make the meta-analysis plot in R, we do this on local computer.
-use meta_analysis/group_vs_group_same_imgVsPeter.R
+### Make meta-analysis plot in R
 
-
-
-# ! COPY OUTPUT INTO LOCAL COMPUTER, EASIER TO VIEW IMAGES AND MAKE POWERPOINT 
+We do this on local computer. Use `meta_analysis/group_vs_group_same_imgVsPeter.R`
 
 
