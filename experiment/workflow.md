@@ -13,9 +13,9 @@ python get_remove_average_tobii.py --main_datadir C:/Users/duongdb/Documents/Fac
 ```
 
 
-### Put images into 4 groups based on their accuracy
+### Put images into 4 groups based on their accuracy.
 
-**We can do this on local computer so we can easily view the images**
+**We can do this on local computer so we can easily view the images.**
 
 ```bash
 cd C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/check_data
@@ -26,7 +26,7 @@ python move_images.py --main_dir C:/Users/duongdb/Documents/Face11CondTobiiEyeTr
 ```
 
 
-### Compare 2 sets of participants 
+### Compare 2 sets of participants.
 
 We should do this on server, we don't need cuda, simple cpu will work fast enough (2-3 hours at most). All paths will now be with respect to server path instead of local pc computer c:/user/something.
 
@@ -46,7 +46,7 @@ See example output below. The png outputs are the heatmaps averaged over NIH gro
 ![example](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleOutputDir.PNG)
 
 
-### Combine all the csv outputs into a single place to analyze 
+### Combine all the csv outputs into a single place to analyze.
 
 It's much easier to create the forest plot (from meta-analysis) if we combine all the individual csv into a single larger csv. 
 
@@ -55,7 +55,7 @@ cd Tobii-AOI-FaceSyndromes/tally_csv
 python tally_group_vs_group_same_img_vsPeter.py # need to change paths inside this code
 ```
 
-### Make meta-analysis plot in R
+### Make meta-analysis plot in R.
 
 We do this on local computer. Use `meta_analysis/group_vs_group_same_imgVsPeter.R`. We need to change paths inside this code. 
 
