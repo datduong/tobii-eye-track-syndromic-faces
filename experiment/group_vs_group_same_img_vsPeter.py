@@ -55,7 +55,7 @@ do
     # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use intersection-over-union hence @cut_ave_img_to_binary argument 
     python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
 
-    # ! start removing very low signal (hence use only high signal to compare 2 sets of participants)
+    # ! START REMOVING VERY LOW SIGNAL (HENCE, USE ONLY HIGH SIGNAL TO COMPARE 2 SETS OF PARTICIPANTS). at very high values like 150, only the brightest spots will be kept, everything else will be removed. 
     for cut_pixel_ave_img in 50 70 90 110 130 150  
     do
 
