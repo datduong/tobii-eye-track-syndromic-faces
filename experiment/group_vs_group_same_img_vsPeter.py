@@ -90,7 +90,7 @@ slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
 
 # slide_folders = ['Slide2', 'Slide11', 'Slide6']
 
-slide_folders = ['Slide1']
+# slide_folders = ['Slide1']
 
 # ---------------------------------------------------------------------------- #
 

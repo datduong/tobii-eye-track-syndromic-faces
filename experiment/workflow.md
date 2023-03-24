@@ -32,6 +32,9 @@ We should do this on server, we don't need cuda, simple cpu will work fast enoug
 
 We run python code to create a bunch of bash script, this code will auto submit the bash script. We need to provide command to submit job according to the server specification (see line with `os.system` in this code).
 
+The line `slide_folders` will select with slide (in other word, which image) we want to compare NIH vs Peter's group. The line `for group in ['Group1']` will indicate which group (there are 4 possible groups).  
+
+
 ```bash
 cd Tobii-AOI-FaceSyndromes/experiment
 python group_vs_group_same_img_vsPeter.py # need to change paths inside this code
