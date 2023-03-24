@@ -18,19 +18,25 @@ code_dir=/data/duongdb/Tobii-AOI-FaceSyndromes/plot_aoi
 cd $code_dir
 
 # ! 
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023
+main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/AOI-default03232023
 
-tobii_metrics="Total_duration_of_whole_fixations,Time_to_first_whole_fixation,Number_of_whole_fixations,Duration_of_first_whole_fixation"
+tobii_metrics="Total_duration_of_whole_fixations,Time_to_first_whole_fixation,Number_of_whole_fixations,Duration_of_first_whole_fixation,Number_of_Visits"
 
 # slides="Slide 2,Slide 11"
 # group1="BAF60a,BRD4,CREBBP,EP300,KMT2,LIMK1,PDGFRa,POLR1C,SMAD1,TCOF1,WHSC1,PTPN11,RIT1,TBX"
 # group2="BAF60a,BRD4,CREBBP,EP300,KMT2,LIMK1,PDGFRa,POLR1C,SMAD1,TCOF1,WHSC1,PTPN11,RIT1,TBX"
 
-slides="Slide 11,Slide 11"
-group1="BAF60a,BRD4,CREBBP,EP300,KMT2,LIMK1,PDGFRa,SMAD1,TCOF1,WHSC1"
-group2="PTPN11,RIT1,TBX"
+# slides="Slide 11,Slide11"
+# group1="BAF60a,BRD4,CREBBP,EP300,KMT2,LIMK1,PDGFRa,SMAD1,TCOF1,WHSC1"
+# group2="Berny,Friederike,Hannah,Manuel,Meghna"
 
-python3 $code_dir/aoi_compare.py --csv $main_data_dir/AOI-data.csv --outname $main_data_dir/aoi_pval.csv --boot_num 1000 --nan_to_0 --tobii_metrics $tobii_metrics --slides "Slide 11,Slide 11" --group1 $group1 --group2 $group2
+slides="Slide 12,Slide 12"
+group1="BAF60a,BRD4,CREBBP,EP300,KMT2,LIMK1,PDGFRa,SMAD1,TCOF1,WHSC1,PTPN11,RIT1,TBX"
+group2="Berny,Friederike,Hannah,Manuel,Meghna"
+
+# --nan_to_0 makes sense if we do "total_number_of_fixation"
+
+python3 $code_dir/aoi_compare.py --csv $main_data_dir/Peter20-24+Nih.csv --outname $main_data_dir/aoi_pval_slide_12.csv --boot_num 1000 --tobii_metrics $tobii_metrics --slides "Slide 12,Slide 12" --group1 $group1 --group2 $group2
 
 # slides = ['Slide 11,Slide 11']
 
@@ -38,3 +44,24 @@ python3 $code_dir/aoi_compare.py --csv $main_data_dir/AOI-data.csv --outname $ma
 #                   ['PTPN11,RIT1,TBX'] ]
 
 ['BAF60a', 'BRD4', 'CREBBP', 'EP300', 'GTF2I', 'KMT2', 'LIMK1', 'PDGFRa', 'PTPN11', 'RAD21', 'SMAD1', 'TBX1', 'TCOF1', 'WHSC1']
+
+# {'BAF60a',
+#  'BRD4',
+#  'Berny',
+#  'CREBBP',
+#  'EP300',
+#  'Friederike',
+#  'Hannah',
+#  'KMT2',
+#  'LIMK1',
+#  'Manuel',
+#  'Meghna',
+#  'PDGFRa',
+#  'POLR1C',
+#  'PTPN11',
+#  'RIT1',
+#  'SMAD1',
+#  'TBX',
+#  'TCOF1',
+#  'WHSC1'}
+

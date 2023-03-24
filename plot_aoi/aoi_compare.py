@@ -25,24 +25,28 @@ def get_statistic (df, image_name, participants, tobii_metrics, average_option='
   Returns:
       _type_: _description_
   """
+  
   if image_name is not None: 
-    df = df[ df['TOI'].isin([image_name]) ] # get @participants who saw @image_name
+    df = df[ df['Media'].isin([image_name]) ] # get @participants who saw @image_name
   if len(participants)!=0 : 
     df = df[ df['Participant'].isin(participants) ]
+    
   # for each face region, take mean. 
   if df.shape[0] == 0: 
     print ('empty?', image_name, participants)
     exit() 
-  #
+
   if average_option == 'mean': 
-    obs_stat = df.groupby('AOI')[tobii_metrics].mean() # ! https://www.statology.org/pandas-mean-by-group/
+    obs_stat_df = df.groupby('AOI')[tobii_metrics].mean() # ! https://www.statology.org/pandas-mean-by-group/
 
   if average_option == 'median': 
-    obs_stat = df.groupby('AOI')[tobii_metrics].median() # ! https://www.statology.org/pandas-mean-by-group/  
+    obs_stat_df = df.groupby('AOI')[tobii_metrics].median() # ! https://www.statology.org/pandas-mean-by-group/  
     
-  AOI = obs_stat.index.tolist() # ! need this to access the row of each AOI
-  obs_stat = obs_stat.to_numpy() # array, num of AOI x tobii_metrics 
-  return AOI, obs_stat, df 
+  AOI = obs_stat_df.index.tolist() # ! need this to access the row of each AOI, these are just names like "eye,nose,mouth..."
+  obs_stat = obs_stat_df.to_numpy() # array, num of AOI x tobii_metrics 
+
+  # also return @obs_stat_df  @df of the user and image. 
+  return AOI, obs_stat, df, obs_stat_df
 
 
 def random_sample_df (df1,df2,image_name,participants):
@@ -77,7 +81,7 @@ def random_sample_df (df1,df2,image_name,participants):
       temp = list ( set ( df[pick_this_slide]['Participant'].tolist() ) )
       pick_this_person = np.random.choice(temp,size=1) # ! pick a random person in this slide 
       temp = df[pick_this_slide]
-      this_random_point = temp[ temp['Participant'].isin(pick_this_person) & temp['TOI'].isin([image_name[pick_this_slide]]) ] 
+      this_random_point = temp[ temp['Participant'].isin(pick_this_person) & temp['Media'].isin([image_name[pick_this_slide]]) ] 
       new_df.append(this_random_point) # ! make a random dataset
     #
     boot_sample.append ( pd.concat(new_df) )
@@ -163,38 +167,6 @@ def string_comma_to_list (this_str):
 
 # ---------------------------------------------------------------------------- #
 
-# ! permute entire row to get statistic significant test. 
-# df = 'C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/data/Trial_data_export_121522.csv'
-# df = pd.read_csv(df)
-# df = df.sort_values(['AOI','Participant']).reset_index(drop=True)
-
-# # df["Time_to_first_whole_fixation"] = df["Time_to_first_whole_fixation"].replace(np.nan, 7000)
-
-# df["Duration_of_first_whole_fixation"] = df["Duration_of_first_whole_fixation"].replace(np.nan, 0)
-
-# # slides = ['Slide 2','Slide 11']
-
-# # people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'], 
-# #                   ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','POLR1C','SMAD1','TCOF1','WHSC1','PTPN11','RIT1','TBX'] ]
-
-# slides = ['Slide 11','Slide 11']
-
-# people_names = [  ['BAF60a','BRD4','CREBBP','EP300','KMT2','LIMK1','PDGFRa','SMAD1','TCOF1','WHSC1'], 
-#                   ['PTPN11','RIT1','TBX'] ]
-
-# tobii_metrics = ['Total_duration_of_whole_fixations','Time_to_first_whole_fixation','Number_of_whole_fixations','Duration_of_first_whole_fixation']
-
-# observed_stat, pval, group_statistic, boot, mean, std, AOI = do_bootstrap (   df, 
-#                                                                               image_name=slides, 
-#                                                                               participants=people_names,   
-#                                                                               tobii_metrics=tobii_metrics,
-#                                                                               boot_num=200)
-
-
-# for d in [observed_stat, pval, mean, std]:
-#   print(d.to_string())
-
-
 
 if __name__ == '__main__':
   parser = ArgumentParser()
@@ -246,15 +218,15 @@ if __name__ == '__main__':
                                                                                 args=args,
                                                                                 boot_num=args.boot_num)
 
-  
-  many_df_to_csv(args, [observed_stat, pval, mean, std], ['observed_stat', 'pval', 'boot_mean', 'boot_std'])
 
-  df_to_long_csv(args, [pval,observed_stat], ['pval','observed_stat'])
+  many_df_to_csv(args, [group_statistic[0][3], group_statistic[0][3], observed_stat, pval, mean, std], ['nih','peter','observed_stat', 'pval', 'boot_mean', 'boot_std'])
+
+  # df_to_long_csv(args, [pval,observed_stat], ['pval','observed_stat'])
   
   # # ! 
-  # df1 = df[ df['TOI'].isin([args.slides[0]]) ] # get @participants who saw @image_name
+  # df1 = df[ df['Media'].isin([args.slides[0]]) ] # get @participants who saw @image_name
   # df1 = df1[ df1['Participant'].isin(args.group1) ]
-  # df2 = df[ df['TOI'].isin([args.slides[1]]) ] # get @participants who saw @image_name
+  # df2 = df[ df['Media'].isin([args.slides[1]]) ] # get @participants who saw @image_name
   # df2 = df2[ df2['Participant'].isin(args.group2) ]
   # fout = open(re.sub(r'.csv','',args.outname)+'mannwhitneyu.csv','w')
   # for aoi in AOI: 
