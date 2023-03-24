@@ -1,8 +1,8 @@
 
 
-### Remove average heatmap (which focuses on mostly eyes/nose/mouth) from each image
+### Remove average heatmap (which focuses on mostly eyes/nose/mouth) from each image.
 
-**We can do this on local computer so we can easily view the images**
+**We can do this on local computer so we can easily view the images.**
 
 ```bash
 cd C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/aoi_segmentation
