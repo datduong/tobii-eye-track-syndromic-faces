@@ -219,7 +219,7 @@ if __name__ == '__main__':
                                                                                 boot_num=args.boot_num)
 
 
-  many_df_to_csv(args, [group_statistic[0][3], group_statistic[0][3], observed_stat, pval, mean, std], ['nih','peter','observed_stat', 'pval', 'boot_mean', 'boot_std'])
+  many_df_to_csv(args, [group_statistic[0][3], group_statistic[1][3], observed_stat, pval, mean, std], ['nih','peter','observed_stat', 'pval', 'boot_mean', 'boot_std'])
 
   # df_to_long_csv(args, [pval,observed_stat], ['pval','observed_stat'])
   

@@ -24,13 +24,33 @@ parser.add_argument('--df', type=str,
 parser.add_argument('--add_file_name_pattern', type=str, default=None, 
                       help='add .png to file name when looking at files to move') # 
 
+parser.add_argument('--clinician_list', type=str, default=None, 
+                      help='a list of names like a,b,c,d,e...')
+
+parser.add_argument('--move_only_clinician', action='store_true', default= False, 
+                      help='use only clinicians')
+
+parser.add_argument('--move_only_non_clinician', action='store_true', default= False, 
+                      help='use only none-clinicians')
+
+
 # ---------------------------------------------------------------------------- #
 args = parser.parse_args()
 
 # ---------------------------------------------------------------------------- #
+
 if args.add_file_name_pattern is None: 
   args.add_file_name_pattern = ''
-  
+
+if args.clinician_list is not None: 
+  args.clinician_list = [i.strip() for i in args.clinician_list.split(',')]
+
+if args.move_only_clinician: 
+  args.final_output_dir = args.final_output_dir + 'Clinician'
+
+if args.move_only_non_clinician: 
+  args.final_output_dir = args.final_output_dir + 'NotClinician'
+
 # ---------------------------------------------------------------------------- #
 
 # main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
@@ -61,11 +81,7 @@ columns = [ 'Syn vs Non Syn Correct',
             'Syn vs NonSyn Correct Syndrome name Incorrect']
 
 # ---------------------------------------------------------------------------- #
-# # remove white spaces
-# for col in columns: 
-#   temp = df[col].values 
-#   temp = [str(i).strip() for i in temp]
-#   df[col] = temp 
+
 
 # ---------------------------------------------------------------------------- #
 
@@ -75,11 +91,19 @@ for slide_name in np.arange(1,18) : # np.arange(1,18) : # np.arange(1,18) [17]
   
   for index, col in enumerate(columns): 
     
-    key_name = [i for i in temp_df[col].tolist() if len(i) > 0 ] 
+    key_name = [i for i in temp_df[col].tolist() if len(i) > 0 ] # ! get all the people codename (like abc, def, ...)
     
     if len(key_name) == 0: 
       continue
 
+    # ! we may want to partition data only with respect to clinician vs not. 
+    if args.move_only_clinician: 
+      key_name = [i for i in key_name if any ( [ c==i for c in args.clinician_list ] ) ] # match whole word because we can see name G1, and G11.  
+
+    if args.move_only_non_clinician: 
+      key_name = [i for i in key_name if not any ( [ c==i for c in args.clinician_list ] ) ] 
+
+    # ! now we check slide name, and also remove images considered "BAD"
     slide_name = str(slide_name)
     
     im = [i for i in os.listdir(source)] # ! copy images
@@ -87,7 +111,7 @@ for slide_name in np.arange(1,18) : # np.arange(1,18) : # np.arange(1,18) [17]
     im = [i for i in im if '_Bad.png' not in i]
     im = [i for i in im if '_bad.png' not in i]
     im = [i for i in im if 'rBAD.png' not in i]
-    im = [i for i in im if 'POLR1C' not in i]
+    im = [i for i in im if 'POLR1C' not in i] # this person data fails. 
   
     im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
 
@@ -122,13 +146,20 @@ for slide_name in np.arange(1,18) : # np.arange(1,18) : # np.arange(1,18) [17]
 
 # ---------------------------------------------------------------------------- #
 
-# ! all images 
+# ! put everyone image in the same folder, because why not ?
 
 for image_id in np.arange(1,18): 
   slide_name = str(image_id)
   im = os.listdir(source)
   im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
-  
+
+  # ! we may want to partition data only with respect to clinician vs not. 
+  if args.move_only_clinician: 
+    im = [i for i in im if any ( [ ('_'+c+args.add_file_name_pattern) in i  for c in args.clinician_list ] ) ] 
+    
+  if args.move_only_non_clinician: 
+    im = [i for i in im if not any ( [ ('_'+c+args.add_file_name_pattern) in i  for c in args.clinician_list ] ) ]  
+
   final_dir = os.path.join(args.main_dir,args.final_output_dir,'Slide'+slide_name,'all')
   if not os.path.exists(final_dir): 
     os.makedirs(final_dir)

@@ -63,9 +63,20 @@ dfpeter = pd.concat(df_array[0:2])
 
 dfpeter['where_from'] = 'peter'
 
-df_array[2]['where_from'] = 'nih' # [2] because we have 3 data input 
+dfpeter = dfpeter[dfpeter["TOI"].str.contains("Image") == False] # remove the 3s, why do we need this 3s ? 
+dfpeter = dfpeter.reset_index(drop=True)
 
-df = [dfpeter, df_array[2]]
+
+# ---------------------------------------------------------------------------- #
+
+dfnih = df_array[2]
+dfnih['where_from'] = 'nih' # [2] because we have 3 data input 
+dfnih = dfnih[dfnih["TOI"].str.contains(" 3s") == False] # remove the 3s, why do we need this 3s ? 
+dfnih = dfnih.reset_index(drop=True)
+
+# ---------------------------------------------------------------------------- #
+
+df = [dfpeter, dfnih]
 
 # ---------------------------------------------------------------------------- #
 
@@ -92,7 +103,7 @@ df = pd.concat(df)
 
 # ! fix "slide 11" and "slide11" spacing between 2 csv
 temp = list (df['Media'].values)
-temp = [re.sub('Slide','',t.strip()) for t in temp ]
+temp = [re.sub('Slide','',t.strip()).strip() for t in temp ]
 temp = ['Slide ' + t for t in temp ]
 df['Media'] = temp
 
