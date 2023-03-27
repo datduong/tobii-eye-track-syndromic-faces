@@ -51,8 +51,30 @@ fix_name = {
 map_user_to_codename.update(fix_name)
  
 # ---------------------------------------------------------------------------- #
+add_name = ''
+peter_clinician_list = None
+nih_clinician_list = None
 
-fout = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter+Nih.csv'
+peter_nonclinician_list = None
+nih_nonclinician_list = None
+
+if nih_clinician_list is not None : 
+  add_name = add_name + 'nihclinician'
+
+if peter_clinician_list is not None : 
+  add_name = add_name + 'peterclinician'
+
+if nih_nonclinician_list is not None: 
+  add_name = add_name + 'nihnotclinician'
+
+if peter_nonclinician_list is not None: 
+  add_name = add_name + 'peternotclinician'
+
+  
+# ---------------------------------------------------------------------------- #
+
+
+fout = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter+Nih'+add_name+'.csv'
 df_array = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter/Simple AOIs_German_032423G1-20.csv',
             'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter/Simple AOIs_German_032423G20-24.csv',
             'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Nih/SimpleAOIs_NIH.csv']
@@ -76,13 +98,11 @@ dfnih = dfnih.reset_index(drop=True)
 
 # ---------------------------------------------------------------------------- #
 
-df = [dfpeter, dfnih]
-
 # ---------------------------------------------------------------------------- #
 
 # ! map user name into code name G_number 
 
-user_name = [i.lower() for i in df[0]['Participant'].values.tolist()] # lower case all user names in peter
+user_name = [i.lower() for i in dfpeter['Participant'].values.tolist()] # lower case all user names in peter
 
 print (set(user_name)) # see all user name
 
@@ -93,12 +113,31 @@ for index,user in enumerate(user_name) :
 
 # see all user name again. 
 print (set(user_name)) 
-df[0]['Participant'] = user_name
+dfpeter['Participant'] = user_name
 
 # ---------------------------------------------------------------------------- #
 
+# ! filter participants? 
+if peter_clinician_list is not None:
+  dfpeter = dfpeter["Participant"].isin(peter_clinician_list)
+
+if peter_nonclinician_list is not None:
+  dfpeter = dfpeter["Participant"].isin(peter_nonclinician_list)
+
+
+# ! filter participants? 
+if nih_clinician_list is not None:
+  dfnih = dfnih["Participant"].isin(nih_clinician_list)
+
+if nih_nonclinician_list is not None:
+  dfnih = dfnih["Participant"].isin(nih_nonclinician_list)
+  
+# ---------------------------------------------------------------------------- #
+
+df = [dfpeter, dfnih]
 df = pd.concat(df)
 
+# ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
 
 # ! fix "slide 11" and "slide11" spacing between 2 csv
