@@ -46,7 +46,7 @@ Output will be saved at the variable `$output_dir` in `group_vs_group_same_img_v
 
 See example output below. The png outputs are the heatmaps averaged over NIH group1 (and likewise Peter group1). The csv outputs compare the differences between the average of the NIH group1 vs Peter group1. We use many different settings to smooth and scale the Tobii heatmap, and these settings are shown the output names. See more comments about these settings in `Tobii-AOI-FaceSyndromes/experiment/group_vs_group_same_img_vsPeter.py`. 
 
-![example](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleOutputDir.PNG)
+![example1](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleOutputDir.PNG)
 
 
 ### Combine all the csv outputs into a single place to analyze.
@@ -57,10 +57,15 @@ It's much easier to create the forest plot (from meta-analysis) if we combine al
 cd Tobii-AOI-FaceSyndromes/tally_csv
 python tally_group_vs_group_same_img_vsPeter.py # need to change paths inside this code
 ```
+We should see this output. 
+
+![example2](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleAfterCombineCsv.PNG)
 
 ### Make meta-analysis plot in R.
 
-We do this on local computer. Use `meta_analysis/group_vs_group_same_imgVsPeter.R`. Variables to change in this .R code are: `data_path` and `what_group`. `threshold_used` defines the intensity where we truncate eye heatmap, and `mod` are the corresponding outputs. Unless we have our own modified experiments, `threshold_used` and `mod` don't need to be changed, since these outputs were already defined in `group_vs_group_same_img_vsPeter.py`. 
+We do this on local computer. Use `meta_analysis/group_vs_group_same_imgVsPeter.R`. Variables to change in this .R code are: `data_path` and `what_group`. `threshold_used` defines the intensity where we truncate eye heatmap, and `mod` are the corresponding outputs. Unless we have our own modified experiments, `threshold_used` and `mod` don't need to be changed, since these outputs were already defined in `group_vs_group_same_img_vsPeter.py`. We should see this output. 
+
+![example3](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/Group1-NIH-Peter-IoU-thr0.PNG)
 
 ### Plot Tobii heatmap on top the original image. 
 
