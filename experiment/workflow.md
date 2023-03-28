@@ -57,7 +57,7 @@ It's much easier to create the forest plot (from meta-analysis) if we combine al
 cd Tobii-AOI-FaceSyndromes/tally_csv
 python tally_group_vs_group_same_img_vsPeter.py # need to change paths inside this code
 ```
-We should see this output. 
+We should see this `Group1VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv` (and other csv files).
 
 ![example2](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleAfterCombineCsv.PNG)
 
@@ -65,7 +65,7 @@ We should see this output.
 
 We do this on local computer. Use `meta_analysis/group_vs_group_same_imgVsPeter.R`. Variables to change in this .R code are: `data_path` and `what_group`. `threshold_used` defines the intensity where we truncate eye heatmap, and `mod` are the corresponding outputs. Unless we have our own modified experiments, `threshold_used` and `mod` don't need to be changed, since these outputs were already defined in `group_vs_group_same_img_vsPeter.py`. We should see this output. 
 
-![example3](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/Group1-NIH-Peter-IoU-thr0.PNG)
+![example3](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/Group1-NIH-Peter-IoU-thr0.png)
 
 ### Plot Tobii heatmap on top the original image. 
 
