@@ -32,7 +32,7 @@ for (i in c(1:length(mod))){
 
 for (i in names(mod_list)) {
 
-  dat = read.csv(paste0(data_path,mod[i]))
+  dat = read.csv(paste0(data_path,mod_list[[i]]))
 
   # dat = dat[dat$group_size1>1,]
   # dat = dat[dat$group_size2>1,]
