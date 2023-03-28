@@ -27,7 +27,7 @@ group2=GROUP2
 
 # --nan_to_0 
 
-python3 $code_dir/aoi_compare.py --csv $main_data_dir/Peter+Nih.csv --outname $main_data_dir/aoi_trajectory_THISGROUP_SLIDENUM.csv --boot_num 500 --tobii_metrics $tobii_metrics --slides "SLIDEPAIR" --group1 $group1 --group2 $group2 --test_statistic mean 
+python3 $code_dir/aoi_compare.py --csv $main_data_dir/Peter+Nihpeterclinician.csv --outname $main_data_dir/aoi_trajectory_THISGROUP_SLIDENUM_peterclinician.csv --boot_num 500 --tobii_metrics $tobii_metrics --slides "SLIDEPAIR" --group1 $group1 --group2 $group2 --test_statistic mean 
 
 
 """
@@ -51,7 +51,7 @@ slide_folders = os.listdir(dir_set_1) # @slide_folders should be "Slide1", "Slid
 
 # slide_folders = [s for s in slide_folders if 'Slide' in s]
 
-slide_folders = ['Slide2','Slide11','Slide12'] # , 'Slide3']
+slide_folders = ['Slide2','Slide11','Slide12','Slide6'] # , 'Slide3']
 
 # ---------------------------------------------------------------------------- #
 # ! do something here later? 
@@ -82,7 +82,7 @@ for folder in slide_folders: # go over each slide
     fout = open(script_name,'w')
     fout.write(script)
     fout.close()
-    os.system('sbatch --time=00:20:00 --mem=4g --cpus-per-task=4 ' + script_name )
+    os.system('sbatch --time=00:20:00 --mem=2g --cpus-per-task=4 ' + script_name )
 
 #
 

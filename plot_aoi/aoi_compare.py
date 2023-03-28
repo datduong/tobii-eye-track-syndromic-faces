@@ -110,6 +110,10 @@ def do_bootstrap (df, image_name, participants, tobii_metrics, args, boot_num=10
   assert np.array_equal(group_statistic[0][0], group_statistic[1][0]) # equal @AOI
   observed_stat = group_statistic[0][1] - group_statistic[1][1] # matrix
 
+  # ! compute percent change? 
+  observed_stat_percent_change = np.around ( observed_stat/group_statistic[0][1], 2 ) 
+
+  # ! bootstrap 
   boot = []
 
   for i in range(boot_num):
@@ -130,13 +134,29 @@ def do_bootstrap (df, image_name, participants, tobii_metrics, args, boot_num=10
 
   AOI = group_statistic[0][0]
 
-  # format output 
+  # ! format output 
+
+  # ---------------------------------------------------------------------------- #
+  # make a nice table
+  pval = np.where (pval < 0.05, '*', '') 
+  nice_view_output = np.char.add(observed_stat_percent_change.astype(str), pval)
+
+  nice_view_nih = np.char.add( np.around(group_statistic[0][1],2).astype(str),')')
+  nice_view_nih = np.char.add(' (',nice_view_nih)
+  
+  nice_view_output = np.char.add(nice_view_output , nice_view_nih)
+
+  nice_view_output = pd.DataFrame(nice_view_output, columns=tobii_metrics, index=AOI) 
+  
+  # ---------------------------------------------------------------------------- #
+  
   observed_stat = pd.DataFrame(observed_stat, columns=tobii_metrics, index=AOI) # ! matrix size: num_aoi x num_tobii_metric
+  observed_stat_percent_change = pd.DataFrame(observed_stat_percent_change, columns=tobii_metrics, index=AOI)
   pval = pd.DataFrame(pval, columns=tobii_metrics, index=AOI)
   mean = pd.DataFrame(mean, columns=tobii_metrics, index=AOI)
   std = pd.DataFrame(std, columns=tobii_metrics, index=AOI)
   
-  return observed_stat, pval, group_statistic, boot, mean, std, AOI
+  return nice_view_output, observed_stat, pval, group_statistic, boot, mean, std, AOI
 
 
 def many_df_to_csv (args,df_list,header): 
@@ -211,15 +231,18 @@ if __name__ == '__main__':
 
   
   people_names = [args.group1, args.group2]
-  observed_stat, pval, group_statistic, boot, mean, std, AOI = do_bootstrap (   df, 
+  nice_view_output, observed_stat, pval, group_statistic, boot, mean, std, AOI = do_bootstrap (   df, 
                                                                                 image_name=args.slides, 
                                                                                 participants=people_names,   
                                                                                 tobii_metrics=args.tobii_metrics,
                                                                                 args=args,
                                                                                 boot_num=args.boot_num)
 
-
-  many_df_to_csv(args, [group_statistic[0][3], group_statistic[1][3], observed_stat, pval, mean, std], ['nih','peter','observed_stat', 'pval', 'boot_mean', 'boot_std'])
+  
+  many_df_to_csv (args, [nice_view_output], ['(Nih-Peter)/Nih,pval<0.05,(Nih)'])
+  
+  # ! 
+  # many_df_to_csv(args, [observed_stat_percent_change, group_statistic[0][3], group_statistic[1][3], observed_stat, pval, mean, std], ['PercentChangeWrtNIH','nih','peter','observed_stat', 'pval', 'boot_mean', 'boot_std'])
 
   # df_to_long_csv(args, [pval,observed_stat], ['pval','observed_stat'])
   

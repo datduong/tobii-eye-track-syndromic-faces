@@ -52,10 +52,10 @@ map_user_to_codename.update(fix_name)
  
 # ---------------------------------------------------------------------------- #
 add_name = ''
-peter_clinician_list = None
-nih_clinician_list = None
+peter_clinician_list = 'G8,G10,G11,G19,G17'.split(',') # 'G8,G10,G11,G19,G17'.split(',') None
+nih_clinician_list = None # 
 
-peter_nonclinician_list = None
+peter_nonclinician_list = None  # ['G'+str(i) for i in range(1,25) if i not in [8,10,11,19,17]] None
 nih_nonclinician_list = None
 
 if nih_clinician_list is not None : 
@@ -119,18 +119,18 @@ dfpeter['Participant'] = user_name
 
 # ! filter participants? 
 if peter_clinician_list is not None:
-  dfpeter = dfpeter["Participant"].isin(peter_clinician_list)
+  dfpeter = dfpeter [ dfpeter["Participant"].isin(peter_clinician_list) ]
 
 if peter_nonclinician_list is not None:
-  dfpeter = dfpeter["Participant"].isin(peter_nonclinician_list)
+  dfpeter = dfpeter [ dfpeter["Participant"].isin(peter_nonclinician_list) ]
 
 
 # ! filter participants? 
 if nih_clinician_list is not None:
-  dfnih = dfnih["Participant"].isin(nih_clinician_list)
+  dfnih = dfnih [ dfnih["Participant"].isin(nih_clinician_list) ]
 
 if nih_nonclinician_list is not None:
-  dfnih = dfnih["Participant"].isin(nih_nonclinician_list)
+  dfnih = dfnih [ dfnih["Participant"].isin(nih_nonclinician_list) ] 
   
 # ---------------------------------------------------------------------------- #
 

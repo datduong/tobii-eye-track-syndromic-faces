@@ -2,41 +2,37 @@
 
 library('metafor')
 
-# mod = c(  
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff.csv',                   
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-diff.csv',   
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv',
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-diff.csv',    
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3.csv',
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-diff.csv',    
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3.csv',
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-diff.csv',     
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv', 
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-diff.csv',     
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
-#   'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv',               
-#   'VsPeter-k0-thresh0.0-diff.csv',                                                      
-# )
+data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/'
 
-# mod = c(  
-#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv',  
-#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3.csv', 
-#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3.csv',  
-#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv',  
-#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
-#   'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv'                                                     
-# )
+what_group = 'Group1' # ! 4 possible groups. 
+
+threshold_used = c(110,130,150,70,90,0) # ! threshold used can be changed, but has to match variable @mod
 
 mod = c(  
-  'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv',  
-  'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
-  'Group2VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv'                                                     
+  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv',  
+  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3.csv', 
+  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3.csv',  
+  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv',  
+  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
+  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv'                                                     
 )
 
+mod = paste0 (what_group,mod) # add the name @what_group to @mod
 
-for (i in c(1:length((mod)))) {
+# ---------------------------------------------------------------------------- #
 
-  dat = read.csv(paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/',mod[i]))
+mod_list = list() # put everything into a list (this is like a dictionary in python)
+threshold_list = list() 
+for (i in c(1:length(mod))){
+  mod_list [[as.character(i)]] = mod[i] 
+  threshold_list [[as.character(i)]] = threshold_used[i]
+}
+
+# ---------------------------------------------------------------------------- #
+
+for (i in names(mod_list)) {
+
+  dat = read.csv(paste0(data_path,mod[i]))
 
   # dat = dat[dat$group_size1>1,]
   # dat = dat[dat$group_size2>1,]
@@ -44,31 +40,26 @@ for (i in c(1:length((mod)))) {
   # res <- rma(observed_stat, sei=std, data=dat, test="knha", weights=group_size)
   res <- rma(obs_stat, sei=boot_std, data=dat, test="knha")
 
-  # if (i==1) { threshold = 110 }
-  # if (i==2) { threshold = 130 }
-  # if (i==3) { threshold = 150 }
-  # if (i==4) { threshold = 70 }
-  # if (i==5) { threshold = 90 }
-  # if (i==6) { threshold = 0 }
+  threshold = threshold_list[[i]]
 
-  if (i==1) { threshold = 70 }
-  if (i==2) { threshold = 90 }
-  if (i==3) { threshold = 0 }
+  # ! CHANGE TITLE ACCORDING TO INPUT GROUPS AND SETTING
+  # this_title = paste ( 'NIH vs. Peter Participants correctly identify\nimage as affected, IoU, threshold', threshold )
+  this_title = paste ( what_group, 'NIH vs. Peter Participants\nIoU, threshold', threshold )
 
-  # this_title = paste ( 'Group2 NIH vs. Peter Participants correctly identify\nimage as affected, IoU, threshold', threshold )
+  # ! PLOT
+  png(file=paste0(data_path,what_group,'-NIH-Peter-IoU-thr',threshold,'.png'))
 
-  this_title = paste ( 'Group2 NIH vs. Peter Participants\nIoU, threshold', threshold )
+  # @slab removes group name on y-axis, so we see "slide" as y-axis name
+  # @xlim sets x-axis width of plot, may need to change depending on how nice we want plot to look visually
+  forest(res, slab=paste(gsub(what_group,'', dat$group_name1 ) , sep = ","), main=this_title, xlim=c(-.4,1.25)) 
 
-  png(file=paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/Group2-NIH-Peter-IoU-thr',threshold,'.png'))
-  forest(res, slab=paste(gsub('Group2','', dat$group_name1 ) , sep = ","), main=this_title, xlim=c(-.4,1.25))
   dev.off()
 }
 
 
+# ---------------------------------------------------------------------------- #
+
 # forest(dat$observed_stat, sei=dat$std, slab=paste(dat$tobii, sep = ","), refline=0) alim=c(-0.05,0.55)
-
-
-
 # forest(x, vi, sei, ci.lb, ci.ub)
 #        annotate=TRUE, showweights=FALSE, header=FALSE,
 #        xlim, alim, olim, ylim, at, steps=5,
