@@ -57,7 +57,7 @@ It's much easier to create the forest plot (from meta-analysis) if we combine al
 cd Tobii-AOI-FaceSyndromes/tally_csv
 python tally_group_vs_group_same_img_vsPeter.py # need to change paths inside this code
 ```
-We should see this `Group1VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv` (and other csv files). <u>**Because of bootstrap, we may not see the exact same numbers in the .csv every time; however, the output should be consistent enough between each repetition.**</u>
+We should see this `Group1VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv` (and other csv files). <u> **Because of bootstrap, we may not see the exact same numbers in the .csv every time; however, the output should be consistent enough between each repetition.** </u>
 
 ![example2](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleAfterCombineCsv.PNG)
 
