@@ -44,7 +44,7 @@ After this step, we will see the heatmap averaged over nih participants (and lik
 
 Output will be saved at the variable `$output_dir` in `group_vs_group_same_img_vsPeter.py`; for example, output dir can be `/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/Slide1`
 
-See example output below. The png outputs are the heatmaps averaged over NIH group1 (and likewise Peter group1). The csv outputs compare the differences between the average of the NIH group1 vs Peter group1. We use many different settings to smooth and scale the Tobii heatmap, and these settings are shown the output names. See more comments about these settings in `Tobii-AOI-FaceSyndromes/experiment/group_vs_group_same_img_vsPeter.py`. 
+See example output below. The png outputs are the heatmaps averaged over NIH group1 (and likewise Peter group1). The csv outputs compare the differences between the average of the NIH group1 vs Peter group1. We use many different settings to smooth and scale the Tobii heatmaps, and these settings are shown the output names. See more comments about these settings in `Tobii-AOI-FaceSyndromes/experiment/group_vs_group_same_img_vsPeter.py`. 
 
 ![example1](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleOutputDir.PNG)
 
@@ -57,6 +57,7 @@ It's much easier to create the forest plot (from meta-analysis) if we combine al
 cd Tobii-AOI-FaceSyndromes/tally_csv
 python tally_group_vs_group_same_img_vsPeter.py # need to change paths inside this code
 ```
+
 We should see this `Group1VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv` (and other csv files). ***Because of bootstrap, we may not see the exact same numbers in the .csv every time; however, the output should be consistent enough between each repetition.***
 
 ![example2](https://github.com/datduong/Tobii-AOI-FaceSyndromes/blob/master/img/ExampleAfterCombineCsv.PNG)
