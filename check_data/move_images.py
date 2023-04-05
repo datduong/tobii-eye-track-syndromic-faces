@@ -18,7 +18,7 @@ parser.add_argument('--source', type=str,
 parser.add_argument('--final_output_dir', type=str,
                       help='name of new image folder')
 
-parser.add_argument('--df', type=str,
+parser.add_argument('--df', type=str, default=None,
                       help='csv where we keep info on the 4 groups based on their accuracy')
 
 parser.add_argument('--add_file_name_pattern', type=str, default=None, 
@@ -72,75 +72,78 @@ if args.move_only_non_clinician:
 
 source = os.path.join(args.main_dir,args.source)
 
-# ---------------------------------------------------------------------------- #
 
-df = pd.read_csv(os.path.join(args.main_dir,args.df)).fillna('')
-columns = [ 'Syn vs Non Syn Correct',
-            'Syn vs Non Syn Incorrect', 	 
-            'Syn vs NonSyn Correct Syndrome Name Correct',
-            'Syn vs NonSyn Correct Syndrome name Incorrect']
+if args.df is not None: # ! because data is coming in at different time points, we may not have a final @args.df
 
-# ---------------------------------------------------------------------------- #
+  # ---------------------------------------------------------------------------- #
+
+  df = pd.read_csv(os.path.join(args.main_dir,args.df)).fillna('')
+  columns = [ 'Syn vs Non Syn Correct',
+              'Syn vs Non Syn Incorrect', 	 
+              'Syn vs NonSyn Correct Syndrome Name Correct',
+              'Syn vs NonSyn Correct Syndrome name Incorrect']
+
+  # ---------------------------------------------------------------------------- #
 
 
-# ---------------------------------------------------------------------------- #
+  # ---------------------------------------------------------------------------- #
 
-for slide_name in np.arange(1,18) : # np.arange(1,18) : # np.arange(1,18) [17]
+  for slide_name in np.arange(1,18) : # np.arange(1,18) : # np.arange(1,18) [17]
 
-  temp_df = df [ df['Image']==slide_name ]
-  
-  for index, col in enumerate(columns): 
+    temp_df = df [ df['Image']==slide_name ]
     
-    key_name = [i for i in temp_df[col].tolist() if len(i) > 0 ] # ! get all the people codename (like abc, def, ...)
-    
-    if len(key_name) == 0: 
-      continue
-
-    # ! we may want to partition data only with respect to clinician vs not. 
-    if args.move_only_clinician: 
-      key_name = [i for i in key_name if any ( [ c==i for c in args.clinician_list ] ) ] # match whole word because we can see name G1, and G11.  
-
-    if args.move_only_non_clinician: 
-      key_name = [i for i in key_name if not any ( [ c==i for c in args.clinician_list ] ) ] 
-
-    # ! now we check slide name, and also remove images considered "BAD"
-    slide_name = str(slide_name)
-    
-    im = [i for i in os.listdir(source)] # ! copy images
-    im = [i for i in im if '_BAD.png' not in i]
-    im = [i for i in im if '_Bad.png' not in i]
-    im = [i for i in im if '_bad.png' not in i]
-    im = [i for i in im if 'rBAD.png' not in i]
-    im = [i for i in im if 'POLR1C' not in i] # this person data fails. 
-  
-    im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
-
-    if len(im) == 0: 
-      continue
-
-    print ('slide', slide_name)
-    # print (key_name,'\n',im)
-    
-    final_dir = os.path.join(args.main_dir,args.final_output_dir,'Slide'+slide_name,'Group'+str(index+1))
-    if not os.path.exists(final_dir): 
-      os.makedirs(final_dir)
-
-    # if not os.path.exists(os.path.join(final_dir+'OnSlide1')): 
-    #   os.makedirs(os.path.join(final_dir+'OnSlide1'))
+    for index, col in enumerate(columns): 
       
-    for i in im: 
-      for k in key_name: 
+      key_name = [i for i in temp_df[col].tolist() if len(i) > 0 ] # ! get all the people codename (like abc, def, ...)
+      
+      if len(key_name) == 0: 
+        continue
+
+      # ! we may want to partition data only with respect to clinician vs not. 
+      if args.move_only_clinician: 
+        key_name = [i for i in key_name if any ( [ c==i for c in args.clinician_list ] ) ] # match whole word because we can see name G1, and G11.  
+
+      if args.move_only_non_clinician: 
+        key_name = [i for i in key_name if not any ( [ c==i for c in args.clinician_list ] ) ] 
+
+      # ! now we check slide name, and also remove images considered "BAD"
+      slide_name = str(slide_name)
+      
+      im = [i for i in os.listdir(source)] # ! copy images
+      im = [i for i in im if '_BAD.png' not in i]
+      im = [i for i in im if '_Bad.png' not in i]
+      im = [i for i in im if '_bad.png' not in i]
+      im = [i for i in im if 'rBAD.png' not in i]
+      im = [i for i in im if 'POLR1C' not in i] # this person data fails. 
+    
+      im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
+
+      if len(im) == 0: 
+        continue
+
+      print ('slide', slide_name)
+      # print (key_name,'\n',im)
+      
+      final_dir = os.path.join(args.main_dir,args.final_output_dir,'Slide'+slide_name,'Group'+str(index+1))
+      if not os.path.exists(final_dir): 
+        os.makedirs(final_dir)
+
+      # if not os.path.exists(os.path.join(final_dir+'OnSlide1')): 
+      #   os.makedirs(os.path.join(final_dir+'OnSlide1'))
         
-        # ! peter naming is using 1_G[number].png, we're using "1_[alphabet]_25r"
-        # if ('_'+k+'.png') in i : # ! CHECK NAMING CONVENTION... 
-        if ('_'+k+args.add_file_name_pattern) in i : # ! CHECK NAMING CONVENTION... 
+      for i in im: 
+        for k in key_name: 
           
-          os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
-          # ! move their results from slide 1 --> can later use as baseline 
-          # user = i.split('_')[1] # user name 
-          # i = '1_'+user+'_25r.png'
-          # if os.path.exists(os.path.join(source,i)): 
-          #   os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir+'OnSlide1'))
+          # ! peter naming is using 1_G[number].png, we're using "1_[alphabet]_25r"
+          # if ('_'+k+'.png') in i : # ! CHECK NAMING CONVENTION... 
+          if ('_'+k+args.add_file_name_pattern) in i : # ! CHECK NAMING CONVENTION... 
+            
+            os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
+            # ! move their results from slide 1 --> can later use as baseline 
+            # user = i.split('_')[1] # user name 
+            # i = '1_'+user+'_25r.png'
+            # if os.path.exists(os.path.join(source,i)): 
+            #   os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir+'OnSlide1'))
 
 
 

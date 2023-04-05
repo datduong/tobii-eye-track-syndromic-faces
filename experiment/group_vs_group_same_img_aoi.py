@@ -25,9 +25,27 @@ tobii_metrics="Total_duration_of_whole_fixations,Time_to_first_whole_fixation,Nu
 group1=GROUP1
 group2=GROUP2
 
-# --nan_to_0 
+# ---------------------------------------------------------------------------- #
 
-python3 $code_dir/aoi_compare.py --csv $main_data_dir/Peter+Nihpeterclinician.csv --outname $main_data_dir/aoi_trajectory_THISGROUP_SLIDENUM_peterclinician.csv --boot_num 500 --tobii_metrics $tobii_metrics --slides "SLIDEPAIR" --group1 $group1 --group2 $group2 --test_statistic mean 
+# --nan_to_0 
+# --zero_to_nan 
+
+# ---------------------------------------------------------------------------- #
+
+
+# Peter+Nih.csv # ! all NIH vs all peter                             
+# Peter+Nihnihclinicianpeterclinician.csv    
+# Peter+Nihnihclinicianpeternotclinician.csv 
+# Peter+Nihpeterclinician.csv # ! all NIH vs only peter clinician    
+# Peter+Nihpeternotclinician.csv             
+
+for csv_input in Peter+Nih.csv Peter+Nihnihclinicianpeterclinician.csv Peter+Nihnihclinicianpeternotclinician.csv Peter+Nihpeterclinician.csv Peter+Nihpeternotclinician.csv 
+do 
+
+python3 $code_dir/aoi_compare.py --csv $main_data_dir/$csv_input --outname $main_data_dir'/aoi_metric_THISGROUP_SLIDENUM_'$csv_input --boot_num 500 --tobii_metrics $tobii_metrics --slides "SLIDEPAIR" --group1 $group1 --group2 $group2 --test_statistic mean 
+
+done
+
 
 
 """
@@ -47,14 +65,12 @@ script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 dir_set_1 = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack' 
 dir_set_2 = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter' 
 
-slide_folders = os.listdir(dir_set_1) # @slide_folders should be "Slide1", "Slide2" ...
+slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
 
-# slide_folders = [s for s in slide_folders if 'Slide' in s]
-
-slide_folders = ['Slide2','Slide11','Slide12','Slide6'] # , 'Slide3']
+# slide_folders = ['Slide11'] # ['Slide2','Slide11','Slide12','Slide6'] # , 'Slide3'] ,'Slide11','Slide12','Slide6'
 
 # ---------------------------------------------------------------------------- #
-# ! do something here later? 
+# ! don't need to worry about physicians vs not. the input csv will already be divided into groups. 
 # german_physicians = ['G8', 'G10', 'G11', 'G17', 'G19' ] 
 
 # ---------------------------------------------------------------------------- #
@@ -62,7 +78,7 @@ slide_folders = ['Slide2','Slide11','Slide12','Slide6'] # , 'Slide3']
 os.chdir(script_path)
 
 for folder in slide_folders: # go over each slide
-  for group in ['Group1']: # use group 1, 2, 3, 4 or "all" between nih vs peter 
+  for group in ['all','Group1']: # use group 1, 2, 3, 4 or "all" between nih vs peter 
     set1 = [get_user_from_image_name(s) for s in os.listdir(os.path.join(dir_set_1,folder,group))]
     set2 = [get_user_from_image_name(s) for s in os.listdir(os.path.join(dir_set_2,folder,group))]
     # 
@@ -86,18 +102,3 @@ for folder in slide_folders: # go over each slide
 
 #
 
-
-x = """0
-0
-0
-283
-100
-217
-0
-325
-0
-0
-267
-0
-0
-333"""

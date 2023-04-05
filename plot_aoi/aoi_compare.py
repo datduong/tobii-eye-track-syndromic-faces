@@ -12,7 +12,7 @@ from tqdm import tqdm
 # ---------------------------------------------------------------------------- #
 
 
-def get_statistic (df, image_name, participants, tobii_metrics, average_option='median'): 
+def get_statistic (df, image_name, participants, tobii_metrics, average_option='median', print_participants=False): 
   """_summary_
 
   Args:
@@ -30,17 +30,20 @@ def get_statistic (df, image_name, participants, tobii_metrics, average_option='
     df = df[ df['Media'].isin([image_name]) ] # get @participants who saw @image_name
   if len(participants)!=0 : 
     df = df[ df['Participant'].isin(participants) ]
-    
+
   # for each face region, take mean. 
   if df.shape[0] == 0: 
     print ('empty?', image_name, participants)
     exit() 
 
+  if print_participants: 
+    print ('participant list', sorted(list(set(df['Participant'].values.tolist()))))
+
   if average_option == 'mean': 
     obs_stat_df = df.groupby('AOI')[tobii_metrics].mean() # ! https://www.statology.org/pandas-mean-by-group/
 
   if average_option == 'median': 
-    obs_stat_df = df.groupby('AOI')[tobii_metrics].median() # ! https://www.statology.org/pandas-mean-by-group/  
+    obs_stat_df = df.groupby('AOI')[tobii_metrics].median() 
     
   AOI = obs_stat_df.index.tolist() # ! need this to access the row of each AOI, these are just names like "eye,nose,mouth..."
   obs_stat = obs_stat_df.to_numpy() # array, num of AOI x tobii_metrics 
@@ -104,7 +107,7 @@ def do_bootstrap (df, image_name, participants, tobii_metrics, args, boot_num=10
   """
   group_statistic = {}
   for index,g in enumerate(image_name): 
-    group_statistic[index] = get_statistic (df, g, participants[index], tobii_metrics, average_option=args.test_statistic) 
+    group_statistic[index] = get_statistic (df, g, participants[index], tobii_metrics, average_option=args.test_statistic, print_participants=True) 
 
   # 
   assert np.array_equal(group_statistic[0][0], group_statistic[1][0]) # equal @AOI
@@ -138,8 +141,8 @@ def do_bootstrap (df, image_name, participants, tobii_metrics, args, boot_num=10
 
   # ---------------------------------------------------------------------------- #
   # make a nice table
-  pval = np.where (pval < 0.05, '*', '') 
-  nice_view_output = np.char.add(observed_stat_percent_change.astype(str), pval)
+  pval_copy = np.where (pval < 0.05, '*', '') 
+  nice_view_output = np.char.add(observed_stat_percent_change.astype(str), pval_copy)
 
   nice_view_nih = np.char.add( np.around(group_statistic[0][1],2).astype(str),')')
   nice_view_nih = np.char.add(' (',nice_view_nih)
@@ -156,7 +159,7 @@ def do_bootstrap (df, image_name, participants, tobii_metrics, args, boot_num=10
   mean = pd.DataFrame(mean, columns=tobii_metrics, index=AOI)
   std = pd.DataFrame(std, columns=tobii_metrics, index=AOI)
   
-  return nice_view_output, observed_stat, pval, group_statistic, boot, mean, std, AOI
+  return nice_view_output, observed_stat, pval, group_statistic, boot, mean, std, AOI, observed_stat_percent_change
 
 
 def many_df_to_csv (args,df_list,header): 
@@ -180,6 +183,22 @@ def df_to_long_csv (args,df_list,header):
     df.to_csv(re.sub(r'.csv',header[index]+'.csv',args.outname) , index=None) 
 
 
+def combine_df_to_csv_to_plot_later (args,df_list,outputname): 
+  out = None
+  for index,d in enumerate(df_list): 
+    d['index'] = d.index
+    d = d.reset_index()
+    df = pd.melt(d, id_vars='index', value_vars=args.tobii_metrics) # "index,variable,value,slide1,slide2"
+    df['slide1'] = args.slides[0].split()[-1]
+    df['slide2'] = args.slides[1].split()[-1] # ! should be the same as Slide2 unless we compare 2 different images
+    # df['stat_type'] = header[index]
+    if out is None: 
+      out = df
+    else: 
+      out = out.merge( df, on="index,variable,slide1,slide2".split(',') )
+  # ! jointly append (wide format)
+  out.to_csv(re.sub(r'.csv',outputname+'.csv',args.outname) , index=None) 
+  
 def string_comma_to_list (this_str): 
   if this_str is None: 
     return None
@@ -197,7 +216,7 @@ if __name__ == '__main__':
   parser.add_argument('--outname', type=str,
                         help='')
 
-  parser.add_argument('--test_statistic', type=str, default='median', 
+  parser.add_argument('--test_statistic', type=str, default='mean', 
                         help='')
 
   parser.add_argument('--boot_num', type=int, default=200, 
@@ -217,21 +236,39 @@ if __name__ == '__main__':
 
   parser.add_argument('--group2', type=string_comma_to_list,
                         help='')
+
+  parser.add_argument('--col_nan_to_0', type=string_comma_to_list, default=None,
+                        help='which col has nan convert to 0') # Duration_of_first_whole_fixation,something,something
+
+  parser.add_argument('--col_zero_to_nan', type=string_comma_to_list, default=None,
+                        help='which col has 0 convert to nan') # this will remove the row when computing mean/median
+
+  parser.add_argument('--aoi_to_use', type=string_comma_to_list, default='Chin,Forehead,L_Cheek,L_Ear,L_Eye,Mouth,Nose,R_Cheek,R_Ear,R_Eye',
+                        help='which aoi to use')
   
   # ---------------------------------------------------------------------------- #
   args = parser.parse_args()
+  for arg in vars(args): # print ... why not
+    print (arg, getattr(args, arg))
 
   # ---------------------------------------------------------------------------- #
   
   df = pd.read_csv ( args.csv )
   df = df.sort_values(['AOI','Participant']).reset_index(drop=True)
 
-  if args.nan_to_0: 
-    df["Duration_of_first_whole_fixation"] = df["Duration_of_first_whole_fixation"].replace(np.nan, 0)
+  if args.aoi_to_use is not None: 
+    df = df [ df["AOI"].isin(args.aoi_to_use) ]
+  
+  if args.col_nan_to_0 is not None: 
+    for col in args.col_nan_to_0: 
+      df[col] = df[col].replace(np.nan, 0)
 
+  if args.col_zero_to_nan is not None: # convert 0-->nan will remove the observation when we take mean or median 
+    for col in args.col_zero_to_nan: 
+      df[col] = df[col].replace(0,np.nan)
   
   people_names = [args.group1, args.group2]
-  nice_view_output, observed_stat, pval, group_statistic, boot, mean, std, AOI = do_bootstrap (   df, 
+  nice_view_output, observed_stat, pval, group_statistic, boot, mean, std, AOI, observed_stat_percent_change = do_bootstrap (   df, 
                                                                                 image_name=args.slides, 
                                                                                 participants=people_names,   
                                                                                 tobii_metrics=args.tobii_metrics,
@@ -245,6 +282,14 @@ if __name__ == '__main__':
   # many_df_to_csv(args, [observed_stat_percent_change, group_statistic[0][3], group_statistic[1][3], observed_stat, pval, mean, std], ['PercentChangeWrtNIH','nih','peter','observed_stat', 'pval', 'boot_mean', 'boot_std'])
 
   # df_to_long_csv(args, [pval,observed_stat], ['pval','observed_stat'])
+
+  output_to_combine = [pval,
+                       observed_stat,
+                       observed_stat_percent_change, 
+                       group_statistic[0][3], 
+                       group_statistic[1][3]]
+  
+  combine_df_to_csv_to_plot_later (args,output_to_combine,'long-form')
   
   # # ! 
   # df1 = df[ df['Media'].isin([args.slides[0]]) ] # get @participants who saw @image_name

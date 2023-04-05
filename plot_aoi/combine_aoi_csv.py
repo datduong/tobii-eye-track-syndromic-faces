@@ -52,11 +52,32 @@ map_user_to_codename.update(fix_name)
  
 # ---------------------------------------------------------------------------- #
 add_name = ''
-peter_clinician_list = 'G8,G10,G11,G19,G17'.split(',') # 'G8,G10,G11,G19,G17'.split(',') None
-nih_clinician_list = None # 
 
-peter_nonclinician_list = None  # ['G'+str(i) for i in range(1,25) if i not in [8,10,11,19,17]] None
-nih_nonclinician_list = None
+peter_clinician_list = None # 'G8,G10,G11,G19,G17'.split(',') # 'G8,G10,G11,G19,G17'.split(',') None
+
+nih_clinician_list = None
+# nih_clinician_list = ['BAF60a',
+#                       'BRD4',
+#                       'CREBBP',
+#                       'EP300',
+#                       # 'GTF2I',
+#                       'KMT2',
+#                       'LIMK1',
+#                       'PDGFRa',
+#                       'POLR1C',
+#                       'PTPN11',
+#                       # 'RAD21',
+#                       'RIT1',
+#                       'SMAD1',
+#                       'TBX1',
+#                       'TCOF1',
+#                       'WHSC1'] # GTF2I RAD21	are trainees
+
+peter_nonclinician_list = ['G'+str(i) for i in range(1,25) if i not in [8,10,11,19,17]]   # ['G'+str(i) for i in range(1,25) if i not in [8,10,11,19,17]] None
+
+nih_nonclinician_list = None # ['GTF2I','RAD21'] GTF2I RAD21
+
+# ---------------------------------------------------------------------------- #
 
 if nih_clinician_list is not None : 
   add_name = add_name + 'nihclinician'
@@ -75,26 +96,58 @@ if peter_nonclinician_list is not None:
 
 
 fout = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter+Nih'+add_name+'.csv'
-df_array = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter/Simple AOIs_German_032423G1-20.csv',
-            'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter/Simple AOIs_German_032423G20-24.csv',
-            'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Nih/SimpleAOIs_NIH.csv']
+
+df_array = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter/SimpleAOIs_German_033023.csv',
+            'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Nih/Simple AOIs_NIH_032923.csv']
 
 df_array = [pd.read_csv(d) for d in df_array]
 
-dfpeter = pd.concat(df_array[0:2])
+# ---------------------------------------------------------------------------- #
 
+# dfpeter = pd.concat(df_array[0:2])
+dfpeter = df_array[0]
 dfpeter['where_from'] = 'peter'
 
 dfpeter = dfpeter[dfpeter["TOI"].str.contains("Image") == False] # remove the 3s, why do we need this 3s ? 
 dfpeter = dfpeter.reset_index(drop=True)
 
+# check user names 
+user = set(dfpeter['Participant'].values.tolist()) 
+user_define = set ( map_user_to_codename.keys() ) 
+print ( user_define - user ) 
+print ( user - user_define )
+
 
 # ---------------------------------------------------------------------------- #
 
-dfnih = df_array[2]
-dfnih['where_from'] = 'nih' # [2] because we have 3 data input 
+dfnih = df_array[1] # use at [1] or [2] because we have 2 or 3 data input 
+dfnih['where_from'] = 'nih' 
 dfnih = dfnih[dfnih["TOI"].str.contains(" 3s") == False] # remove the 3s, why do we need this 3s ? 
 dfnih = dfnih.reset_index(drop=True)
+
+# check user names 
+user = set(dfnih['Participant'].values.tolist()) 
+user_define = """BAF60a
+BRD4
+CREBBP
+EP300
+GTF2I
+KMT2
+LIMK1
+PDGFRa
+POLR1C
+PTPN11
+RAD21
+RIT1
+SMAD1
+TBX1
+TCOF1
+WHSC1
+""".split('\n')
+user_define = set ( [i.strip() for i in user_define] ) 
+print ( user_define - user ) 
+print ( user - user_define )
+
 
 # ---------------------------------------------------------------------------- #
 
@@ -140,6 +193,8 @@ df = pd.concat(df)
 # ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
 
+df = df [ df["Media"] != "Entire Recording" ] 
+df = df [ df["TOI"] != "Entire Recording" ] 
 # ! fix "slide 11" and "slide11" spacing between 2 csv
 temp = list (df['Media'].values)
 temp = [re.sub('Slide','',t.strip()).strip() for t in temp ]

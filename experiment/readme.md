@@ -22,7 +22,7 @@ cd C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/check_data
 
 python move_images.py --main_dir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --source 25radius-fix-mismatch-name-csv-no-ave-whtbg --final_output_dir RemoveAveEyeTrack --df C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/TableEyeTrackingSimple.csv
 
-python move_images.py --main_dir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --source 25radius-fix-mismatch-name-csv-no-ave-whtbg --final_output_dir RemoveAveEyeTrackPeter --df C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/TableEyeTrackingSimplePeter.csv --add_file_name_pattern .png
+python move_images.py --main_dir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --source 25radius-no-ave-whtbg-peter --final_output_dir RemoveAveEyeTrackPeter --df C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/TableEyeTrackingSimplePeter.csv --add_file_name_pattern .png
 ```
 
 
