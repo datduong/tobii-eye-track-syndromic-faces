@@ -8,22 +8,22 @@ library('ggpubr')
 library('coin')
 library('EnvStats')
 
-df = read.csv('C:/Users/duongdb/Documents/GitHub/Tobii-AOI-FaceSyndromes/data/Trial_data_export_121522.csv')
+df = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter+Nih04072023NihClinicPeterClinic.csv')
 
 
 # ---------------------------------------------------------------------------- #
 
-# slide_number = 'Slide 8' # 'Slide 11' 2
+slide_number = 'Slide 11' # 'Slide 11' 2
 
-# df_wrt_slide = subset (df, df$TOI==slide_number)
-# p_Total_duration_of_fixations<-ggplot(df_wrt_slide, aes(x=as.factor(AOI), y=Total_duration_of_fixations)) +
-#   geom_boxplot(position=position_dodge(1)) +
-#   theme_bw(base_size = 16) +
-#   theme(legend.position = 'bottom', legend.direction = "horizontal", axis.title.x=element_blank(), axis.title.y = element_text(size = 16), plot.title = element_text(hjust = 0.5, size=14) ) +
-#   labs(title = paste (slide_number, 'Total_duration_of_fixations')) +
-#   ylab('Milisec') 
+df_wrt_slide = subset (df, df$Media==slide_number)
+Time_to_first_whole_fixation<-ggplot(df_wrt_slide, aes(x=as.factor(AOI), y=Time_to_first_whole_fixation, fill=as.factor(where_from))) +
+  geom_boxplot(position=position_dodge(1)) +
+  theme_bw(base_size = 16) +
+  theme(legend.position = 'bottom', legend.direction = "horizontal", axis.title.x=element_blank(), axis.title.y = element_text(size = 16), plot.title = element_text(hjust = 0.5, size=14) ) +
+  labs(title = paste (slide_number, 'Time_to_first_whole_fixation')) +
+  ylab('Milisec') 
 
-# p_Total_duration_of_fixations
+Time_to_first_whole_fixation
 
 
 # # ---------------------------------------------------------------------------- #

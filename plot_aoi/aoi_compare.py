@@ -266,6 +266,19 @@ if __name__ == '__main__':
   if args.col_zero_to_nan is not None: # convert 0-->nan will remove the observation when we take mean or median 
     for col in args.col_zero_to_nan: 
       df[col] = df[col].replace(0,np.nan)
+
+  # ---------------------------------------------------------------------------- #
+
+  # change output name based on setting 
+  add_to_name = args.test_statistic + 'nan2ze' if args.col_nan_to_0 is not None else args.test_statistic
+  add_to_name = add_to_name + 'ze2nan' if args.col_zero_to_nan is not None else add_to_name
+  outputname = add_to_name + args.outname.split('/')[-1]
+  temp = args.outname.split('/')
+  temp = temp[0:(len(temp)-1)]
+  args.outname = '/'.join(temp+[outputname])
+  print ('output name ', args.outname )
+  
+  # ---------------------------------------------------------------------------- #
   
   people_names = [args.group1, args.group2]
   nice_view_output, observed_stat, pval, group_statistic, boot, mean, std, AOI, observed_stat_percent_change = do_bootstrap (   df, 

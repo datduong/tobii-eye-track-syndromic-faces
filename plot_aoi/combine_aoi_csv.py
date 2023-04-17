@@ -33,71 +33,78 @@ map_codename_to_user = {
 'G22'	:'Fredreike',
 'G23'	:'Manuel',
 'G24'	:'Meghna',
-'G25' :'Sebastian'
+'G25' :'Sebastian',
+'G26' :'Matthias Weigl',
+'G27' :'Elisabeth',
+'G28' :'Tzung', 
+'G29' :'Claudia',
 }
 
-map_user_to_codename = { v.lower() :k for k,v in map_codename_to_user.items() }
+map_user_to_codename = { v.lower() :k for k,v in map_codename_to_user.items() } # ! PUT EVERYTHING IN LOWER CASE, MAKE LIFE EASER
 
-# ! we have wrong spelling in names 
+# ! we have wrong spelling in names, MUST USE LOWER CASE HERE, MAKE LIFE EASIER
 fix_name = {
  'nanditha':'G12',
  'behnam':'G6',
  'sheetal kumar':'G19',
  'astrid golla':'G4',
  'isabelle claus': 'G8',
- 'friederike': 'G22'
+ 'friederike': 'G22',
+ 'mattihias': 'G26',
+ 'elisabet': 'G27',
  }
 
 map_user_to_codename.update(fix_name)
  
 # ---------------------------------------------------------------------------- #
-add_name = ''
+add_name = '04072023'
 
-peter_clinician_list = None # 'G8,G10,G11,G19,G17'.split(',') # 'G8,G10,G11,G19,G17'.split(',') None
+peter_clinician_id_number = [8,10,11,19,17,27,29]
 
-nih_clinician_list = None
-# nih_clinician_list = ['BAF60a',
-#                       'BRD4',
-#                       'CREBBP',
-#                       'EP300',
-#                       # 'GTF2I',
-#                       'KMT2',
-#                       'LIMK1',
-#                       'PDGFRa',
-#                       'POLR1C',
-#                       'PTPN11',
-#                       # 'RAD21',
-#                       'RIT1',
-#                       'SMAD1',
-#                       'TBX1',
-#                       'TCOF1',
-#                       'WHSC1'] # GTF2I RAD21	are trainees
+peter_clinician_list = None # ['G'+str(i) for i in peter_clinician_id_number] # None
 
-peter_nonclinician_list = ['G'+str(i) for i in range(1,25) if i not in [8,10,11,19,17]]   # ['G'+str(i) for i in range(1,25) if i not in [8,10,11,19,17]] None
+# nih_clinician_list = None
+nih_clinician_list = ['BAF60a',
+                      'BRD4',
+                      'CREBBP',
+                      'EP300',
+                      # 'GTF2I',
+                      'KMT2',
+                      'LIMK1',
+                      'PDGFRa',
+                      'POLR1C',
+                      'PTPN11',
+                      # 'RAD21',
+                      'RIT1',
+                      'SMAD1',
+                      'TBX1',
+                      'TCOF1',
+                      'WHSC1'] # GTF2I RAD21	are trainees
+
+peter_nonclinician_list = ['G'+str(i) for i in range(1,30) if i not in peter_clinician_id_number ] # ['G'+str(i) for i in range(1,25) if i not in peter_clinician_id_number ]   #  None
 
 nih_nonclinician_list = None # ['GTF2I','RAD21'] GTF2I RAD21
 
 # ---------------------------------------------------------------------------- #
 
 if nih_clinician_list is not None : 
-  add_name = add_name + 'nihclinician'
+  add_name = add_name + 'NihClinic'
 
 if peter_clinician_list is not None : 
-  add_name = add_name + 'peterclinician'
+  add_name = add_name + 'PeterClinic'
 
 if nih_nonclinician_list is not None: 
-  add_name = add_name + 'nihnotclinician'
+  add_name = add_name + 'NihNotClinic'
 
 if peter_nonclinician_list is not None: 
-  add_name = add_name + 'peternotclinician'
+  add_name = add_name + 'PeterNotClinic'
 
   
 # ---------------------------------------------------------------------------- #
 
-
 fout = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter+Nih'+add_name+'.csv'
 
-df_array = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter/SimpleAOIs_German_033023.csv',
+df_array = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter/AOI_peter_04072023.csv',
             'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Nih/Simple AOIs_NIH_032923.csv']
 
 df_array = [pd.read_csv(d) for d in df_array]
@@ -204,6 +211,8 @@ df['Media'] = temp
 # ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
 df.to_csv(fout,index=False)
+
+print ( 'check final user list', sorted( list (set (df['Participant'].values.tolist()) ) ))
 
 # may see this below, but they don't affect the computation. 
 # sys:1: DtypeWarning: Columns (7,8,9,10,11,26) have mixed types.Specify dtype option on import or set low_memory=False.
