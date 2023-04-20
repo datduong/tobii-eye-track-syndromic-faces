@@ -2,19 +2,19 @@
 
 library('metafor')
 
-data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareGroupSameImgVsPeter/'
+data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023/'
 
-what_group = 'Group1' # ! 4 possible groups. 
+what_group = 'all' # ! 4 possible groups. 
 
 threshold_used = c(110,130,150,70,90,0) # ! threshold used can be changed, but has to match variable @mod
 
 mod = c(  
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv',  
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3.csv', 
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3.csv',  
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv',  
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
-  'VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv'                                                     
+  '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv',  
+  '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3.csv', 
+  '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3.csv',  
+  '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv',  
+  '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
+  '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv'                                                     
 )
 
 mod = paste0 (what_group,mod) # add the name @what_group to @mod
@@ -44,10 +44,10 @@ for (i in names(mod_list)) {
 
   # ! CHANGE TITLE ACCORDING TO INPUT GROUPS AND SETTING
   # this_title = paste ( 'NIH vs. Peter Participants correctly identify\nimage as affected, IoU, threshold', threshold )
-  this_title = paste ( what_group, 'NIH vs. Peter Participants\nIoU, threshold', threshold )
+  this_title = paste ( what_group, 'Expert vs. Non Expert Participants\nIoU, threshold', threshold )
 
   # ! PLOT
-  png(file=paste0(data_path,what_group,'-NIH-Peter-IoU-thr',threshold,'.png'))
+  png(file=paste0(data_path,what_group,'-Expert-NonExpert-IoU-thr',threshold,'.png'))
 
   # @slab removes group name on y-axis, so we see "slide" as y-axis name
   # @xlim sets x-axis width of plot, may need to change depending on how nice we want plot to look visually

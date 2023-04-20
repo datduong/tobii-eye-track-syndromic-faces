@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np 
 
 from argparse import ArgumentParser
+import shutil
 
 # ---------------------------------------------------------------------------- #
 
@@ -113,7 +114,7 @@ if args.df is not None: # ! because data is coming in at different time points, 
       im = [i for i in im if '_BAD.png' not in i]
       im = [i for i in im if '_Bad.png' not in i]
       im = [i for i in im if '_bad.png' not in i]
-      im = [i for i in im if 'rBAD.png' not in i]
+      im = [i for i in im if 'BAD.png' not in i]
       im = [i for i in im if 'POLR1C' not in i] # this person data fails. 
     
       im = [i for i in im if re.match(r'^'+slide_name+'_',i) ]
@@ -121,7 +122,7 @@ if args.df is not None: # ! because data is coming in at different time points, 
       if len(im) == 0: 
         continue
 
-      print ('slide', slide_name)
+      # print ('slide', slide_name)
       # print (key_name,'\n',im)
       
       final_dir = os.path.join(args.main_dir,args.final_output_dir,'Slide'+slide_name,'Group'+str(index+1))
@@ -131,19 +132,23 @@ if args.df is not None: # ! because data is coming in at different time points, 
       # if not os.path.exists(os.path.join(final_dir+'OnSlide1')): 
       #   os.makedirs(os.path.join(final_dir+'OnSlide1'))
         
-      for i in im: 
+      for i in im: # go over each image... kind of slow... whatever
         for k in key_name: 
           
           # ! peter naming is using 1_G[number].png, we're using "1_[alphabet]_25r"
           # if ('_'+k+'.png') in i : # ! CHECK NAMING CONVENTION... 
           if ('_'+k+args.add_file_name_pattern) in i : # ! CHECK NAMING CONVENTION... 
             
-            os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
-            # ! move their results from slide 1 --> can later use as baseline 
-            # user = i.split('_')[1] # user name 
-            # i = '1_'+user+'_25r.png'
-            # if os.path.exists(os.path.join(source,i)): 
-            #   os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir+'OnSlide1'))
+            if os.path.exists ( os.path.join(source,i) ) : 
+          
+              shutil.copy2 ( os.path.join(source,i), os.path.join(final_dir,i))
+              
+              # os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir))
+              # ! move their results from slide 1 --> can later use as baseline 
+              # user = i.split('_')[1] # user name 
+              # i = '1_'+user+'_25r.png'
+              # if os.path.exists(os.path.join(source,i)): 
+              #   os.system ('scp ' + os.path.join(source,i) + ' ' + os.path.join(final_dir+'OnSlide1'))
 
 
 

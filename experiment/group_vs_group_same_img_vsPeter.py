@@ -19,20 +19,23 @@ code_dir=/data/duongdb/Tobii-AOI-FaceSyndromes/aoi_segmentation
 cd $code_dir
 
 # ! NIH data
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack
+main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023
 img_dir_group_1=$main_data_dir/SLIDE_NUM/GROUP1 
 
 # ! Peter data
-main_data_dir_2=/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter
+main_data_dir_2=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
 img_dir_group_2=$main_data_dir_2/SLIDE_NUM/GROUP2
 
 # ! output
-output_dir=$main_data_dir/CompareGroupSameImgVsPeter # mean_vs_model.csv
+output_dir=$main_data_dir/Heatmap25rExpertVsNonExpert04172023 # mean_vs_model.csv
 mkdir $output_dir
 
-output_dir=$main_data_dir/CompareGroupSameImgVsPeter/SLIDE_NUM # mean_vs_model.csv
+output_dir=$main_data_dir/Heatmap25rExpertVsNonExpert04172023/SLIDE_NUM # mean_vs_model.csv
 mkdir $output_dir
 
+# ! add suffix to output average images? 
+name_suffix_1=exp
+name_suffix_2=noexp
 
 # ! may as well do this at tons of threshold to see what happens
 
@@ -47,23 +50,23 @@ do
     # ! @this_thres remove pixel values in the indidivual person (0=not doing anything). we may need this if there are super noisy dots in the corners of the image. 
 
     # ! compare simple average images of 2 groups NIH vs Peter, using simple subtraction
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --simple_diff
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --simple_diff
 
     # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes) hence @remove_low_before_scale argument, use using simple subtraction
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --remove_low_before_scale $remove_low_before_scale
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --remove_low_before_scale $remove_low_before_scale
 
     # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use intersection-over-union hence @cut_ave_img_to_binary argument 
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
 
     # ! START REMOVING VERY LOW SIGNAL (HENCE, USE ONLY HIGH SIGNAL TO COMPARE 2 SETS OF PARTICIPANTS). at very high values like 150, only the brightest spots will be kept, everything else will be removed. 
     for cut_pixel_ave_img in 50 70 90 110 130 150  
     do
 
       # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use using simple subtraction
-      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --remove_low_before_scale $remove_low_before_scale
+      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --remove_low_before_scale $remove_low_before_scale
 
       # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use intersection-over-union hence @cut_ave_img_to_binary argument 
-      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 nih --name_suffix_2 peter --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
+      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
 
     done 
     
@@ -83,7 +86,7 @@ cut_seg_to_binary_2 = .5
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack' # @main_folder is where we save all the output data
+main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the output data
 
 # 
 slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
@@ -100,15 +103,15 @@ slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
 os.chdir(main_folder)
 
 for folder in slide_folders:
-  for group in ['Group1']: 
+  for group in ['all','Group1','Group2']: # Group1
     # @group: 
     # Group1 = NIH vs Peter, participant who answer "correct affected vs not" 
     # Group2 = NIH vs Peter, participant who answer "incorrect affected vs not" 
     # Group3 = NIH vs Peter, participant who answer "correct affected vs not" AND say correct disease name  
     # Group2 = NIH vs Peter, participant who answer "correct affected vs not" BUT say wrong disease name 
-    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack',folder,group)):
+    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023',folder,group)):
       continue
-    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter',folder,group)):
+    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023',folder,group)):
       continue
     script = re.sub('THIS_K',str(this_k),script_base)
     script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script) # ! note @THRESHOLD_GROUP_1 is NIH

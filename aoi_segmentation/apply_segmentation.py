@@ -414,10 +414,10 @@ if __name__ == '__main__':
   parser.add_argument('--remove_low_before_scale', type=float, default=None, 
                         help='before scale color intensity up, we remove random noise signals (e.g. very low pixel values)') 
 
-  parser.add_argument('--name_suffix_1', type=str, default=None, 
+  parser.add_argument('--name_suffix_1', type=str, default='', 
                         help='without this, output will be called group1, with this, we can say group1-nih') 
 
-  parser.add_argument('--name_suffix_2', type=str, default=None, 
+  parser.add_argument('--name_suffix_2', type=str, default='', 
                         help='add english suffix name to group2')
   
   
