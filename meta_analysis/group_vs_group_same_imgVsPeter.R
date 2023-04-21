@@ -4,7 +4,7 @@ library('metafor')
 
 data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023/'
 
-what_group = 'all' # ! 4 possible groups. 
+what_group = 'Group3' # ! 4 possible groups. 
 
 threshold_used = c(110,130,150,70,90,0) # ! threshold used can be changed, but has to match variable @mod
 
@@ -34,8 +34,8 @@ for (i in names(mod_list)) {
 
   dat = read.csv(paste0(data_path,mod_list[[i]]))
 
-  # dat = dat[dat$group_size1>1,]
-  # dat = dat[dat$group_size2>1,]
+  dat = dat[dat$group_size1>1,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE.  
+  dat = dat[dat$group_size2>1,]
 
   # res <- rma(observed_stat, sei=std, data=dat, test="knha", weights=group_size)
   res <- rma(obs_stat, sei=boot_std, data=dat, test="knha")

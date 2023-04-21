@@ -84,11 +84,11 @@ all_model_face_seg = [i for i in all_model_face_seg if i.endswith('.PNG')]
 # ---------------------------------------------------------------------------- #
 
 
-tobii_num = np.arange(2,18) # tobii_num = [2,3,4,6,11,14]
+tobii_num = np.arange(2,18) # tobii_num = [2,3,4,6,11,14] np.arange(2,18)
 
 image_type = 'img_ave'
 
-output_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareWithPeter'
+output_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/MetaAnalysisExpertNoExpert'
 
 os.makedirs(output_dir,exist_ok=True)
 
@@ -126,11 +126,12 @@ for this_group in ['all','Group1', 'Group2', 'Group3', 'Group4']: # 'all','Group
     img_dir_set2 = [] # ! another group of participants 
       
     for tobii_choice in TOBII_CHOICE: 
-      
-      tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+tobii_choice
-      peter_tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Compare2Images/'+tobii_choice
 
-      tobii_heatmap_arr = [i for i in os.listdir(tobii_dir) if i.endswith('.png')]
+      # ! get the average heatmaps of each participant set. @tobii_choice select low/medium/high attention in heatmap
+      tobii_dir1 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//Heatmap25rExpertNoAveByAcc04172023/'+tobii_choice
+      tobii_dir2 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//Heatmap25rNonExpertNoAveByAcc04172023/'+tobii_choice
+
+      tobii_heatmap_arr = [i for i in os.listdir(tobii_dir1) if i.endswith('.png')]
       tobii_heatmap_arr = [i for i in tobii_heatmap_arr if tobii_choice in i]
       tobii_heatmap_arr = [i for i in tobii_heatmap_arr if this_group in i]
       tobii_heatmap_arr = [i for i in tobii_heatmap_arr if image_type in i]
@@ -145,23 +146,23 @@ for this_group in ['all','Group1', 'Group2', 'Group3', 'Group4']: # 'all','Group
         continue
       this_tobii_heatmap = this_tobii_heatmap[0]
 
-      if not os.path.exists ( os.path.join(peter_tobii_dir,this_tobii_heatmap) ): # ! compare side by side, need images from both cohorts
+      if not os.path.exists ( os.path.join(tobii_dir2,this_tobii_heatmap) ): # ! compare side by side, need images from both cohorts
         continue
 
       mask_as_img = [
-                    os.path.join(tobii_dir,this_tobii_heatmap),
-                    os.path.join(peter_tobii_dir,this_tobii_heatmap)
+                    os.path.join(tobii_dir1,this_tobii_heatmap),
+                    os.path.join(tobii_dir2,this_tobii_heatmap)
                     ]
 
 
       masks = []
       for index, this_mask in enumerate(mask_as_img): 
         this_mask = Image.open(this_mask).convert("L")
+        this_mask = np.array(this_mask)
         if use_face_seg_removal: # ! mask out region not of interest? 
           face_remove = Image.open(os.path.join(face_seg_dir,'Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG')).convert("L")
           face_remove = np.array (face_remove)
           face_remove = np.where (face_remove==0,0,1)
-          this_mask = np.array(this_mask)
           this_mask = this_mask * face_remove 
         # 
         # convert mask into an original_image 

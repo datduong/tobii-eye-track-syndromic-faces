@@ -4,10 +4,13 @@ library('metafor')
 
 
 
-dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/all_heatmap_vs_heatmap_long.csv')
+dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/all_img_group_heatmap_vs_heatmap_long.csv')
+expert_or_not = 'Expert'
 
-# unique(dat$type)
-# unique(dat$group)
+fout_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/'
+
+# unique(this_df$type)
+# unique(this_df$group)
 # [1] "1,2" "2,3" "2,4" "3,4"
 
 
@@ -26,22 +29,30 @@ for (group in c("1,2") ) {
     this_df = subset(dat, dat$type==mod[i])
     this_df = this_df [this_df$group==group, ]
 
+    this_df = this_df[this_df$group_size1>1,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE.  
+    this_df = this_df[this_df$group_size2>1,]
+    print (mod[i])
+    print (this_df)
     res <- rma(obs_stat, sei=boot_std, data=this_df, test="knha")
 
     if (i==1) { threshold = 70 }
     if (i==2) { threshold = 90 }
     if (i==3) { threshold = 110 }
     # if (i==2) { threshold = 130 }
-    this_title = paste ( 'Peter Group', group, 'participants, threshold', threshold )
+    this_title = paste ( 'Expert participants', group , 'threshold', threshold )
 
-    windows() 
-    forest(res, slab=paste(gsub('Group1','', this_df$condition ) , sep = ","), main=this_title) # alim=c(-0.05,0.45), xlim=c(-.25,.75)
+    # ! PLOT
+    png(file=paste0(fout_path,'Group1-Group2-IoU-thr',threshold,'.png'))
+
+    forest(res, slab=paste(gsub('Group1','', this_df$condition ) , sep = ","), main=this_title, xlim=c(-.4,1.25)) # alim=c(-0.05,0.45), xlim=c(-.25,.75)
+    dev.off()
 
   }
 
 }
 
-# forest(dat$observed_stat, sei=dat$std, slab=paste(dat$tobii, sep = ","), refline=0)
+
+# forest(this_df$observed_stat, sei=this_df$std, slab=paste(this_df$tobii, sep = ","), refline=0)
 
 
 

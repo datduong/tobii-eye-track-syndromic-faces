@@ -70,7 +70,7 @@ criteria_arr = ['k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-r
 
 slide = ['Slide' + str(i) for i in np.arange(2,18)]
 
-for this_group in ['Group1']:
+for this_group in ['all','Group1','Group2','Group3','Group4']:
   for criteria in criteria_arr: 
     df_arr = []
     for this_slide in slide: 
@@ -79,6 +79,9 @@ for this_group in ['Group1']:
       csv = [i for i in csv if this_group in i]
       csv = [ pd.read_csv(os.path.join(path,this_slide,c) ) for c in csv ] 
       df_arr = df_arr + csv # append 
+    #
+    if len(df_arr) == 0: 
+      continue
     #
     df_long = pd.concat (df_arr)
     df_long.to_csv(os.path.join(foutpath,this_group+'-'+criteria+'.csv'), index=False)
