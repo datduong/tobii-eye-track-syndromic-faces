@@ -20,7 +20,7 @@ cd $code_dir
 
 # ! 
 
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
+main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023
 
 img_dir_group_1=$main_data_dir/SLIDE_NUM/GROUP1 
 img_dir_group_2=$main_data_dir/SLIDE_NUM/GROUP2
@@ -72,7 +72,7 @@ cut_seg_to_binary_2 = .5
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023' # @main_folder is where we save all the data
+main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the data
 
 slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Slide2" ...
 
@@ -87,7 +87,7 @@ slide_folders = ['Slide'+str(s) for s in np.arange(2,18)]
 
 os.chdir(main_folder)
 
-GROUP_TO_USE = ['all','all'] # ['Group1','Group2','Group3','Group4']
+GROUP_TO_USE = ['all','Group1','Group2','Group3','Group4'] # ['Group1','Group2','Group3','Group4']
 
 for folder in slide_folders: 
   #
@@ -96,7 +96,7 @@ for folder in slide_folders:
   #
   for i,g1 in enumerate(group_folder):
     for j,g2 in enumerate(group_folder): 
-      if j<=i: 
+      if j<i: 
         continue
       print (g1,g2)
       if g1=='Group1' and g2=='Group3': 
@@ -104,6 +104,8 @@ for folder in slide_folders:
       if g1=='Group1' and g2=='Group4': 
         continue
       #
+      if (g1=='all') and ('G' in g2):
+        continue
       script = re.sub('THIS_K',str(this_k),script_base)
       script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script)
       script = re.sub('THRESHOLD_GROUP_2',str(cut_seg_to_binary_2),script)
@@ -111,13 +113,13 @@ for folder in slide_folders:
       script = re.sub('GROUP1',g1,script)
       script = re.sub('GROUP2',g2,script)
       #
-      time.sleep( 1.5 )
+      time.sleep( 2.5 )
       now = datetime.now() # current date and time
-      script_name = os.path.join(script_path,'script'+'-'+now.strftime("%m-%d-%H-%M-%S")+'.sh')
+      script_name = os.path.join(script_path,'script2'+'-'+now.strftime("%m-%d-%H-%M-%S")+'.sh')
       fout = open(script_name,'w')
       fout.write(script)
       fout.close()
-      os.system('sbatch --time=00:50:00 --mem=4g --cpus-per-task=4 ' + script_name )
+      os.system('sbatch --time=00:60:00 --mem=4g --cpus-per-task=4 ' + script_name )
       # exit()
       
 #

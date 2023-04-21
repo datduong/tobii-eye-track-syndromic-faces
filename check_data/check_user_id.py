@@ -3,11 +3,18 @@ import os,sys,re,pickle
 import numpy as np
 import pandas as pd 
 
-df = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-data-format.csv'
+df = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Nih/Simple AOIs_NIH_032923.csv'
 df = pd.read_csv(df)
 user_in_df = set(df['Participant'].values)
 
-image_source = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius'
+image_source = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-to-csv-04172023'
+
+img = os.listdir(image_source)
+
+dash_in_name = [i for i in img if '-' in i]
+dash_in_name
+
+
 img = [i.split('_')[1] for i in os.listdir(image_source)]
 img = [i.split('-')[0] if '-' in i else i for i in img  ]
 
@@ -19,6 +26,23 @@ print ( user_in_df-img )
 print ('reverse')
 print ( img-user_in_df ) 
 # {'GTF21', 'GTF@1', 'CEBBP', 'KIMT2', 'RTI', 'TOCF1', 'RITI', 'PTPN'}
+
+# ---------------------------------------------------------------------------- #
+# ! check with simple excel that saves the accuracy scores
+acc = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/TableEyeTrackingSimpleNih04172023.csv'
+acc = pd.read_csv(acc)
+user_acc = []
+for i in np.arange(0,4): 
+  user_acc = user_acc + acc.iloc[:, i].values.tolist()
+#
+
+user_acc = set (user_acc)
+print ('in user in acc but not img')
+print ( user_acc-img )
+print ('reverse')
+print ( img-user_acc ) 
+
+# ---------------------------------------------------------------------------- #
 
 rename = {'GTF21':'GTF2I', 'GTF@1':'GTF2I', 
           'CEBBP':'CREBBP', 

@@ -4,7 +4,7 @@ library('metafor')
 
 
 
-dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/all_img_group_heatmap_vs_heatmap_long.csv')
+dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/all_img_expgroup_heatmap_vs_heatmap_long.csv')
 expert_or_not = 'Expert'
 
 fout_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/'
@@ -29,8 +29,8 @@ for (group in c("1,2") ) {
     this_df = subset(dat, dat$type==mod[i])
     this_df = this_df [this_df$group==group, ]
 
-    this_df = this_df[this_df$group_size1>1,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE.  
-    this_df = this_df[this_df$group_size2>1,]
+    this_df = this_df[this_df$group_size1>0,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
+    this_df = this_df[this_df$group_size2>0,]
     print (mod[i])
     print (this_df)
     res <- rma(obs_stat, sei=boot_std, data=this_df, test="knha")

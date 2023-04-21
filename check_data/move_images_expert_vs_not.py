@@ -19,7 +19,7 @@ main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023'
 source_folder = os.path.join(main_dir,'Peter25RadiusTobiiHeatmap04172023_fix_name')
 destination_folder = os.path.join(main_dir,'Heatmap25rNonExpert04172023')
 
-expert_images = [i for i in os.listdir(source_folder) if not any (j in i for j in peter_clinician_id_number)]
+expert_images = [i for i in os.listdir(source_folder) if not any (j in i for j in peter_clinician_id_number)] # use "not any" if move non-expert
 
 for p in expert_images: 
   src = os.path.join(source_folder, p)

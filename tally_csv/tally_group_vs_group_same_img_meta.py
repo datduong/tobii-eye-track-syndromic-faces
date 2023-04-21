@@ -76,8 +76,8 @@ for s in slide:
   # this_df = this_df[this_df['type']==criteria]
   # ! how to view this? https://stackoverflow.com/questions/22798934/pandas-long-to-wide-reshape-by-two-variables
   # ! filter some other stuffs? this will make viewing easier ?
-  this_df = this_df[ this_df['group_size1'] > 1] # ! PROBABLY SHOULD NOT USE PARTITION WITH JUST 1 PERSON. 
-  this_df = this_df[ this_df['group_size2'] > 1]
+  # this_df = this_df[ this_df['group_size1'] > 1] # ! PROBABLY SHOULD NOT USE PARTITION WITH JUST 1 PERSON. 
+  # this_df = this_df[ this_df['group_size2'] > 1]
   # ! long format
   all_df_long.append(this_df) # add 2 list 
   
@@ -95,6 +95,6 @@ pair2 = [i.split('Group')[-1] for i in all_df_long['group_name2'].values]
 pair = [str(i)+','+str(j) for i,j in zip(pair1,pair2)]
 all_df_long['group'] = pair
 
-all_df_long.to_csv(os.path.join(path,'all_img_group_heatmap_vs_heatmap_long.csv'),index=None)
+all_df_long.to_csv(os.path.join(path,'all_img_expgroup_heatmap_vs_heatmap_long.csv'),index=None)
 
 all_df_long

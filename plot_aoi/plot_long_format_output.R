@@ -2,10 +2,20 @@
 library('ggplot2')
 
 
-slide_number = 3
-group_option = 'NihClinicPeterNotClinic' # 'NihClinicPeterNotClinic' # 'NihClinicPeterClinic'
-main_dir = paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/CompareNihPeter/Slide',slide_number,'/')
-csv_input = paste0('meanaoi_metric_all_Slide',slide_number,'_Peter+Nih04072023',group_option,'long-form.csv')
+# slide_number = 3
+# group_option = 'NihClinicPeterNotClinic' # 'NihClinicPeterNotClinic' # 'NihClinicPeterClinic'
+# main_dir = paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/CompareNihPeter/Slide',slide_number,'/')
+# csv_input = paste0('meanaoi_metric_all_Slide',slide_number,'_Peter+Nih04072023',group_option,'long-form.csv')
+
+
+# ---------------------------------------------------------------------------- #
+
+slide_number = 2
+group_option = 'NihMetricsManualUniqueDysmorphicAOIs' # 'NihClinicPeterNotClinic' # 'NihClinicPeterClinic'
+main_dir = paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/CompareWithinNihManualAoi/Slide',slide_number,'/')
+csv_input = paste0('meanaoi_Group1Group2_Slide',slide_number,'_',group_option,'long-form.csv')
+
+# ---------------------------------------------------------------------------- #
 
 df = read.csv(paste0(main_dir,csv_input))
 names(df) = c ("aoi","variable","pval","slide1","slide2","observe_diff","percent_diff","value1","value2")    
@@ -27,7 +37,9 @@ df = subset( df, df$aoi != 'Chin')
 
 # ---------------------------------------------------------------------------- #
 
-df = subset( df, df$variable %in% c('Number_of_whole_fixations','Number_of_Glances','Number_of_Visits','Number_of_saccades_in_AOI','Time_to_first_whole_fixation','Time_to_first_Glance','Time_to_first_Visit'))
+# df = subset( df, df$variable %in% c('Number_of_whole_fixations','Number_of_Glances','Number_of_Visits','Number_of_saccades_in_AOI','Time_to_first_whole_fixation','Time_to_first_Glance','Time_to_first_Visit'))
+
+df = subset( df, df$variable %in% c('Total_duration_of_fixations','Number_of_whole_fixations','Time_to_first_whole_fixation'))
 
 # ! flip, so it's easy to view ?
 # df$percent_diff[ df$variable == 'Time_to_first_whole_fixation' ] = df$percent_diff[ df$variable == 'Time_to_first_whole_fixation' ]  * -1
@@ -52,7 +64,7 @@ p = ggplot(df, aes(x=aoi, y=percent_diff, fill=as.factor(variable) )) +
   theme_bw(base_size = 14) +
   theme(legend.position = 'right', legend.direction = "vertical", axis.title.x=element_blank(), axis.title.y = element_text(size = 14), plot.title = element_text(hjust = 0.5, size=14), axis.text.x = element_text(angle = 30, vjust = 0.5, hjust=0.25) ) +
   labs(title = paste('Slide',slide_number,group_option)) +
-  ylab('(NIH-Peter) / NIH') 
+  ylab('(Acc-NotAcc) / Acc') 
 
 png(file=paste0(main_dir,slide_number,'_',group_option,'.png'), width=9.5, height=4, units="in", res=720)
 p
