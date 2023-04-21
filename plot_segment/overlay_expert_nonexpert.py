@@ -5,21 +5,23 @@ import numpy as np
 from PIL import Image
 from segmentation_mask_overlay import overlay_masks
 
-# ! overlay tobii segmentation on the image 
-# ! https://github.com/lobantseff/segmentation-mask-overlay
+from matplotlib import cm
 
-# ---------------------------------------------------------------------------- #
+
+# ! overlay tobii segmentation on the original_image 
+
+# ! https://github.com/lobantseff/segmentation-mask-overlay
 
 def image_grid(imgs, rows, cols):
   # assert len(imgs) == rows*cols
+
   w, h = imgs[0].size
   grid = Image.new('RGB', size=(cols*w, rows*h))
-  # grid_w, grid_h = grid.size
+  grid_w, grid_h = grid.size
+  
   for i, img in enumerate(imgs):
       grid.paste(img, box=(i%cols*w, i//cols*h))
   return grid
-
-# ---------------------------------------------------------------------------- #
 
 match_powerpoint_to_tobii = {
   1:3, 
@@ -63,121 +65,124 @@ id_to_english = {
 
 # ---------------------------------------------------------------------------- #
 
-model_choice = 'smoothk20-thresh0.1-'
-model_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/EfficientNetOccSegment/'
-all_model_mask = os.listdir(model_dir)
-all_model_mask = [i for i in all_model_mask if model_choice in i]
+# ! use saliency map ?
+# model_choice = 'smoothk20-thresh0.5-'
+# model_dir = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/Classify/b4ns448wlEqualss10lr3e-05dp0.2b64ntest1NormalNotAsUnaff/EfficientNetOccSegment/'
+# all_model_mask = os.listdir(model_dir)
+# all_model_mask = [i for i in all_model_mask if model_choice in i]
 
 # ---------------------------------------------------------------------------- #
 
-# ! mask from face parser to remove eye movement outside of the face? 
+# ! use face parser map to remove eye movement outside of face ?
+
+use_face_seg_removal = False
+
 face_seg_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/SurveyPicsFacerSegment'
 all_model_face_seg = os.listdir(face_seg_dir)
-all_model_face_seg = [i for i in all_model_mask if i.endswith('.PNG')]
-use_face_seg_removal = True
+all_model_face_seg = [i for i in all_model_face_seg if i.endswith('.PNG')]
 
 # ---------------------------------------------------------------------------- #
 
-# slide_folders = ['Slide2','Slide11','Slide14','Slide12','Slide8'
-tobii_num = np.arange(2,18)
+
+tobii_num = np.arange(2,18) # tobii_num = [2,3,4,6,11,14]
+
+image_type = 'img_ave'
+
+output_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/CompareWithPeter'
+
+os.makedirs(output_dir,exist_ok=True)
+
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3 
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3  
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3  
+# k0-thresh0.0-diff                                                       
+# k0-thresh0.0-cutbfscale10.0-diff                                        
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff                    
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave50.0-diff      
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-diff      
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-diff      
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-diff     
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-diff     
+# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-diff     
+
+TOBII_CHOICE = [
+                # 'k0-thresh0.0-diff',
+                # 'k0-thresh0.0-cutbfscale10.0-diff',
+                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff',
+                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-diff',    
+                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-diff',      
+                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-diff',     
+                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-diff', 
+                ]
 
 
-# C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/nosmooth-thresh0.0-avepix0.3-round0.7
+# ---------------------------------------------------------------------------- #
 
-criteria = 'k0-thresh0.0-avepix0.2-smoothave-pixcutave170.0-round'
-
-# k0-thresh0.0-avepix0.2-smoothave-pixcutave110.0-round0.3
-# C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/k0-thresh0.0-avepix0.2-smoothave-pixcutave135.0-round0.0
-
-for this_group in ['Group1','Group3','all'] : # ['Group1', 'all'] : 
-
-  for threshold_used in [0.3]: 
-      
-    tobii_choice = criteria+str(threshold_used)+'_seg_ave'  # '_seg_ave'  _img_ave
-    tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+str(criteria)+str(threshold_used)
-    if not os.path.exists( tobii_dir ): 
-      continue
-
-    #
-    peter_data_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Compare2Images/'+str(criteria)+str(threshold_used)
-    # 
+for this_group in ['all','Group1', 'Group2', 'Group3', 'Group4']: # 'all','Group1', 'Group2', 'Group3', 'Group4'
     
-    all_tobii_mask = os.listdir(tobii_dir)
-
-    all_tobii_mask = [i for i in all_tobii_mask if tobii_choice in i]
-    all_tobii_mask = [i for i in all_tobii_mask if this_group in i]
-
-    all_img_as_pil = []
-
-    for tobii_index, this_tobii in enumerate(tobii_num) : 
-
-      image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG'
-
-      disease_english_name = id_to_english[this_tobii]
+  for tobii_index, this_tobii in enumerate(tobii_num) : # ! for each original_image 
+    
+    img_dir_set1 = [] # ! can be expert or just nih group
+    img_dir_set2 = [] # ! another group of participants 
       
-      output_name = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/'+model_choice+disease_english_name+'_overlay.png'
-
-      image = Image.open(image).convert("L")
-      image = np.array(image)
-
-      this_tobii_mask = [i for i in all_tobii_mask if 'Slide'+str(this_tobii) in i]
-      if len(this_tobii_mask) == 0: 
-        continue
-      #
-      this_tobii_mask = this_tobii_mask[0]
-
-      # this_model_mask = [i for i in all_model_mask if disease_english_name+'Slide' in i]
-
-      # if len(this_model_mask)==0:
-      #   continue
-       
-      # this_model_mask = this_model_mask[0]
-
-      if not os.path.exists(os.path.join(peter_data_dir,this_tobii_mask)): 
-        print (os.path.join(peter_data_dir,this_tobii_mask))
-        continue
+    for tobii_choice in TOBII_CHOICE: 
       
+      tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/'+tobii_choice
+      peter_tobii_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter/Compare2Images/'+tobii_choice
+
+      tobii_heatmap_arr = [i for i in os.listdir(tobii_dir) if i.endswith('.png')]
+      tobii_heatmap_arr = [i for i in tobii_heatmap_arr if tobii_choice in i]
+      tobii_heatmap_arr = [i for i in tobii_heatmap_arr if this_group in i]
+      tobii_heatmap_arr = [i for i in tobii_heatmap_arr if image_type in i]
+
+      # ---------------------------------------------------------------------------- #
+
+      original_image = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG'
+      original_image = Image.open(original_image).convert("RGBA")
+
+      this_tobii_heatmap = [i for i in tobii_heatmap_arr if 'Slide'+str(this_tobii)+this_group in i]
+      if len(this_tobii_heatmap) == 0: 
+        continue
+      this_tobii_heatmap = this_tobii_heatmap[0]
+
+      if not os.path.exists ( os.path.join(peter_tobii_dir,this_tobii_heatmap) ): # ! compare side by side, need images from both cohorts
+        continue
+
       mask_as_img = [
-                os.path.join(tobii_dir,this_tobii_mask),
-                os.path.join(peter_data_dir,this_tobii_mask), 
-                ]
+                    os.path.join(tobii_dir,this_tobii_heatmap),
+                    os.path.join(peter_tobii_dir,this_tobii_heatmap)
+                    ]
 
-      mask_labels = [
-                'NIH particip.',
-                'Peter particip.',    
-                ]
-        
+
       masks = []
-      for this_mask in mask_as_img: 
+      for index, this_mask in enumerate(mask_as_img): 
         this_mask = Image.open(this_mask).convert("L")
-        
-        if use_face_seg_removal: 
+        if use_face_seg_removal: # ! mask out region not of interest? 
           face_remove = Image.open(os.path.join(face_seg_dir,'Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG')).convert("L")
           face_remove = np.array (face_remove)
           face_remove = np.where (face_remove==0,0,1)
           this_mask = np.array(this_mask)
           this_mask = this_mask * face_remove 
-          
-        this_mask = np.array(this_mask,dtype="bool") # should be pure black/white style ??
+        # 
+        # convert mask into an original_image 
+        # https://stackoverflow.com/questions/10965417/how-to-convert-a-numpy-array-to-pil-original_image-applying-matplotlib-colormap
+        this_mask = cm.magma((255-this_mask)/255)
+        this_mask = Image.fromarray(np.uint8(this_mask*255)).convert("RGBA")
         masks.append(this_mask)
         
-      # [Optional] prepare labels
-      # mask_labels = [f"Mask_{i}" for i in range(len(masks))]
 
-      # [Optional] prepare colors
-      # https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
-      cmap = plt.cm.tab10(np.arange(6)) # np.arange(len(mask_labels))
-      cmap = cmap[[2,3],:]
-      # Laminate your image!
-      # fig = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.5) # matplotlib.figure.Figure
-      # Do with that image whatever you want to do.
-      # fig.savefig(output_name, bbox_inches="tight", dpi=300)
-      
-      pil_img = overlay_masks(image, masks, labels=mask_labels, colors=cmap, mask_alpha=0.4, return_pil_image=True) # matplotlib.figure.Figure
-      all_img_as_pil.append(pil_img)
+      for i,foreground in enumerate(masks) : 
+        blend_image = Image.blend (original_image, foreground, alpha=0.3)
+        if i == 0: 
+          img_dir_set1.append(blend_image)
+        if i ==1: 
+          img_dir_set2.append(blend_image)
 
 
     #
-    grid = image_grid(all_img_as_pil, rows=4, cols=4)
-    grid.save(os.path.join(tobii_dir,this_group+"tobii_overlay_peter.png"))
+    all_img_as_pil = img_dir_set1 + img_dir_set2
+    if len(all_img_as_pil)==0: 
+      continue
+    grid = image_grid(all_img_as_pil, rows=2, cols=len(img_dir_set1))
+    grid.save(os.path.join(output_dir,this_group+'_'+str(this_tobii)+"tobii_overlay.png"))
 

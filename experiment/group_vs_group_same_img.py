@@ -20,14 +20,13 @@ cd $code_dir
 
 # ! 
 
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter
+main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
 
 img_dir_group_1=$main_data_dir/SLIDE_NUM/GROUP1 
 img_dir_group_2=$main_data_dir/SLIDE_NUM/GROUP2
 
 output_dir=$main_data_dir/CompareGroupSameImgSLIDE_NUM # mean_vs_model.csv
 mkdir $output_dir
-
 
 
 # ! may as well do this at tons of threshold to see what happens
@@ -73,13 +72,13 @@ cut_seg_to_binary_2 = .5
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrackPeter' # @main_folder is where we save all the data
+main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023' # @main_folder is where we save all the data
 
 slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Slide2" ...
 
-slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
+slide_folders = ['Slide'+str(s) for s in np.arange(2,18)]
 
-# slide_folders = ['Slide2','Slide11'] # , 'Slide3']
+# slide_folders = ['Slide10'] # , 'Slide3']
 
 # ---------------------------------------------------------------------------- #
 
@@ -88,7 +87,7 @@ slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
 
 os.chdir(main_folder)
 
-GROUP_TO_USE = ['Group1','Group2','Group3','Group4']
+GROUP_TO_USE = ['all','all'] # ['Group1','Group2','Group3','Group4']
 
 for folder in slide_folders: 
   #
@@ -104,18 +103,6 @@ for folder in slide_folders:
         continue
       if g1=='Group1' and g2=='Group4': 
         continue
-      # if g1=='Group2' and g2=='Group3': 
-      #   continue
-      # if g1=='Group2' and g2=='Group4': 
-      #   continue
-      # if g1=='Group1OnSlide1' and g2=='Group3OnSlide1': 
-      #   continue
-      # if g1=='Group1OnSlide1' and g2=='Group4OnSlide1': 
-      #   continue
-      # if g1=='Group2OnSlide1' and g2=='Group3OnSlide1': 
-      #   continue
-      # if g1=='Group2OnSlide1' and g2=='Group4OnSlide1': 
-      #   continue
       #
       script = re.sub('THIS_K',str(this_k),script_base)
       script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script)
@@ -130,7 +117,7 @@ for folder in slide_folders:
       fout = open(script_name,'w')
       fout.write(script)
       fout.close()
-      os.system('sbatch --time=00:35:00 --mem=4g --cpus-per-task=4 ' + script_name )
+      os.system('sbatch --time=00:50:00 --mem=4g --cpus-per-task=4 ' + script_name )
       # exit()
       
 #

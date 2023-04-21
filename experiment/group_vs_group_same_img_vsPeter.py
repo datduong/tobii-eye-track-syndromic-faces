@@ -23,7 +23,7 @@ main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAv
 img_dir_group_1=$main_data_dir/SLIDE_NUM/GROUP1 
 
 # ! Peter data
-main_data_dir_2=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
+main_data_dir_2=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023
 img_dir_group_2=$main_data_dir_2/SLIDE_NUM/GROUP2
 
 # ! output
@@ -103,7 +103,7 @@ slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
 os.chdir(main_folder)
 
 for folder in slide_folders:
-  for group in ['all','Group1','Group2']: # Group1
+  for group in ['all']: # Group1
     # @group: 
     # Group1 = NIH vs Peter, participant who answer "correct affected vs not" 
     # Group2 = NIH vs Peter, participant who answer "incorrect affected vs not" 
@@ -111,7 +111,7 @@ for folder in slide_folders:
     # Group2 = NIH vs Peter, participant who answer "correct affected vs not" BUT say wrong disease name 
     if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023',folder,group)):
       continue
-    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023',folder,group)):
+    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023',folder,group)):
       continue
     script = re.sub('THIS_K',str(this_k),script_base)
     script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script) # ! note @THRESHOLD_GROUP_1 is NIH
