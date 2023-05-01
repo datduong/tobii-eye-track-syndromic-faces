@@ -10,18 +10,22 @@ from matplotlib import cm
 
 # ! overlay tobii segmentation on the original_image 
 
-# ! https://github.com/lobantseff/segmentation-mask-overlay
+# ! follow https://github.com/lobantseff/segmentation-mask-overlay
+
+# ---------------------------------------------------------------------------- #
 
 def image_grid(imgs, rows, cols):
   # assert len(imgs) == rows*cols
-
   w, h = imgs[0].size
   grid = Image.new('RGB', size=(cols*w, rows*h))
-  grid_w, grid_h = grid.size
-  
+  # grid_w, grid_h = grid.size
   for i, img in enumerate(imgs):
       grid.paste(img, box=(i%cols*w, i//cols*h))
   return grid
+
+# ---------------------------------------------------------------------------- #
+
+# ! we need to remap image numbering, during the experiments, we had multiple powerpoint slides 
 
 match_powerpoint_to_tobii = {
   1:3, 
@@ -83,7 +87,6 @@ all_model_face_seg = [i for i in all_model_face_seg if i.endswith('.PNG')]
 
 # ---------------------------------------------------------------------------- #
 
-
 tobii_num = np.arange(2,18) # tobii_num = [2,3,4,6,11,14] np.arange(2,18)
 
 image_type = 'img_ave'
@@ -91,19 +94,6 @@ image_type = 'img_ave'
 output_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/MetaAnalysisExpertNoExpert'
 
 os.makedirs(output_dir,exist_ok=True)
-
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3 
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3  
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3  
-# k0-thresh0.0-diff                                                       
-# k0-thresh0.0-cutbfscale10.0-diff                                        
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff                    
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave50.0-diff      
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-diff      
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-diff      
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-diff     
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-diff     
-# k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-diff     
 
 TOBII_CHOICE = [
                 # 'k0-thresh0.0-diff',
@@ -155,16 +145,18 @@ for this_group in ['all','Group1', 'Group2', 'Group3', 'Group4']: # 'all','Group
                     ]
 
 
-      masks = []
+      masks = [] # ! @masks is naming convention of https://github.com/lobantseff/segmentation-mask-overlay
+      
       for index, this_mask in enumerate(mask_as_img): 
         this_mask = Image.open(this_mask).convert("L")
         this_mask = np.array(this_mask)
+        
         if use_face_seg_removal: # ! mask out region not of interest? 
           face_remove = Image.open(os.path.join(face_seg_dir,'Slide'+str(match_tobii_to_powerpoint[this_tobii])+'.PNG')).convert("L")
           face_remove = np.array (face_remove)
           face_remove = np.where (face_remove==0,0,1)
           this_mask = this_mask * face_remove 
-        # 
+         
         # convert mask into an original_image 
         # https://stackoverflow.com/questions/10965417/how-to-convert-a-numpy-array-to-pil-original_image-applying-matplotlib-colormap
         this_mask = cm.magma((255-this_mask)/255)
@@ -178,7 +170,6 @@ for this_group in ['all','Group1', 'Group2', 'Group3', 'Group4']: # 'all','Group
           img_dir_set1.append(blend_image)
         if i ==1: 
           img_dir_set2.append(blend_image)
-
 
     #
     all_img_as_pil = img_dir_set1 + img_dir_set2

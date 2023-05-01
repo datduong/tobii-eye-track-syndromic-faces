@@ -4,10 +4,10 @@ library('metafor')
 
 
 
-dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/all_img_expgroup_heatmap_vs_heatmap_long.csv')
+dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/all_img_nonexpgroup_heatmap_vs_heatmap_long.csv')
 expert_or_not = 'Expert'
 
-fout_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/'
+fout_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/'
 
 # unique(this_df$type)
 # unique(this_df$group)
@@ -39,7 +39,7 @@ for (group in c("1,2") ) {
     if (i==2) { threshold = 90 }
     if (i==3) { threshold = 110 }
     # if (i==2) { threshold = 130 }
-    this_title = paste ( 'Expert participants', group , 'threshold', threshold )
+    this_title = paste ( 'Nonexpert participants', group , 'threshold', threshold )
 
     # ! PLOT
     png(file=paste0(fout_path,'Group1-Group2-IoU-thr',threshold,'.png'))
