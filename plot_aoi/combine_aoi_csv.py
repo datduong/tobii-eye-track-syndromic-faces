@@ -57,31 +57,31 @@ fix_name = {
 map_user_to_codename.update(fix_name)
  
 # ---------------------------------------------------------------------------- #
-add_name = '04072023'
+add_name = '05012023'
 
-peter_clinician_id_number = [8,10,11,19,17,27,29]
+peter_clinician_id_number = None # [8,10,11,19,17,27,29] # None
 
 peter_clinician_list = None # ['G'+str(i) for i in peter_clinician_id_number] # None
 
-# nih_clinician_list = None
-nih_clinician_list = ['BAF60a',
-                      'BRD4',
-                      'CREBBP',
-                      'EP300',
-                      # 'GTF2I',
-                      'KMT2',
-                      'LIMK1',
-                      'PDGFRa',
-                      'POLR1C',
-                      'PTPN11',
-                      # 'RAD21',
-                      'RIT1',
-                      'SMAD1',
-                      'TBX1',
-                      'TCOF1',
-                      'WHSC1'] # GTF2I RAD21	are trainees
+nih_clinician_list = None
+# nih_clinician_list = ['BAF60a',
+#                       'BRD4',
+#                       'CREBBP',
+#                       'EP300',
+#                       # 'GTF2I',
+#                       'KMT2',
+#                       'LIMK1',
+#                       'PDGFRa',
+#                       'POLR1C',
+#                       'PTPN11',
+#                       # 'RAD21',
+#                       'RIT1',
+#                       'SMAD1',
+#                       'TBX1',
+#                       'TCOF1',
+#                       'WHSC1'] # GTF2I RAD21	are trainees
 
-peter_nonclinician_list = ['G'+str(i) for i in range(1,30) if i not in peter_clinician_id_number ] # ['G'+str(i) for i in range(1,25) if i not in peter_clinician_id_number ]   #  None
+peter_nonclinician_list = None # ['G'+str(i) for i in range(1,30) if i not in peter_clinician_id_number ] # None
 
 nih_nonclinician_list = None # ['GTF2I','RAD21'] GTF2I RAD21
 
@@ -102,23 +102,27 @@ if peter_nonclinician_list is not None:
   
 # ---------------------------------------------------------------------------- #
 
-fout = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter+Nih'+add_name+'.csv'
+fout = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-manual05012023/Peter+Nih'+add_name+'.csv'
 
-df_array = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter/AOI_peter_04072023.csv',
-            'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Nih/Simple AOIs_NIH_032923.csv']
+df_array = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-manual05012023/DysmorphicAOIs_042523/Project4_Bonn_DysmorphicAOIs_042523.csv',
+            'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-manual05012023/DysmorphicAOIs_042523/Project5_Bonn_DysmorphicAOIs_042523.csv',
+            'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-manual05012023/DysmorphicAOIs_042523/NIH_DysmorphicAOIs_042523.csv']
 
 df_array = [pd.read_csv(d) for d in df_array]
 
 # ---------------------------------------------------------------------------- #
 
-# dfpeter = pd.concat(df_array[0:2])
-dfpeter = df_array[0]
+dfpeter = pd.concat(df_array[0:2])
+# dfpeter = df_array[0]
 dfpeter['where_from'] = 'peter'
 
 dfpeter = dfpeter[dfpeter["TOI"].str.contains("Image") == False] # remove the 3s, why do we need this 3s ? 
 dfpeter = dfpeter.reset_index(drop=True)
 
 # check user names 
+user_name = [i.lower() for i in dfpeter['Participant'].values.tolist()] # lower case all user names in peter
+dfpeter['Participant'] = user_name
+
 user = set(dfpeter['Participant'].values.tolist()) 
 user_define = set ( map_user_to_codename.keys() ) 
 print ( user_define - user ) 
@@ -127,7 +131,7 @@ print ( user - user_define )
 
 # ---------------------------------------------------------------------------- #
 
-dfnih = df_array[1] # use at [1] or [2] because we have 2 or 3 data input 
+dfnih = df_array[2] # use at [1] or [2] because we have 2 or 3 data input 
 dfnih['where_from'] = 'nih' 
 dfnih = dfnih[dfnih["TOI"].str.contains(" 3s") == False] # remove the 3s, why do we need this 3s ? 
 dfnih = dfnih.reset_index(drop=True)
@@ -210,9 +214,16 @@ df['Media'] = temp
 
 # ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
+
+# ! check the name TBX --> TBX1
 df.to_csv(fout,index=False)
 
 print ( 'check final user list', sorted( list (set (df['Participant'].values.tolist()) ) ))
 
 # may see this below, but they don't affect the computation. 
 # sys:1: DtypeWarning: Columns (7,8,9,10,11,26) have mixed types.Specify dtype option on import or set low_memory=False.
+
+print ('check areas of interests')
+z = list ( set (df['AOI']) ) 
+z = sorted (z)
+print (','.join(z))

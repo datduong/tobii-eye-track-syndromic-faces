@@ -20,7 +20,7 @@ cd $code_dir
 
 # ! 
 
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023
+main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertKeepAveByAcc04172023
 
 img_dir_group_1=$main_data_dir/SLIDE_NUM/GROUP1 
 img_dir_group_2=$main_data_dir/SLIDE_NUM/GROUP2
@@ -72,7 +72,7 @@ cut_seg_to_binary_2 = .5
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the data
+main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertKeepAveByAcc04172023' # @main_folder is where we save all the data
 
 slide_folders = os.listdir(main_folder) # @slide_folders should be "Slide1", "Slide2" ...
 

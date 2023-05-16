@@ -70,6 +70,8 @@ parser.add_argument('--cropsize', type=str, default=None,
 parser.add_argument('--resize_output', type=string_comma_to_np, default=None, 
                       help='resize output') # 720,720
 
+parser.add_argument('--keep_average', action='store_true', default=False, 
+                      help='keep average, not remove it') # 720,720
 
 # ---------------------------------------------------------------------------- #
 args = parser.parse_args()
@@ -127,7 +129,8 @@ for im in imlist:
 
   # ---------------------------------------------------------------------------- #
 
-  imarr = imarr - average_image_array # ! take out average 
+  if not args.keep_average: 
+    imarr = imarr - average_image_array # ! take out average 
 
   # ---------------------------------------------------------------------------- #
   

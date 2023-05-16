@@ -108,7 +108,7 @@ TOBII_CHOICE = [
 
 # ---------------------------------------------------------------------------- #
 
-for this_group in ['all','Group1', 'Group2', 'Group3', 'Group4']: # 'all','Group1', 'Group2', 'Group3', 'Group4'
+for this_group in ['Group1']: # 'all','Group1', 'Group2', 'Group3', 'Group4'
     
   for tobii_index, this_tobii in enumerate(tobii_num) : # ! for each original_image 
     
@@ -176,5 +176,5 @@ for this_group in ['all','Group1', 'Group2', 'Group3', 'Group4']: # 'all','Group
     if len(all_img_as_pil)==0: 
       continue
     grid = image_grid(all_img_as_pil, rows=2, cols=len(img_dir_set1))
-    grid.save(os.path.join(output_dir,this_group+'_'+str(this_tobii)+"tobii_overlay.png"))
+    grid.save(os.path.join(output_dir,this_group+'_'+str(this_tobii)+"tobii_overlay_short.png"))
 

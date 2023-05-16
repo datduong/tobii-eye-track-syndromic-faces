@@ -28,15 +28,15 @@ def image_grid(imgs, rows, cols):
 
 # ! average of a few images after remove the "common consensus"
 
-slidename_arr = [ str(i)+'_' for i in [2,3,11,14,17] ] # ['17_']
+slidename_arr = [ str(i)+'_' for i in [11] ] # ['17_'] 2,3,11,14,17
 
-imdir_arr = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg-3sec',
-             'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave-whtbg'
+imdir_arr = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertKeepAveByAcc04172023/Slide11/Group1',
+            #  'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Slide11'
              ]
 
 out_arr = []
 
-foutname = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radiusAve3vs7s.jpg'
+foutname = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertKeepAveByAcc04172023/Slide11/SimpleAverage.png'
 
 for imdir in imdir_arr : 
 
@@ -59,7 +59,7 @@ for imdir in imdir_arr :
       arr=arr+imarr/N
 
     # Round values in array and cast as 8-bit integer
-    arr=np.array(np.round(arr),dtype=np.uint8)
+    arr=np.array(1-np.round(arr),dtype=np.uint8) # ! convert black background using "1-"
     out=Image.fromarray(np.array(arr)).convert('L')
     out_arr.append(out)
     

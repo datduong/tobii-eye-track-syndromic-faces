@@ -44,12 +44,17 @@ def get_statistic (df, image_name, participants, tobii_metrics, average_option='
 
   if average_option == 'median': 
     obs_stat_df = df.groupby('AOI')[tobii_metrics].median() 
-    
+
+  # https://stackoverflow.com/questions/18429491/pandas-groupby-columns-with-nan-missing-values
+  
   AOI = obs_stat_df.index.tolist() # ! need this to access the row of each AOI, these are just names like "eye,nose,mouth..."
   obs_stat = obs_stat_df.to_numpy() # array, num of AOI x tobii_metrics 
 
+  # ! compute std as well? why not? 
+  obs_stat_std = df.groupby('AOI')[tobii_metrics].std()
+  
   # also return @obs_stat_df  @df of the user and image. 
-  return AOI, obs_stat, df, obs_stat_df
+  return AOI, obs_stat, df, obs_stat_df, obs_stat_std
 
 
 def random_sample_df (df1,df2,image_name,participants):
@@ -183,7 +188,7 @@ def df_to_long_csv (args,df_list,header):
     df.to_csv(re.sub(r'.csv',header[index]+'.csv',args.outname) , index=None) 
 
 
-def combine_df_to_csv_to_plot_later (args,df_list,outputname): 
+def combine_df_to_csv_to_plot_later (args,df_list,outputname, colnames=None): 
   out = None
   for index,d in enumerate(df_list): 
     d['index'] = d.index
@@ -197,6 +202,8 @@ def combine_df_to_csv_to_plot_later (args,df_list,outputname):
     else: 
       out = out.merge( df, on="index,variable,slide1,slide2".split(',') )
   # ! jointly append (wide format)
+  if colnames is not None: 
+    out.columns = colnames
   out.to_csv(re.sub(r'.csv',outputname+'.csv',args.outname) , index=None) 
   
 def string_comma_to_list (this_str): 
@@ -300,7 +307,10 @@ if __name__ == '__main__':
                        observed_stat,
                        observed_stat_percent_change, 
                        group_statistic[0][3], 
-                       group_statistic[1][3]]
+                       group_statistic[0][4],
+                       group_statistic[1][3],  
+                       group_statistic[1][4]
+                       ]
   
   combine_df_to_csv_to_plot_later (args,output_to_combine,'long-form')
   
