@@ -99,10 +99,10 @@ TOBII_CHOICE = [
                 # 'k0-thresh0.0-diff',
                 # 'k0-thresh0.0-cutbfscale10.0-diff',
                 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff',
-                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-diff',    
-                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-diff',      
-                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-diff',     
-                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-diff', 
+                # 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-diff',    
+                # 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-diff',      
+                # 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-diff',     
+                # 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-diff', 
                 ]
 
 
@@ -118,8 +118,8 @@ for this_group in ['Group1']: # 'all','Group1', 'Group2', 'Group3', 'Group4'
     for tobii_choice in TOBII_CHOICE: 
 
       # ! get the average heatmaps of each participant set. @tobii_choice select low/medium/high attention in heatmap
-      tobii_dir1 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//Heatmap25rExpertNoAveByAcc04172023/'+tobii_choice
-      tobii_dir2 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//Heatmap25rNonExpertNoAveByAcc04172023/'+tobii_choice
+      tobii_dir1 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//Heatmap25rExpertKeepAveByAcc04172023/'+tobii_choice
+      tobii_dir2 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//Heatmap25rExpertNoAveByAcc04172023/'+tobii_choice
 
       tobii_heatmap_arr = [i for i in os.listdir(tobii_dir1) if i.endswith('.png')]
       tobii_heatmap_arr = [i for i in tobii_heatmap_arr if tobii_choice in i]
@@ -176,5 +176,5 @@ for this_group in ['Group1']: # 'all','Group1', 'Group2', 'Group3', 'Group4'
     if len(all_img_as_pil)==0: 
       continue
     grid = image_grid(all_img_as_pil, rows=2, cols=len(img_dir_set1))
-    grid.save(os.path.join(output_dir,this_group+'_'+str(this_tobii)+"tobii_overlay_short.png"))
+    grid.save(os.path.join(output_dir,this_group+'_'+str(this_tobii)+"tobii_overlay_keep_remove_average.png"))
 

@@ -4,7 +4,7 @@
 # ! move some stuffs around on server 
 
 # ! change path
-maindir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
+maindir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertKeepAveByAcc04172023
 subdir=CompareGroupSameImg
 
 cd $maindir
