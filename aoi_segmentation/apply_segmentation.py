@@ -41,7 +41,7 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
   
   seg_dict = {} # save all segmentations in dict
   for img in images: 
-    x, y = aoi_to_segmentation.cam_to_segmentation(   cam_mask = img, 
+    x, y = aoi_to_segmentation.img_to_segment(   cam_mask = img, 
                                                       threshold = threshold,
                                                       smoothing = args.if_smoothing,
                                                       k = args.k,
@@ -82,7 +82,7 @@ def ave_of_segmentation (dict_segment,args=None):
     arr = scale_shift_ave_pixel_one_image (arr, target=args.scale_or_shift_ave_pixel) # ! put on same scale, so easier to compare between 2 groups
 
   threshold_to_binary = args.cut_ave_img_to_binary if args.scale_or_shift_ave_pixel is not None else args.cut_seg_to_binary_1
-  seg_im, _ = aoi_to_segmentation.cam_to_segmentation(  cam_mask = arr, 
+  seg_im, _ = aoi_to_segmentation.img_to_segment(  cam_mask = arr, 
                                                         threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                         smoothing = True,
                                                         k = args.k,
@@ -180,7 +180,7 @@ def segementation_of_ave (dict_segment,size,args):
   if not args.simple_diff: 
     threshold_to_binary = args.cut_ave_img_to_binary if args.cut_ave_img_to_binary is not None else None # ! scale ave pixel up to brighter value, need to use @cut_ave_img_to_binary
 
-  seg_im, ave_im = aoi_to_segmentation.cam_to_segmentation(   cam_mask = ave_im, 
+  seg_im, ave_im = aoi_to_segmentation.img_to_segment(   cam_mask = ave_im, 
                                                               threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                               smoothing = args.smooth_ave,
                                                               k = args.k,
@@ -208,8 +208,8 @@ def diff_two_sets(dict1,dict2,args):
       _type_: _description_
   """
   
-  # average images in @dict1, compute @cam_to_segmentation of this average? 
-  # average segmentation in @dict1, compute @cam_to_segmentation of this average? 
+  # average images in @dict1, compute @img_to_segment of this average? 
+  # average segmentation in @dict1, compute @img_to_segment of this average? 
   # aoi_to_segmentation.calculate_iou
   
   if args.boot_ave_segmentation: 
@@ -512,10 +512,15 @@ if __name__ == '__main__':
     boot_output = [observed_mIOU,ave,std]
     
     # save as csv 
+    if prefix1==args.name_suffix_2: 
+      prefix = prefix1
+    else:
+      prefix = prefix1 + args.name_suffix_2
+      
     model_name = args.compare_vs_this.split('/')[-1]
-    fout = open(os.path.join(args.output_dir,'saliency-vs-'+group_name1+'_'+prefix1+'.csv'),'w')
-    fout.write ('saliency,tobii,observed_stat,mean,std,group_size\n')
-    fout.write ( model_name + ',' + group_name1 + ',' + ','.join ( [str(item) for item in boot_output] ) + ',' + str(len(segmentation_group_1)) + '\n')
+    fout = open(os.path.join(args.output_dir, args.name_suffix_2+'-vs-'+group_name1+'_'+prefix1+'.csv'),'w')
+    fout.write ('saliency,type,tobii,observed_stat,mean,std,group_size\n')
+    fout.write ( model_name + ',' + prefix + ',' + group_name1 + ',' + ','.join ( [str(item) for item in boot_output] ) + ',' + str(len(segmentation_group_1)) + '\n')
     fout.close()
 
   else:

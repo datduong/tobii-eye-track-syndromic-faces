@@ -62,7 +62,7 @@ seg_arr = []
 img_ave_pixel = []
 
 for cam_mask in imlist:
-  segment, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=SINGLE_SEG_THRESHOLD, smoothing=False, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=SINGLE_IMG_THRESHOLD, outdir=outdir)
+  segment, img = aoi_to_segmentation.img_to_segment(cam_mask, threshold=SINGLE_SEG_THRESHOLD, smoothing=False, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=SINGLE_IMG_THRESHOLD, outdir=outdir)
   img_arr.append ( img )
   seg_arr.append ( segment )
   img_ave_pixel.append ( np.mean(img[img>0]) ) 
@@ -106,7 +106,7 @@ np.quantile(thisimg[thisimg>0].flatten(),[.1,.25,.5,.75,.9])
 
 plot_arr = []
 for th in try_these: 
-  segment, temp = aoi_to_segmentation.cam_to_segmentation(seg_arr, threshold=th, smoothing=True, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, outdir=outdir)
+  segment, temp = aoi_to_segmentation.img_to_segment(seg_arr, threshold=th, smoothing=True, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, outdir=outdir)
   out_show=Image.fromarray(np.array(segment* 255,dtype=np.uint8)).convert('L')
   plot_arr.append(out_show)
 
@@ -123,7 +123,7 @@ brighter = Image.fromarray(np.array(ave_img,dtype=np.uint8)).convert('L')
 
 plot_arr = []
 for th in try_these: 
-  segment, temp = aoi_to_segmentation.cam_to_segmentation(ave_img, threshold=th, smoothing=True, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, outdir=outdir)
+  segment, temp = aoi_to_segmentation.img_to_segment(ave_img, threshold=th, smoothing=True, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, outdir=outdir)
   out_show=Image.fromarray(np.array(segment* 255,dtype=np.uint8)).convert('L')
   plot_arr.append(out_show)
 

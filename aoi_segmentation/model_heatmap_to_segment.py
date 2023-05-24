@@ -85,11 +85,11 @@ original_image_dir = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/surv
 #     face_mask = np.array(Image.open(face_mask).convert('L'))
 #     face_mask = np.where (face_mask==0,0,1) # ! remove background, keep everything else. 
     
-#     seg, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=th, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, face_parse_mask=face_mask)
+#     seg, img = aoi_to_segmentation.img_to_segment(cam_mask, threshold=th, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, face_parse_mask=face_mask)
 
 # ---------------------------------------------------------------------------- #
 
-for cut_pixel_per_img in [0,50,70]: 
+for cut_pixel_per_img in [0]: # 50,70
     
   for cam_mask in this_img_arr:
 
@@ -98,12 +98,14 @@ for cut_pixel_per_img in [0,50,70]:
     face_mask = np.array(Image.open(face_mask).convert('L'))
     face_mask = np.where (face_mask==0,0,1) # ! remove background, keep everything else. 
 
-    if cut_pixel_per_img==0: 
-      threshold = 0
-    else: 
-      threshold = 0.1
-      
-    seg, img = aoi_to_segmentation.cam_to_segmentation(cam_mask, threshold=threshold, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
+    # if cut_pixel_per_img==0: 
+    #   threshold = 0
+    # else: 
+    #   threshold = 0.1
+
+    threshold = 0.1
+    
+    seg, img = aoi_to_segmentation.img_to_segment(cam_mask, threshold=threshold, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
 
     prefix = 'k20-thresh'+str(threshold)+'-pixcut'+str(cut_pixel_per_img)
     

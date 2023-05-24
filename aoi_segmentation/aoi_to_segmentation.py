@@ -63,7 +63,7 @@ def calculate_simple_diff(pred_mask, gt_mask): # ! doing subtraction between 2 i
 
 
 
-def cam_to_segmentation(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_pixel_per_img=None, hi_threshold=None, face_parse_mask=None, outdir=None, matplotlib_cm=False):
+def img_to_segment(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_pixel_per_img=None, hi_threshold=None, face_parse_mask=None, outdir=None, matplotlib_cm=False):
     """
     Threshold a saliency heatmap to binary segmentation mask.
     Args:

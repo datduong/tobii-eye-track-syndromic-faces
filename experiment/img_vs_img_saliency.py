@@ -20,7 +20,7 @@ cd $code_dir
 
 # ! 
 
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack
+main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023
 
 img_dir_group_1=$main_data_dir/SLIDE_NUM1/GROUP1 
 img_dir_group_2=$main_data_dir/SLIDE_NUM2/GROUP2
@@ -35,25 +35,30 @@ mkdir $output_dir
 compare_vs_this=/data/duongdb/Face11CondTobiiEyeTrack01112023/EfficientNetOccSegment/COMPARE_VS_THIS
 
 
-cut_pixel_per_img=20 # ! if use, should be pixel value at 80 (about bottom 10%)
+# ! add suffix to output average images? 
+name_suffix_1=human
+name_suffix_2=EfnetOcc
 
-remove_low_before_scale=10
+
+# ---------------------------------------------------------------------------- #
+
+remove_low_before_scale=10 # ! remove very low noisy signal before scaling up the color intensity
 
 for this_k in 10 
 do
   for this_thres in 0 
   do
 
-    # ! --cut_ave_img_to_binary 0.3 seems to work well. 
-      
-    for cut_pixel_ave_img in 50 70 90 110 130 150  
+    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 100 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale --compare_vs_this $compare_vs_this
+
+    for cut_pixel_ave_img in 70 90 110 130  
     do
 
       # ! USE SIMPLE DIFFERENCE, SO CHECK @SALIENCYCRITERIA
-      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --remove_low_before_scale $remove_low_before_scale --compare_vs_this $compare_vs_this
+      # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 100 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --remove_low_before_scale $remove_low_before_scale --compare_vs_this $compare_vs_this
 
       # ! USE SIMPLE OVERLAP AREA, SO CHECK @SALIENCYCRITERIA
-      # python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 100 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale --compare_vs_this $compare_vs_this
+      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 100 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale --compare_vs_this $compare_vs_this
 
     done 
 
@@ -76,7 +81,7 @@ cut_seg_to_binary_2 = .5
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack' # @main_folder is where we save all the data
+main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the data
 
 compare_vs_this = {
   'Slide14': '22q11DSSlide150v2_heatmappositiveAverage.png',
@@ -91,7 +96,7 @@ compare_vs_this = {
   'Slide4' : 'RSTS1Slide57v2_heatmappositiveAverage.png',
 }
 
-criteria = 'k20-thresh0.1-pixcut70' # 'k20-thresh0.1-pixcut70-seg'
+criteria = 'k20-thresh0.1-pixcut0' # 'k20-thresh0.1-pixcut70' # 'k20-thresh0.1-pixcut70-seg'
 
 for k,v in compare_vs_this.items(): 
   compare_vs_this[k] = criteria+'-'+v
@@ -100,8 +105,6 @@ for k,v in compare_vs_this.items():
 # slide_folders = ['Slide2','Slide11'] # , 'Slide3']
 
 slide_folders = list ( compare_vs_this.keys() ) 
-
-k20-thresh0.1-pixcut70-22q11DSSlide150v2_heatmappositiveAverage.png
 
 # ---------------------------------------------------------------------------- #
 
