@@ -490,7 +490,8 @@ if __name__ == '__main__':
                             'image': single_img } # ! duplicate both so we don't change data struct; @single_img should be a saliency heatmap (or a segmentation of saliency heatmap. )
 
     observed_mIOU = diff_two_sets ( segmentation_group_1, segmentation_group_2 , args )
-
+    print ('observed mIoU', observed_mIOU)
+    
     num_people_to_sample = len(segmentation_group_1)
     mIoU = [] # ! bootstrap only on @segmentation_group_1
     for i in np.arange(args.boot_num): 
@@ -537,7 +538,8 @@ if __name__ == '__main__':
 
     # ! observe statistics 
     obs_stat = diff_two_sets(segmentation_group_1,segmentation_group_2, args=args) 
-
+    print ('observed mIoU', obs_stat)
+    
     # ! do bootstrap 
     total_sample = len(segmentation_group_1) + len(segmentation_group_2) # ! edit boot number? 
     call_combo = total_sample**total_sample

@@ -78,22 +78,24 @@ original_image_dir = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/surv
 
 # for th in [.1, .15, 0.2,0.3,0.35, 0.4]: # 0.1,0.2,0.3,0.4,0.5
   
-#   for cam_mask in this_img_arr:
+#   for image_path in this_img_arr:
 
-#     face_mask = os.path.join(face_seg_dir, match_model_heatmap_to_face_seg[cam_mask.split('/')[-1]])
+#     face_mask = os.path.join(face_seg_dir, match_model_heatmap_to_face_seg[image_base_name])
     
 #     face_mask = np.array(Image.open(face_mask).convert('L'))
 #     face_mask = np.where (face_mask==0,0,1) # ! remove background, keep everything else. 
     
-#     seg, img = aoi_to_segmentation.img_to_segment(cam_mask, threshold=th, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, face_parse_mask=face_mask)
+#     seg, img = aoi_to_segmentation.img_to_segment(image_path, threshold=th, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, face_parse_mask=face_mask)
 
 # ---------------------------------------------------------------------------- #
 
-for cut_pixel_per_img in [0]: # 50,70
+for cut_pixel_per_img in [20,70]: # 50,70
     
-  for cam_mask in this_img_arr:
+  for image_path in this_img_arr:
 
-    face_mask = os.path.join(face_seg_dir, match_model_heatmap_to_face_seg[cam_mask.split('/')[-1]])
+    image_base_name = image_path.split('/')[-1]
+    
+    face_mask = os.path.join(face_seg_dir, match_model_heatmap_to_face_seg[image_base_name])
     
     face_mask = np.array(Image.open(face_mask).convert('L'))
     face_mask = np.where (face_mask==0,0,1) # ! remove background, keep everything else. 
@@ -103,22 +105,28 @@ for cut_pixel_per_img in [0]: # 50,70
     # else: 
     #   threshold = 0.1
 
-    threshold = 0.1
+    threshold = 0.05
     
-    seg, img = aoi_to_segmentation.img_to_segment(cam_mask, threshold=threshold, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
+    seg, img = aoi_to_segmentation.img_to_segment(image_path, threshold=threshold, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
 
+    # ! 
+    # ! HERE, WE HAVE JUST 1 IMAGE. WE CAN REMOVE LOW VALUES, THEN CONVERT TO 1-HOT. DON'T NEED TO USE @threshold, IT'S FINE TO JUST USE @cut_pixel_per_img. 
+    # ! replace @seg with @img in 1-hot
+    # seg = np.where(img/255 > 0, 1, 0)
+    
+    # ! 
     prefix = 'k20-thresh'+str(threshold)+'-pixcut'+str(cut_pixel_per_img)
     
     img = Image.fromarray(np.uint8(img), 'L') 
-    temp = prefix + '-' + cam_mask.split('/')[-1]
+    temp = prefix + '-' + image_base_name
     img.save(os.path.join(this_path,temp))
 
     seg = Image.fromarray(np.uint8(seg*255), 'L') # ! seg is 1 hot
-    temp = prefix + '-seg-' + cam_mask.split('/')[-1]
+    temp = prefix + '-seg-' + image_base_name
     seg.save(os.path.join(this_path,temp))
 
     # overlay 
-    original_image = os.path.join(original_image_dir, match_model_heatmap_to_face_seg[cam_mask.split('/')[-1]])
+    original_image = os.path.join(original_image_dir, match_model_heatmap_to_face_seg[image_base_name])
     original_image = os.path.join(this_path,original_image)
     original_image = Image.open(original_image).convert("RGBA")
 
@@ -128,7 +136,7 @@ for cut_pixel_per_img in [0]: # 50,70
     this_img = cm.magma((255-this_img)/255)*255 # flip color scale
     this_img = Image.fromarray(np.uint8(this_img)).convert("RGBA")
     blend_image = Image.blend (original_image, this_img, alpha=0.3)
-    temp = 'overlay-' + prefix + '-' + cam_mask.split('/')[-1]
+    temp = 'overlay-' + prefix + '-' + image_base_name
     blend_image.save(os.path.join(this_path,temp))
 
 

@@ -48,6 +48,26 @@ id_to_english = {
   16: 'Unaff16',
 }
 
+id_to_english_name_out = {
+  1:'TCS',
+  2:'WS', 
+  4:'RSTS1', 
+  6:'WHS',
+  8:'CdLS', 
+  9:'Down',
+  11:'KS', 
+  12:'NS', 
+  14:'22q11DS', 
+  15:'PWS',
+  17:'BWS',
+  3: 'Unaff1',
+  5: 'Unaff2',
+  7: 'Unaff3',
+  10: 'Unaff4',
+  13: 'Unaff5',
+  16: 'Unaff6',
+}
+
 
 path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023'
 
@@ -87,7 +107,7 @@ all_df_long = pd.concat(all_df_long)
 
 # format to be plotted in R
 slide_num = [i.split('+')[0] for i in all_df_long['image_number'].values]
-slide_disease = [ id_to_english[int(re.sub('Slide','',i))] for i in slide_num ]
+slide_disease = [ id_to_english_name_out[int(re.sub('Slide','',i))] for i in slide_num ]
 all_df_long['condition'] = slide_disease
 
 pair1 = [i.split('Group')[-1] for i in all_df_long['group_name1'].values]

@@ -48,6 +48,27 @@ id_to_english = {
   16: 'Unaff16',
 }
 
+id_to_english_name_out = {
+  1:'TCS',
+  2:'WS', 
+  4:'RSTS1', 
+  6:'WHS',
+  8:'CdLS', 
+  9:'Down',
+  11:'KS', 
+  12:'NS', 
+  14:'22q11DS', 
+  15:'PWS',
+  17:'BWS',
+  3: 'Unaff1',
+  5: 'Unaff2',
+  7: 'Unaff3',
+  10: 'Unaff4',
+  13: 'Unaff5',
+  16: 'Unaff6',
+}
+
+
 # ---------------------------------------------------------------------------- #
 
 path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023'
@@ -78,7 +99,9 @@ for this_group in ['all','Group1','Group2','Group3','Group4']:
       csv = [i for i in csv if criteria in i]
       csv = [i for i in csv if this_group in i]
       csv = [ pd.read_csv(os.path.join(path,this_slide,c) ) for c in csv ] 
-      df_arr = df_arr + csv # append 
+      csv = pd.concat (csv) # put all the slide together 
+      csv['condition'] = id_to_english_name_out[ int (re.sub('Slide',this_slide)) ] # ! use english labels, instead of using slide1 slide2...
+      df_arr = df_arr + [csv] # append  over many slides
     #
     if len(df_arr) == 0: 
       continue

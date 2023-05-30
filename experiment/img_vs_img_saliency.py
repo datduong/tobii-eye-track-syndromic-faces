@@ -83,6 +83,8 @@ script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
 main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the data
 
+# k20-thresh0.1-pixcut0-seg-KSSlide133v2_heatmappositiveAverage
+
 compare_vs_this = {
   'Slide14': '22q11DSSlide150v2_heatmappositiveAverage.png',
   'Slide17': 'BWSSlide17v2_heatmappositiveAverage.png',
@@ -96,7 +98,7 @@ compare_vs_this = {
   'Slide4' : 'RSTS1Slide57v2_heatmappositiveAverage.png',
 }
 
-criteria = 'k20-thresh0.1-pixcut0' # 'k20-thresh0.1-pixcut70' # 'k20-thresh0.1-pixcut70-seg'
+criteria = 'k20-thresh0.05-pixcut20-seg' # 'k20-thresh0.1-pixcut70' # 'k20-thresh0.1-pixcut70-seg'
 
 for k,v in compare_vs_this.items(): 
   compare_vs_this[k] = criteria+'-'+v
@@ -128,7 +130,7 @@ for i1, folder1 in enumerate(slide_folders):
     #
     time.sleep( 1.5 )
     now = datetime.now() # current date and time
-    script_name = os.path.join(script_path,'script'+'-'+now.strftime("%m-%d-%H-%M-%S")+'.sh')
+    script_name = os.path.join(script_path,'script1'+'-'+now.strftime("%m-%d-%H-%M-%S")+'.sh')
     fout = open(script_name,'w')
     fout.write(script)
     fout.close()

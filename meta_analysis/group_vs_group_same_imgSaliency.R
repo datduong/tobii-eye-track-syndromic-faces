@@ -4,8 +4,9 @@ library('metafor')
 
 
 # k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3
+# Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3
 
-mod = c(  'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv', 
+mod = c(  'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv', 
           # 'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
           'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv'
           # 'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3.csv' 
@@ -14,7 +15,7 @@ mod = c(  'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3.csv',
 
 for (i in c(1:2)) {
 
-  dat = read.csv(paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.1-pixcut0/',mod[i]))
+  dat = read.csv(paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg/',mod[i]))
 
   # res <- rma(observed_stat, sei=std, data=dat, test="knha", weights=group_size)
   res <- rma(observed_stat, sei=std, data=dat, test="knha")
