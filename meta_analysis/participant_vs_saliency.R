@@ -46,7 +46,7 @@ for (i in names(mod_list)) {
   # ! PLOT
   png(file=paste0(saliency_path,output_base_name,threshold,'.png'), width = 4, height = 5, units="in", res=300)
 
-  forest(res, order="obs", slab=paste(gsub('Group1','', dat$tobii ) , sep = ","), main=this_title, xlim=c(-.2,.5))
+  forest(res, order="obs", slab=paste(gsub('Group1','', dat$tobii ) , sep = ","), main=this_title, xlim=c(-.2,.5), header=c('Image','IoU [95% CI]'))
 
   dev.off()
 

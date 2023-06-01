@@ -55,19 +55,10 @@ done
 
 # ! copy to pc 
 
-where=/cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images
-mkdir $where
-for this_model_name in 'k0-thresh0.0-diff' 'k0-thresh0.0-cutbfscale10.0-diff' 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff'
-do
-cd $where
-mkdir $where/$this_model_name
-scp -r $helix:$datadir/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/$this_model_name/*png $where/$this_model_name
-done 
+# ! condition on experts (or nonexperts), compare how succ vs underperforming do. 
+scp $helix:$datadir/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/all_img_nonexpgroup_succ_vs_under_long.csv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
 
-for cut in '50.0' '70.0' '90.0' '110.0' '130.0' '150.0'
-do 
-this_model_name='k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave'$cut'-diff'
-cd $where
-mkdir $where/$this_model_name
-scp -r $helix:$datadir/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Compare2Images/$this_model_name/*png $where/$this_model_name
-done 
+# ! condition on one image, compare experts vs nonexperts 
+scp $helix:$datadir/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023/*csv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023
+
+
