@@ -69,9 +69,18 @@ id_to_english_name_out = {
 }
 
 
-path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023'
+# ---------------------------------------------------------------------------- #
+
+# ! conditioned on "experts" or "nonexperts", we compare "successful" vs "underperforming".
+
+# ---------------------------------------------------------------------------- #
+
+
+path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023'
+foutname = 'all_img_expgroup_heatmap_vs_heatmap_long.csv'
 
 slide = ['Slide' + str(i) for i in np.arange(2,18)]
+
 # slide = ['Slide2','Slide11','Slide14','Slide12','Slide8']
 
 all_df_long = []
@@ -115,6 +124,6 @@ pair2 = [i.split('Group')[-1] for i in all_df_long['group_name2'].values]
 pair = [str(i)+','+str(j) for i,j in zip(pair1,pair2)]
 all_df_long['group'] = pair
 
-all_df_long.to_csv(os.path.join(path,'all_img_nonexpgroup_heatmap_vs_heatmap_long.csv'),index=None)
+all_df_long.to_csv(os.path.join(path,foutname),index=None)
 
 all_df_long

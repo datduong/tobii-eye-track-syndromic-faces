@@ -48,6 +48,8 @@ id_to_english = {
   16: 'Unaff16',
 }
 
+
+
 # ---------------------------------------------------------------------------- #
 
 path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg'

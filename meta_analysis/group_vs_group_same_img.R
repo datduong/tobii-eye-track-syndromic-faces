@@ -3,7 +3,8 @@
 library('metafor')
 
 dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/all_img_nonexpgroup_heatmap_vs_heatmap_long.csv')
-expert_or_not = 'Expert'
+
+expert_or_not = 'Nonclinicians' # ! Clinicians OR Nonclinicians CHANGE THIS IF NEEDED
 
 fout_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/'
 
@@ -31,7 +32,7 @@ for (group in c("1,2") ) { # , "2,3", "2,4", "3,4"
 
   for (i in names(mod_list)) {
 
-    this_df = subset(dat, dat$type==mod[i])
+    this_df = subset(dat, dat$type==mod_list[[i]])
     this_df = this_df [this_df$group==group, ]
 
     this_df = this_df[this_df$group_size1>0,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
@@ -53,7 +54,7 @@ for (group in c("1,2") ) { # , "2,3", "2,4", "3,4"
       threshold_name = 'low'
     }
 
-    this_title = paste0 ( 'Successful vs underperforming ', expert_or_not, '\nIoU threshold', threshold_name )
+    this_title = paste0 ( 'Successful vs underperforming\n', expert_or_not, ' IoU threshold ', threshold_name )
 
     # ---------------------------------------------------------------------------- #
 

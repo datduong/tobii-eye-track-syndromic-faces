@@ -99,8 +99,10 @@ for this_group in ['all','Group1','Group2','Group3','Group4']:
       csv = [i for i in csv if criteria in i]
       csv = [i for i in csv if this_group in i]
       csv = [ pd.read_csv(os.path.join(path,this_slide,c) ) for c in csv ] 
+      if len(csv) == 0: 
+        continue
       csv = pd.concat (csv) # put all the slide together 
-      csv['condition'] = id_to_english_name_out[ int (re.sub('Slide',this_slide)) ] # ! use english labels, instead of using slide1 slide2...
+      csv['condition'] = id_to_english_name_out[ int (re.sub('Slide','',this_slide)) ] # ! use english labels, instead of using slide1 slide2...
       df_arr = df_arr + [csv] # append  over many slides
     #
     if len(df_arr) == 0: 
@@ -108,4 +110,7 @@ for this_group in ['all','Group1','Group2','Group3','Group4']:
     #
     df_long = pd.concat (df_arr)
     df_long.to_csv(os.path.join(foutpath,this_group+'-'+criteria+'.csv'), index=False)
+
+
+#
 

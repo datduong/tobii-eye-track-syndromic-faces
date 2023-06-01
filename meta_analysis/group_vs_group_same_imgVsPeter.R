@@ -37,8 +37,8 @@ for (what_group in c('all','Group1','Group2')){ # ! 4 possible groups.  ,'Group3
 
     dat = read.csv(paste0(data_path,mod_list[[i]]))
 
-    dat = dat[dat$group_size1>0,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
-    dat = dat[dat$group_size2>0,]
+    dat = dat[dat$group_size1>1,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
+    dat = dat[dat$group_size2>1,]
 
     dat = dat[dat$boot_std>0,]
     if (nrow(dat) == 0) {
@@ -54,6 +54,8 @@ for (what_group in c('all','Group1','Group2')){ # ! 4 possible groups.  ,'Group3
       threshold_name = 'low'
     }
 
+    xlim=c(-.5,1.5) # ! define width of plot
+
     if (what_group == 'all'){
       what_group_name = 'All'
     }
@@ -62,6 +64,7 @@ for (what_group in c('all','Group1','Group2')){ # ! 4 possible groups.  ,'Group3
     }
     if (what_group == 'Group2'){
       what_group_name = 'Underperforming'
+      xlim=c(-1,1.5)
     }
     # if (what_group = 'Group3'){
     #   what_group_name = 'All'
@@ -78,7 +81,7 @@ for (what_group in c('all','Group1','Group2')){ # ! 4 possible groups.  ,'Group3
 
     # @slab removes group name on y-axis, so we see "slide" as y-axis name
     # @xlim sets x-axis width of plot, may need to change depending on how nice we want plot to look visually
-    forest(res, slab=paste(gsub(what_group,'', dat$group_name1 ) , sep = ","), main=this_title, xlim=c(-.5,1.5)) 
+    forest(res, slab=paste(gsub(what_group,'', dat$group_name1 ) , sep = ","), main=this_title, xlim=xlim, header=c('Image','IoU [95% CI]')) 
 
     dev.off()
   }
