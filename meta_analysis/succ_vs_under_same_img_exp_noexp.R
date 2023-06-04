@@ -2,12 +2,13 @@
 rm(list = ls())
 
 library('metafor')
+library('data.table')
 
 data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023/'
 
 
 
-for (what_group in c('all','Group1','Group2')){ # ! 4 possible groups.  ,'Group3','Group4'
+for (what_group in c('Group1')){ # ! 4 possible groups.  ,'Group3','Group4' 'all','Group1','Group2'
 
   threshold_used = c(110,130,150,70,90,0) # ! threshold used can be changed, but has to match variable @mod 130,150
 
@@ -33,9 +34,37 @@ for (what_group in c('all','Group1','Group2')){ # ! 4 possible groups.  ,'Group3
 
   # ---------------------------------------------------------------------------- #
 
+  split_img = '' # ! empty
+
+  # split_img = 'Unaff' # ! split the set of images into 2 sets, and do comparision on each set 
+  # alim = c(0,.8)
+  # split_img = 'Aff' # ! split the set of images into 2 sets, and do comparision on each set 
+
+  # ---------------------------------------------------------------------------- #
+
+
   for (i in names(mod_list)) {
 
+    height = 6 # ! set image height to control line spacing
+    alim=c(0,.8)
+
+    if (what_group=='Group2'){
+      alim=c(-.3,.7)
+      height=4
+    }
+
+    
     dat = read.csv(paste0(data_path,mod_list[[i]]))
+
+    if (split_img == 'Unaff'){
+      dat = dat[dat$condition %like% 'Unaff', ]
+      height = 4
+    }
+    if (split_img == 'Aff'){
+      dat = dat[!(dat$condition %like% 'Unaff'), ]
+      height = 5
+    }
+
 
     dat = dat[dat$group_size1>1,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
     dat = dat[dat$group_size2>1,]
@@ -75,14 +104,15 @@ for (what_group in c('all','Group1','Group2')){ # ! 4 possible groups.  ,'Group3
 
     # ! CHANGE TITLE ACCORDING TO INPUT GROUPS AND SETTING
     this_title = paste ( what_group_name, 'clinicians vs nonclinicians\nIoU threshold', threshold_name )
+    # this_title = paste0 ( what_group_name, ' clinicians vs','\nnonclinicians IoU threshold ', threshold_name )
 
     # ! PLOT
-    png(file=paste0(data_path,what_group,'-Expert-NonExpert-IoU-thr',threshold,'.png'), width = 4.5, height = 6, units="in", res=300)
+    png(file=paste0(data_path,what_group,'-Expert-NonExpert-IoU-thr',threshold,split_img,'.png'), width = 4.5, height = height, units="in", res=300)
 
     # @slab removes group name on y-axis, so we see "slide" as y-axis name
     # @xlim sets x-axis width of plot, may need to change depending on how nice we want plot to look visually
-    forest(res, slab=paste(gsub(what_group,'', dat$group_name1 ) , sep = ","), main=this_title, xlim=xlim, header=c('Image','IoU [95% CI]')) 
-
+    forest(res, slab=dat$condition, main=this_title, xlim=xlim, alim=alim, header=c('Image','IoU [95% CI]')) 
+    # forest(res, order="obs", slab=dat$condition, main=this_title, xlim=xlim, alim=alim, header=c('Image','IoU [95% CI]')) 
     dev.off()
   }
 

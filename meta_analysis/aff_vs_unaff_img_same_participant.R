@@ -4,7 +4,11 @@ rm(list = ls())
 library('metafor')
 library('grid')
 
-data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/HeatmapAffPerParticipant/same_participant_aff_vs_unaff_heatmap_long.csv'
+data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/HeatmapAffPerParticipant/'
+csv_input = paste0(data_path,'/','same_participant_aff_vs_unaff_heatmap_long.csv')
+expert_or_not = 'Nonclinicians' # 'Clinicians' 'Nonclinicians'
+
+# ---------------------------------------------------------------------------- #
 
 threshold_used = c(110,130,150,70,90,0) # ! threshold used can be changed, but has to match variable @mod 130,150
 
@@ -30,7 +34,7 @@ for (i in c(1:length(mod))){
 
 for (i in names(mod_list)) {
 
-  dat = read.csv(data_path)
+  dat = read.csv(csv_input)
   dat = subset(dat, dat$type == mod_list[[i]])
 
   dat = dat[dat$group_size1>0,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
@@ -53,14 +57,14 @@ for (i in names(mod_list)) {
     threshold_name = 'low'
   }
 
-  this_title = paste ( 'Clinicians, affected vs unaffected\nIoU threshold', threshold_name )
+  this_title = paste ( expert_or_not, ', affected vs unaffected\nIoU threshold', threshold_name )
 
   # ! PLOT
-  png(file=paste0(data_path,'Clinician-Aff-Unaff-IoU-thr',threshold,'.png'), width = 4.5, height = 6, units="in", res=300)
+  png(file=paste0(data_path,expert_or_not,'-Aff-Unaff-IoU-thr',threshold,'.png'), width = 4.5, height = 6, units="in", res=300)
 
   # @slab removes group name on y-axis, so we see "slide" as y-axis name
   # @xlim sets x-axis width of plot, may need to change depending on how nice we want plot to look visually
-  forest(res, order="obs", slab=paste(gsub('HeatmapAffPerParticipant','', dat$group_name1 ) , sep = ","), main=this_title, xlim=c(-.5,1.5)) # alim=c(-0.1,.8)
+  forest(res, order="obs", slab=paste(gsub('HeatmapAffPerParticipant','', dat$group_name1 ) , sep = ","), main=this_title, xlim=c(-.5,1.5), header=c('Participant','IoU [95% CI]') ) # alim=c(-0.1,.8)
 
   dev.off()
 }

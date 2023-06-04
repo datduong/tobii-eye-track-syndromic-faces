@@ -1,10 +1,16 @@
-
+rm(list = ls())
 
 library('metafor')
 
-saliency_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg/'
+saliency_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut70-seg/'
 
-output_base_name = paste0('sal-','k20-thresh0.05-pixcut20-seg')
+output_base_name = paste0('sal-','k20-thresh0.05-pixcut70-seg')
+
+# xlim=c(-.4,.8) # works for 'k20-thresh0.05-pixcut70-seg'? 
+# alim=c(0,.4)
+
+xlim=c(-.2,.5) # 
+alim=c(0,.2)
 
 mod = c(  'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv', 
           # 'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3.csv', 
@@ -29,6 +35,8 @@ for (i in names(mod_list)) {
 
   dat = read.csv(paste0(saliency_path,mod_list[i]))
 
+  dat = dat[order(dat$condition),]
+
   # res <- rma(observed_stat, sei=std, data=dat, test="knha", weights=group_size)
   res <- rma(observed_stat, sei=std, data=dat, test="knha")
 
@@ -46,7 +54,7 @@ for (i in names(mod_list)) {
   # ! PLOT
   png(file=paste0(saliency_path,output_base_name,threshold,'.png'), width = 4, height = 5, units="in", res=300)
 
-  forest(res, order="obs", slab=paste(gsub('Group1','', dat$tobii ) , sep = ","), main=this_title, xlim=c(-.2,.5), header=c('Image','IoU [95% CI]'))
+  forest(res, slab=dat$condition, main=this_title, xlim=xlim, alim=alim, header=c('Image','IoU [95% CI]'))
 
   dev.off()
 

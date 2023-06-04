@@ -1,8 +1,8 @@
-
+rm(list = ls())
 
 library('metafor')
 
-dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/all_img_nonexpgroup_heatmap_vs_heatmap_long.csv')
+dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/all_img_nonexpgroup_succ_vs_under_long.csv')
 
 expert_or_not = 'Nonclinicians' # ! Clinicians OR Nonclinicians CHANGE THIS IF NEEDED
 
@@ -59,9 +59,9 @@ for (group in c("1,2") ) { # , "2,3", "2,4", "3,4"
     # ---------------------------------------------------------------------------- #
 
     # ! PLOT
-    png(file=paste0(fout_path,'Group1-Group2-IoU-thr',threshold,'.png'), width = 4.5, height = 6, units="in", res=300)
+    png(file=paste0(fout_path,'Group1-Group2-IoU-thr',threshold,'.png'), width = 4.5, height = 5, units="in", res=300)
 
-    forest(res, slab=paste(gsub('Group1','', this_df$condition ) , sep = ","), main=this_title, xlim=c(-.5,1.5)) # alim=c(-0.05,0.45), xlim=c(-.25,.75)
+    forest(res, order="obs", slab=this_df$condition, main=this_title, xlim=c(-.6,1.5), alim=c(-0.1,0.6), header=c('Image','IoU [95% CI]') ) # alim=c(-0.05,0.45), xlim=c(-.25,.75)
 
     dev.off()
 

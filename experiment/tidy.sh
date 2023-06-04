@@ -61,4 +61,5 @@ scp $helix:$datadir/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAc
 # ! condition on one image, compare experts vs nonexperts 
 scp $helix:$datadir/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023/*csv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023
 
-
+# ! compare vs saliency 
+scp -r $helix:$datadir/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/

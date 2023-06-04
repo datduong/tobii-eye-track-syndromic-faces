@@ -1,4 +1,6 @@
 
+# ---------------------------------------------------------------------------- #
+
 # ! average of a few images after remove the "common consensus"
 
 
@@ -89,7 +91,7 @@ import pickle
 from PIL import Image, ImageDraw
 import sys, re
 import matplotlib.pyplot as plt
-
+from matplotlib import cm
 
 
 imdir_arr = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertKeepAve04172023',
@@ -116,9 +118,15 @@ for imdir in imdir_arr :
     arr=arr+imarr/N
 
   # Round values in array and cast as 8-bit integer
-  arr=np.array(1-np.round(arr),dtype=np.uint8) # ! convert black background using "1-"
-  out=Image.fromarray(np.array(arr)).convert('L')
-  out.save( os.path.join(foutname ) )
+  # arr=np.array(1-np.round(arr),dtype=np.uint8) # ! convert black background using "1-"
+  # out=Image.fromarray(np.array(arr)).convert('L')
+
+  arr=np.array(np.round(arr),dtype=np.uint8)
+  arr = cm.magma(arr)
+  out = Image.fromarray(np.uint8(arr*255)).convert("RGB")
+
+  
+  # out.save( os.path.join(foutname ) )
 
 
   
