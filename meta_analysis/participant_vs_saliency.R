@@ -2,9 +2,9 @@ rm(list = ls())
 
 library('metafor')
 
-saliency_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut70-seg/'
+saliency_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg/'
 
-output_base_name = paste0('sal-','k20-thresh0.05-pixcut70-seg')
+output_base_name = paste0('sal-','k20-thresh0.05-pixcut20-seg')
 
 # xlim=c(-.4,.8) # works for 'k20-thresh0.05-pixcut70-seg'? 
 # alim=c(0,.4)
@@ -35,6 +35,8 @@ for (i in names(mod_list)) {
 
   dat = read.csv(paste0(saliency_path,mod_list[i]))
 
+  dat = subset (dat, dat$condition != 'RSTS1')
+
   dat = dat[order(dat$condition),]
 
   # res <- rma(observed_stat, sei=std, data=dat, test="knha", weights=group_size)
@@ -52,7 +54,7 @@ for (i in names(mod_list)) {
   this_title = paste ( 'Successful clinicians vs model\nIoU threshold', threshold_name )
  
   # ! PLOT
-  png(file=paste0(saliency_path,output_base_name,threshold,'.png'), width = 4, height = 5, units="in", res=300)
+  png(file=paste0(saliency_path,output_base_name,threshold,'RemoveRSTS1.png'), width = 4, height = 5, units="in", res=300)
 
   forest(res, slab=dat$condition, main=this_title, xlim=xlim, alim=alim, header=c('Image','IoU [95% CI]'))
 
