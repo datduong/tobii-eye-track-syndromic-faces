@@ -14,7 +14,7 @@ module load CUDA/11.0
 module load cuDNN/8.0.3/CUDA-11.0
 module load gcc/8.3.0
 
-code_dir=/data/duongdb/Tobii-AOI-FaceSyndromes/plot_aoi
+code_dir=/data/duongdb/tobii-eye-track-syndromic-faces/plot_aoi
 cd $code_dir
 
 # ! 
