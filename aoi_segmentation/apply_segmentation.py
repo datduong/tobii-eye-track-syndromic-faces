@@ -7,14 +7,12 @@ from pathlib import Path
 import pickle
 from PIL import Image, ImageDraw
 import sys
-
 from argparse import ArgumentParser
-
 import matplotlib.pyplot as plt
-
-import aoi_to_segmentation 
-
 from copy import deepcopy
+
+import eye_heatmap_to_segmentation 
+
 
 # ---------------------------------------------------------------------------- #
 
@@ -41,7 +39,7 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
   
   seg_dict = {} # save all segmentations in dict
   for img in images: 
-    x, y = aoi_to_segmentation.img_to_segment(   cam_mask = img, 
+    x, y = eye_heatmap_to_segmentation.img_to_segment(   cam_mask = img, 
                                                       threshold = threshold,
                                                       smoothing = args.if_smoothing,
                                                       k = args.k,
@@ -82,7 +80,7 @@ def ave_of_segmentation (dict_segment,args=None):
     arr = scale_shift_ave_pixel_one_image (arr, target=args.scale_or_shift_ave_pixel) # ! put on same scale, so easier to compare between 2 groups
 
   threshold_to_binary = args.cut_ave_img_to_binary if args.scale_or_shift_ave_pixel is not None else args.cut_seg_to_binary_1
-  seg_im, _ = aoi_to_segmentation.img_to_segment(  cam_mask = arr, 
+  seg_im, _ = eye_heatmap_to_segmentation.img_to_segment(  cam_mask = arr, 
                                                         threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                         smoothing = True,
                                                         k = args.k,
@@ -180,7 +178,7 @@ def segementation_of_ave (dict_segment,size,args):
   if not args.simple_diff: 
     threshold_to_binary = args.cut_ave_img_to_binary if args.cut_ave_img_to_binary is not None else None # ! scale ave pixel up to brighter value, need to use @cut_ave_img_to_binary
 
-  seg_im, ave_im = aoi_to_segmentation.img_to_segment(   cam_mask = ave_im, 
+  seg_im, ave_im = eye_heatmap_to_segmentation.img_to_segment(   cam_mask = ave_im, 
                                                               threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                               smoothing = args.smooth_ave,
                                                               k = args.k,
@@ -210,7 +208,7 @@ def diff_two_sets(dict1,dict2,args):
   
   # average images in @dict1, compute @img_to_segment of this average? 
   # average segmentation in @dict1, compute @img_to_segment of this average? 
-  # aoi_to_segmentation.calculate_iou
+  # eye_heatmap_to_segmentation.calculate_iou
   
   if args.boot_ave_segmentation: 
     seg_im1, ave_im1 = ave_of_segmentation(dict1, args=args) # ! compute the average seg of each image, and then compare the 2 groups
@@ -224,14 +222,14 @@ def diff_two_sets(dict1,dict2,args):
   #
   if args.compare_vs_this is None: 
     if args.simple_diff: 
-      score = aoi_to_segmentation.calculate_simple_diff(ave_im1, ave_im2) # ! simple diff (subtraction) on 2 averages of 2 sets of images
+      score = eye_heatmap_to_segmentation.calculate_simple_diff(ave_im1, ave_im2) # ! simple diff (subtraction) on 2 averages of 2 sets of images
     else:
-      score = aoi_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) # ! intersection over union. 
+      score = eye_heatmap_to_segmentation.calculate_iou(seg_im1, seg_im2, true_pos_only=False) # ! intersection over union. 
   else: 
     if args.simple_diff: 
-      score = aoi_to_segmentation.calculate_simple_diff(ave_im1, dict2['image']) 
+      score = eye_heatmap_to_segmentation.calculate_simple_diff(ave_im1, dict2['image']) 
     else:
-      score = aoi_to_segmentation.calculate_iou(seg_im1, dict2['segmentation'], true_pos_only=False) 
+      score = eye_heatmap_to_segmentation.calculate_iou(seg_im1, dict2['segmentation'], true_pos_only=False) 
   return score
 
 

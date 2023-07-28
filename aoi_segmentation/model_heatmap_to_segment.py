@@ -13,7 +13,7 @@ from argparse import ArgumentParser
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-import aoi_to_segmentation 
+import eye_heatmap_to_segmentation 
 from apply_segmentation import scale_shift_ave_pixel_one_image
 
 match_model_heatmap_to_face_seg = {
@@ -94,7 +94,7 @@ for cut_pixel_per_img in [20,70]: # 50,70
 
     threshold = 0.05
     
-    seg, img = aoi_to_segmentation.img_to_segment(image_path, threshold=threshold, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
+    seg, img = eye_heatmap_to_segmentation.img_to_segment(image_path, threshold=threshold, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
 
 
     # ! HERE, WE HAVE JUST 1 IMAGE. WE CAN REMOVE LOW VALUES, THEN CONVERT TO 1-HOT. DON'T NEED TO USE @threshold, IT'S FINE TO JUST USE @cut_pixel_per_img. 

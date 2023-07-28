@@ -14,7 +14,7 @@ from argparse import ArgumentParser
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-import aoi_to_segmentation 
+import eye_heatmap_to_segmentation 
 from apply_segmentation import scale_shift_ave_pixel_one_image
 
 
@@ -37,7 +37,7 @@ image2 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/EfficientNe
 img1, image1 = read_img_convert_np_array(image1)
 img2, image2 = read_img_convert_np_array(image2)
 
-iou_score = aoi_to_segmentation.calculate_iou(image1,image2,true_pos_only=False)
+iou_score = eye_heatmap_to_segmentation.calculate_iou(image1,image2,true_pos_only=False)
 print (iou_score)
 
 0.0958543833580

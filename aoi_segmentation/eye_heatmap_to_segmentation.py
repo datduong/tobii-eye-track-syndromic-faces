@@ -17,7 +17,8 @@ from matplotlib import cm
 
 # ---------------------------------------------------------------------------- #
 
-def calculate_iou(pred_mask, gt_mask, true_pos_only):
+def calculate_iou(pred_mask, gt_mask, true_pos_only=False): 
+    # ! follow https://github.com/rajpurkarlab/cheXlocalize
     """
     Calculate IoU score between two segmentation masks.
 
