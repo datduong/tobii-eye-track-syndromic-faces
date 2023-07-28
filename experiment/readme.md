@@ -5,7 +5,7 @@
 **We can do this on local computer so we can easily view the images.**
 
 ```bash
-cd C:/Users/duongdb/Documents/GitHub/tobii-eye-track-syndromic-faces/aoi_segmentation
+cd C:/Users/duongdb/Documents/GitHub/tobii-eye-track-syndromic-faces/format_heatmap
 
 python get_remove_average_tobii.py --main_datadir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --imdir 25radius-fix-mismatch-name-to-csv --where_to_save_formated_individual 25radius-fix-mismatch-name-csv-no-ave-whtbg --imsize 720,720 
 
