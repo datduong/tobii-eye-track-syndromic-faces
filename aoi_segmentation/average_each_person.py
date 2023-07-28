@@ -15,11 +15,9 @@ import shutil
 
 def image_grid(imgs, rows, cols):
   # assert len(imgs) == rows*cols
-
   w, h = imgs[0].size
   grid = Image.new('RGB', size=(cols*w, rows*h), color=(255, 255, 255))
-  grid_w, grid_h = grid.size
-  
+  # grid_w, grid_h = grid.size
   for i, img in enumerate(imgs):
       grid.paste(img, box=(i%cols*w, i//cols*h))
   return grid
@@ -29,9 +27,6 @@ def image_grid(imgs, rows, cols):
 # ! see user behavior, average over all images for same person. 
 
 # ---------------------------------------------------------------------------- #
-
-# C:\Users\duongdb\Documents\Face11CondTobiiEyeTrack01112023
-# C:\Users\duongdb\Documents\Face11CondTobiiEyeTrack01112023\Heatmap25rExpertNoAveByAcc04172023
 
 main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
 
