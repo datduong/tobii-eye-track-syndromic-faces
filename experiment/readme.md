@@ -7,9 +7,9 @@
 ```bash
 cd C:/Users/duongdb/Documents/GitHub/tobii-eye-track-syndromic-faces/format_heatmap
 
-python get_remove_average_tobii.py --main_datadir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --imdir 25radius-fix-mismatch-name-to-csv --where_to_save_formated_individual 25radius-fix-mismatch-name-csv-no-ave-whtbg --imsize 720,720 
+python get_remove_average_heatmap.py --main_datadir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --imdir 25radius-fix-mismatch-name-to-csv --where_to_save_formated_individual 25radius-fix-mismatch-name-csv-no-ave-whtbg --imsize 720,720 
 
-python get_remove_average_tobii.py --main_datadir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --imdir Peter25radiusTobiiHeatmap --where_to_save_formated_individual 25radius-no-ave-whtbg-peter --imsize 720,720 
+python get_remove_average_heatmap.py --main_datadir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --imdir Peter25radiusTobiiHeatmap --where_to_save_formated_individual 25radius-no-ave-whtbg-peter --imsize 720,720 
 ```
 
 
