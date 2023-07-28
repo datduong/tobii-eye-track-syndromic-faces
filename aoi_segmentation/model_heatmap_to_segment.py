@@ -73,20 +73,7 @@ print (this_img_arr)
 
 original_image_dir = 'C:/Users/duongdb/Documents/ManyFaceConditions12012022/survey_pics_eyetrack_tobii/'
 
-
 # ---------------------------------------------------------------------------- #
-
-# for th in [.1, .15, 0.2,0.3,0.35, 0.4]: # 0.1,0.2,0.3,0.4,0.5
-  
-#   for image_path in this_img_arr:
-
-#     face_mask = os.path.join(face_seg_dir, match_model_heatmap_to_face_seg[image_base_name])
-    
-#     face_mask = np.array(Image.open(face_mask).convert('L'))
-#     face_mask = np.where (face_mask==0,0,1) # ! remove background, keep everything else. 
-    
-#     seg, img = aoi_to_segmentation.img_to_segment(image_path, threshold=th, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=True, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=None, face_parse_mask=face_mask)
-
 # ---------------------------------------------------------------------------- #
 
 for cut_pixel_per_img in [20,70]: # 50,70
@@ -109,12 +96,10 @@ for cut_pixel_per_img in [20,70]: # 50,70
     
     seg, img = aoi_to_segmentation.img_to_segment(image_path, threshold=threshold, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
 
-    # ! 
+
     # ! HERE, WE HAVE JUST 1 IMAGE. WE CAN REMOVE LOW VALUES, THEN CONVERT TO 1-HOT. DON'T NEED TO USE @threshold, IT'S FINE TO JUST USE @cut_pixel_per_img. 
     # ! replace @seg with @img in 1-hot
-    # seg = np.where(img/255 > 0, 1, 0)
-    
-    # ! 
+
     prefix = 'k20-thresh'+str(threshold)+'-pixcut'+str(cut_pixel_per_img)
     
     img = Image.fromarray(np.uint8(img), 'L') 
@@ -131,6 +116,7 @@ for cut_pixel_per_img in [20,70]: # 50,70
     original_image = Image.open(original_image).convert("RGBA")
 
     # ! scale pixel value up down? 
+    
     this_img = np.array(img) 
     this_img = 255*scale_shift_ave_pixel_one_image ( this_img/255, target=0.3 )
     this_img = cm.magma((255-this_img)/255)*255 # flip color scale
