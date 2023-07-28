@@ -37,31 +37,3 @@ group2="Berny,Friederike,Hannah,Manuel,Meghna"
 # --nan_to_0 makes sense if we do "total_number_of_fixation"
 
 python3 $code_dir/aoi_compare.py --csv $main_data_dir/Peter20-24+Nih.csv --outname $main_data_dir/aoi_pval_slide_12.csv --boot_num 1000 --tobii_metrics $tobii_metrics --slides "Slide 12,Slide 12" --group1 $group1 --group2 $group2
-
-# slides = ['Slide 11,Slide 11']
-
-# people_names = [  ['BAF60a,BRD4,CREBBP,EP300,KMT2,LIMK1,PDGFRa,SMAD1,TCOF1,WHSC1'], 
-#                   ['PTPN11,RIT1,TBX'] ]
-
-['BAF60a', 'BRD4', 'CREBBP', 'EP300', 'GTF2I', 'KMT2', 'LIMK1', 'PDGFRa', 'PTPN11', 'RAD21', 'SMAD1', 'TBX1', 'TCOF1', 'WHSC1']
-
-# {'BAF60a',
-#  'BRD4',
-#  'Berny',
-#  'CREBBP',
-#  'EP300',
-#  'Friederike',
-#  'Hannah',
-#  'KMT2',
-#  'LIMK1',
-#  'Manuel',
-#  'Meghna',
-#  'PDGFRa',
-#  'POLR1C',
-#  'PTPN11',
-#  'RIT1',
-#  'SMAD1',
-#  'TBX',
-#  'TCOF1',
-#  'WHSC1'}
-
