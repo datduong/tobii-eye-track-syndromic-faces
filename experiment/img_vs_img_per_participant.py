@@ -140,9 +140,6 @@ user_array = ['G1',
 
 # ---------------------------------------------------------------------------- #
 
-# ! for each slide1, slide2 (as a folder)
-# ! for each group1, group2 ...
-
 os.chdir(main_folder)
 
 for this_user in user_array: # Group1

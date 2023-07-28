@@ -28,12 +28,7 @@ group1=GROUP1
 group2=GROUP2
 
 # ---------------------------------------------------------------------------- #
-
-# --nan_to_0 
-# --zero_to_nan 
-
 # ---------------------------------------------------------------------------- #
-
 
 output_dir=$main_data_dir/CompareExpertNonExpert
 mkdir $output_dir
@@ -41,17 +36,11 @@ mkdir $output_dir
 output_dir=$output_dir/SLIDENUM
 mkdir $output_dir
 
-# Peter+Nih04072023PeterClinic.csv
-# Peter+Nih04072023.csv
-# Peter+Nih04072023NihClinic.csv  
- 
+
 for csv_input in Peter+Nih05012023.csv             
 do 
 
 python3 $code_dir/aoi_compare.py --csv $main_data_dir/$csv_input --outname $output_dir'/aoi_THISGROUP_SLIDENUM_'$csv_input --boot_num 500 --tobii_metrics $tobii_metrics --slides "SLIDEPAIR" --group1 $group1 --group2 $group2 --test_statistic mean --aoi_to_use AOI_TO_USE
-
-# python3 $code_dir/aoi_compare.py --csv $main_data_dir/$csv_input --outname $output_dir'/aoi_THISGROUP_SLIDENUM_'$csv_input --boot_num 500 --tobii_metrics $tobii_metrics --slides "SLIDEPAIR" --group1 $group1 --group2 $group2 --test_statistic mean --col_zero_to_nan Total_duration_of_whole_fixations
-
 
 done
 
@@ -121,16 +110,15 @@ for slide_i in slide_folders: # go over each slide
       script = re.sub('GROUP2',set2,script)
       script = re.sub('AOI_TO_USE',AOI_to_use[this_slide],script)
       #
-      # time.sleep( 1 )
-      # now = datetime.now() # current date and time
-      # script_name = os.path.join(script_path,'scriptaoimanual'+'-'+now.strftime("%m-%d-%H-%M-%S")+'.sh')
-      # fout = open(script_name,'w')
-      # fout.write(script)
-      # fout.close()
-      # os.system('sbatch --time=00:30:00 --mem=2g --cpus-per-task=4 ' + script_name )
+      time.sleep( 1 )
+      now = datetime.now() # current date and time
+      script_name = os.path.join(script_path,'scriptaoimanual'+'-'+now.strftime("%m-%d-%H-%M-%S")+'.sh')
+      fout = open(script_name,'w')
+      fout.write(script)
+      fout.close()
+      os.system('sbatch --time=00:30:00 --mem=2g --cpus-per-task=4 ' + script_name )
 
 
 #
-# 
 exit() 
 

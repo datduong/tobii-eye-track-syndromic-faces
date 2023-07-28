@@ -2,7 +2,6 @@
 
 # ! make simple boxplot showing "range" of time spent at an aoi. 
 
-
 library('ggplot2')
 library('ggpubr')
 library('coin')
@@ -31,9 +30,6 @@ get_user_list = function(expert_level_path, which_group) {
 
   return ( user )
 }
-
-# get_user_list ('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/','Group1')
-
 
 # ---------------------------------------------------------------------------- #
 
@@ -87,6 +83,8 @@ for (this_slide_number in (c(2,4,6,8,9,11,12,14,15,17))) {
 
   # Time_to_first_whole_fixation Total_duration_of_fixations
 
+  # ---------------------------------------------------------------------------- #
+  
   thisplot <-ggplot(df_wrt_slide, aes(x=as.factor(AOI), y=Total_duration_of_fixations, fill=as.factor(ParticipantType))) +
     geom_boxplot(position=position_dodge2(padding = 0.3, preserve='single')) +
     geom_point(position = position_jitterdodge()) +

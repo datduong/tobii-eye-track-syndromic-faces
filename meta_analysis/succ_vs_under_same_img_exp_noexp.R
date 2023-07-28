@@ -13,7 +13,7 @@ for (what_group in c('Group1')){ # ! 4 possible groups.  ,'Group3','Group4' 'all
   threshold_used = c(110,130,150,70,90,0) # ! threshold used can be changed, but has to match variable @mod 130,150
 
   mod = c(  
-    '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv',  
+    '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3.csv', # ! look at experiments ran with different hyperparameters.  
     '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3.csv', 
     '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3.csv',  
     '-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3.csv',  
@@ -35,7 +35,6 @@ for (what_group in c('Group1')){ # ! 4 possible groups.  ,'Group3','Group4' 'all
   # ---------------------------------------------------------------------------- #
 
   split_img = '' # ! empty
-
   # split_img = 'Unaff' # ! split the set of images into 2 sets, and do comparision on each set 
   # alim = c(0,.8)
   # split_img = 'Aff' # ! split the set of images into 2 sets, and do comparision on each set 
