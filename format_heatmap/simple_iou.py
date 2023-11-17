@@ -27,6 +27,7 @@ def read_img_convert_np_array (imgpath):
   return img, img_as_np
 
 
+
 # ---------------------------------------------------------------------------- #
 
 image1 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023/Slide11/k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3_seg_aveSlide11Group1exp.png'
@@ -38,3 +39,5 @@ img2, image2 = read_img_convert_np_array(image2)
 iou_score = eye_heatmap_to_segmentation.calculate_iou(image1,image2,true_pos_only=False)
 print (iou_score)
 
+
+   
