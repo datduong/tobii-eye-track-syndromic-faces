@@ -20,26 +20,6 @@ from argparse import ArgumentParser
 
 # ---------------------------------------------------------------------------- #
 
-# args.main_datadir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023'
-
-# ---------------------------------------------------------------------------- #
-
-# imdir = 'Peter25radiusTobiiHeatmap' # "25radius-fix-mismatch-name-to-csv/"
-# outputname = 'total_average_25_radiusPeter.png' # "total_average_25radius.png"
-# where_to_save_formated_individual = '25radius-keep-ave-whtbg-peter' # 25radius-fix-mismatch-name-csv-no-ave-whtbg/
-
-
-# imdir = '25radius-fix-mismatch-name-to-csv' # "25radius-fix-mismatch-name-to-csv/"
-# outputname = 'total_average_25radius.png' # "total_average_25radius.png"
-# where_to_save_formated_individual = '25radius-fix-mismatch-name-csv-no-ave-whtbg' # 25radius-fix-mismatch-name-csv-no-ave-whtbg/
-
-# imdir = '25radius-fix-mismatch-name-to-csv-3sec' # "25radius-fix-mismatch-name-to-csv/"
-# outputname = 'total_average_25radius_3sec.png' # "total_average_25radius.png"
-# where_to_save_formated_individual = '25radius-fix-mismatch-name-csv-no-ave-whtbg-3sec' # 25radius-fix-mismatch-name-csv-no-ave-whtbg/
-
-
-# ---------------------------------------------------------------------------- #
-
 def string_comma_to_np (this_str): 
   if this_str is None: 
     return None

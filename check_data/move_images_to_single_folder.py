@@ -67,7 +67,7 @@ if args.move_only_non_clinician:
 
 # source = '25radius-keep-ave-whtbg-peter' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
 # final_output_dir = 'KeepAveEyeTrackPeter' # RemoveAveEyeTrack
-# df = 'TableEyeTrackingSimplePeter.csv'
+# df = 'TableEyeTrackingSimpleNihPeter04172023.csv'
 
 # ---------------------------------------------------------------------------- #
 
