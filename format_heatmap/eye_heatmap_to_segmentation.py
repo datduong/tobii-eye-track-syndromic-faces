@@ -64,41 +64,29 @@ def calculate_simple_diff(pred_mask, gt_mask): # ! doing subtraction between 2 i
 
 
 
-def img_to_segment(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_pixel_per_img=None, hi_threshold=None, face_parse_mask=None, outdir=None, matplotlib_cm=False):
-    """
-    Threshold a saliency heatmap to binary segmentation mask.
-    Args:
-        cam_mask (torch.Tensor): heat map in the original image size (H x W).
-            Will squeeze the tensor if there are more than two dimensions.
-        threshold (np.float64): threshold to use
-        smoothing (bool): if true, smooth the pixelated heatmaps using box filtering
-        k (int): size of kernel used for box filter smoothing (int); k must be
-                 >= 0; if k is > 0, make sure to set if_smoothing to True,
-                 otherwise no smoothing would be performed.
+def img_to_segment(img_input, threshold=None, smoothing=False, k=0, img_dir=None, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=None, cut_pixel_per_img=None, hi_threshold=None, face_parse_mask=None, outdir=None, matplotlib_cm=False):
 
-    Returns:
-        segmentation (np.ndarray): binary segmentation output
-    """
-
+    # ! @img_input can be array, or string name. 
+    
     if outdir is None: 
         outdir = img_dir
         
     # ! original code reads in pickle https://github.com/rajpurkarlab/cheXlocalize
-    # if (len(cam_mask.size()) > 2):
-    #     cam_mask = cam_mask.squeeze()
+    # if (len(img_input.size()) > 2):
+    #     img_input = img_input.squeeze()
 
-    # assert len(cam_mask.size()) == 2
+    # assert len(img_input.size()) == 2
 
     # # normalize heatmap
-    # mask = cam_mask - cam_mask.min()
+    # mask = img_input - img_input.min()
     # mask = mask.div(mask.max()).data
     # mask = mask.cpu().detach().numpy()
 
     # ! read saliency image, or a numpy
     # ! if input is numpy, then it should be 2D matrix on grayscale 0-255
-    if type(cam_mask) == str: 
+    if type(img_input) == str: 
         if transparent_to_white: 
-            mask = Image.open(os.path.join(img_dir,cam_mask)) 
+            mask = Image.open(os.path.join(img_dir,img_input)) 
             # https://stackoverflow.com/questions/50898034/how-replace-transparent-with-a-color-in-pillow/50898375#50898375
             temp = Image.new("RGBA", (mask.size), "WHITE")  # Create a white rgba background
             temp.paste(mask, (0, 0), mask)                  # Paste the image on the background. Go to the links given below for details.
@@ -109,13 +97,13 @@ def img_to_segment(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None,
             mask = 255 - mask # flip, white-->eye focus, black-->nothing
         else: 
             # ! NOTE: THERE'S A PROBLEM, DARKEST RED WILL LOOK BLACK. DO NOT USE IF BACKGROUND IS TRANSPARENT
-            mask = np.array(Image.open(os.path.join(img_dir,cam_mask)).convert('L')) # red-->white, transparent-->black 
+            mask = np.array(Image.open(os.path.join(img_dir,img_input)).convert('L')) # red-->white, transparent-->black 
             mask = 255 - mask # flip, white-->eye focus, black-->nothing
             
-    # ! read in numpy, so we set mask=cam_mask, set to uint8 for @cv2
+    # ! read in numpy, so we set mask=img_input, set to uint8 for @cv2
     else: 
-        mask = cam_mask # https://stackoverflow.com/questions/10965417/how-to-convert-a-numpy-array-to-pil-image-applying-matplotlib-colormap
-
+        mask = img_input 
+        
     # ---------------------------------------------------------------------------- #
 
     if resize is not None: 
@@ -124,9 +112,9 @@ def img_to_segment(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None,
     if face_parse_mask is not None: 
         mask = np.array(mask) * face_parse_mask # ! apply face parser to remove random noise
 
-    if cut_pixel_per_img is not None: 
+    if cut_pixel_per_img is not None: # ! remove low pixel values (these are probably noise)
         if (0 < cut_pixel_per_img) and (cut_pixel_per_img < 1): 
-            sys.exit('cut off pix is on raw scale 0-255')
+            sys.exit('cut off pix is on raw scale 0-255') # ! can clean this up, by convert image input into 0-1 scale ahead of time
         #
         mask = np.array(mask)
         mask = np.where (mask > cut_pixel_per_img, mask, 0) # keep pixel higher than this threshold.
@@ -144,38 +132,7 @@ def img_to_segment(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None,
     formated_input_img_as_np = np.copy(np.array(mask)) # ! may need this later for bootstrap, this is the input image after resize and smoothing and a bunch of other stuffs (if used)
 
     # ---------------------------------------------------------------------------- #
-    
-    # use Otsu's method to find threshold if no threshold is passed in
-    # if (threshold is None) :
-        
-    #     maxval = 255 # ! grayscale uses 0 to 255
-    #     thresh = cv2.threshold(mask, 0, maxval, cv2.THRESH_OTSU)[1] # ! this should not differ from @segmentation_output ?? @thres looks same as @segmentation
-
-    #     if plot_default_otsu: # ! plot
-    #         img = Image.fromarray(np.uint8(thresh), 'L')
-    #         img.show()
-
-    #     # draw out contours
-    #     cnts = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    #     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
-    #     polygons = []
-    #     for cnt in cnts:
-    #         if len(cnt) > 1:
-    #             polygons.append([list(pt[0]) for pt in cnt])
-
-    #     # create segmentation based on contour
-    #     img_dims = (mask.shape[1], mask.shape[0])
-    #     segmentation_output = Image.new("L", img_dims, "#000000") # ! using "Image.new('1', img_dims)" creates a black image. # https://pillow.readthedocs.io/en/stable/reference/Image.html
-    #     for polygon in polygons:
-    #         coords = [(point[0], point[1]) for point in polygon]
-    #         ImageDraw.Draw(segmentation_output).polygon(coords,
-    #                                                     outline=255,
-    #                                                     fill=255) # ! fill=1 fills in white spots, color image 0=black, 255=white
-            
-    #     segmentation = np.array(segmentation_output, dtype="int")//255 # mod 255 to bring back to 0/1 scale
-
-    # else:
-
+ 
     segmentation = None
     if threshold is not None: 
         mask = np.array(mask)
@@ -198,7 +155,7 @@ def img_to_segment(cam_mask, threshold=None, smoothing=False, k=0, img_dir=None,
         segmentation_as_png = Image.fromarray(np.uint8(segmentation*255), 'L') 
         prefix = 'k'+str(k) if smoothing else 'nosmooth'
         prefix = prefix + '-' + 'thresh'+str(threshold) if threshold is not None else 'otsu'
-        temp = prefix + '-' + cam_mask.split('/')[-1]
+        temp = prefix + '-' + img_input.split('/')[-1]
         segmentation_as_png.save(os.path.join(outdir,temp))
 
     return segmentation, formated_input_img_as_np

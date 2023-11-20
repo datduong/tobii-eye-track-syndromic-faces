@@ -18,6 +18,9 @@ import eye_heatmap_to_segmentation
 
 
 def apply_segmentation(img_dir, threshold, transparent_to_white, args): 
+  
+  # ! take array of img, segment each img (note: not doing exact segmentation)
+  
   """_summary_
 
   Args:
@@ -34,12 +37,12 @@ def apply_segmentation(img_dir, threshold, transparent_to_white, args):
   if args.filter_by_word is not None: 
     images = [ i for i in images if re.match(args.filter_by_word,i) ]
   
-  images = [i for i in images if ('otsu' not in i)] # ! only ourput images will have "otsu" name attached to it
-  images = [i for i in images if ('thresh' not in i)]
+  images = [i for i in images if ('otsu' not in i)] # ! only output images will have "otsu" name attached to it
+  images = [i for i in images if ('thresh' not in i)] # ! only output images will have "thresh" name attached to it, can tidy this later. 
   
   seg_dict = {} # save all segmentations in dict
   for img in images: 
-    x, y = eye_heatmap_to_segmentation.img_to_segment(   cam_mask = img, 
+    x, y = eye_heatmap_to_segmentation.img_to_segment(   img_input = img, 
                                                       threshold = threshold,
                                                       smoothing = args.if_smoothing,
                                                       k = args.k,
@@ -80,7 +83,7 @@ def ave_of_segmentation (dict_segment,args=None):
     arr = scale_shift_ave_pixel_one_image (arr, target=args.scale_or_shift_ave_pixel) # ! put on same scale, so easier to compare between 2 groups
 
   threshold_to_binary = args.cut_ave_img_to_binary if args.scale_or_shift_ave_pixel is not None else args.cut_seg_to_binary_1
-  seg_im, _ = eye_heatmap_to_segmentation.img_to_segment(  cam_mask = arr, 
+  seg_im, _ = eye_heatmap_to_segmentation.img_to_segment(  img_input = arr, 
                                                         threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                         smoothing = True,
                                                         k = args.k,
@@ -178,7 +181,7 @@ def segementation_of_ave (dict_segment,size,args):
   if not args.simple_diff: 
     threshold_to_binary = args.cut_ave_img_to_binary if args.cut_ave_img_to_binary is not None else None # ! scale ave pixel up to brighter value, need to use @cut_ave_img_to_binary
 
-  seg_im, ave_im = eye_heatmap_to_segmentation.img_to_segment(   cam_mask = ave_im, 
+  seg_im, ave_im = eye_heatmap_to_segmentation.img_to_segment(   img_input = ave_im, 
                                                               threshold = threshold_to_binary, # ! should use same setting for both set? 
                                                               smoothing = args.smooth_ave,
                                                               k = args.k,

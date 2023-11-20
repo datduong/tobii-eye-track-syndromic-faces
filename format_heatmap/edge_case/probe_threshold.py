@@ -61,8 +61,8 @@ img_arr = []
 seg_arr = []
 img_ave_pixel = []
 
-for cam_mask in imlist:
-  segment, img = eye_heatmap_to_segmentation.img_to_segment(cam_mask, threshold=SINGLE_SEG_THRESHOLD, smoothing=False, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=SINGLE_IMG_THRESHOLD, outdir=outdir)
+for img_input in imlist:
+  segment, img = eye_heatmap_to_segmentation.img_to_segment(img_input, threshold=SINGLE_SEG_THRESHOLD, smoothing=False, k=10, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=SINGLE_IMG_THRESHOLD, outdir=outdir)
   img_arr.append ( img )
   seg_arr.append ( segment )
   img_ave_pixel.append ( np.mean(img[img>0]) ) 
