@@ -72,7 +72,7 @@ id_to_english_name_out = {
 # ---------------------------------------------------------------------------- #
 
 path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg'
-foutpath = path
+foutpath = path # ! maybe clean up. 
 criteria_arr = ['k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3',
                 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3',
                 # 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3', 
@@ -87,7 +87,7 @@ for criteria in criteria_arr:
   csv = [i for i in os.listdir(path) if (i.endswith('csv')) and ('Eb4Occ' not in i)]
   csv = [i for i in csv if criteria in i]
   csv = [ pd.read_csv(os.path.join(path,c) ) for c in csv ] 
-  df_long = pd.concat (csv)
+  df_long = pd.concat (csv) # ! combine csv
   # 
   temp = df_long['tobii'].values # get convert slide into english names # may see "Slide11Group1"
   temp = [t.split('Group')[0] for t in temp]
