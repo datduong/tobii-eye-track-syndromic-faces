@@ -49,7 +49,7 @@ do
     # ! @this_k control smoothing parameter to smooth out the dots in the heatmap 
     # ! @this_thres remove pixel values in the indidivual person (0=not doing anything). we may need this if there are super noisy dots in the corners of the image. 
 
-    # ! compare simple average images of 2 groups NIH vs Peter, using simple subtraction
+    # ! compare simple average images of 2 groups expert vs nonexpert, using simple subtraction
     python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --simple_diff
 
     # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes) hence @remove_low_before_scale argument, use using simple subtraction
@@ -105,10 +105,10 @@ os.chdir(main_folder)
 for folder in slide_folders:
   for group in ['all','Group1','Group2','Group3','Group4']: # Group1
     # @group: 
-    # Group1 = NIH vs Peter, participant who answer "correct affected vs not" 
-    # Group2 = NIH vs Peter, participant who answer "incorrect affected vs not" 
-    # Group3 = NIH vs Peter, participant who answer "correct affected vs not" AND say correct disease name  
-    # Group2 = NIH vs Peter, participant who answer "correct affected vs not" BUT say wrong disease name 
+    # Group1 = expert vs nonexpert, participant who answer "correct affected vs not" 
+    # Group2 = expert vs nonexpert, participant who answer "incorrect affected vs not" 
+    # Group3 = expert vs nonexpert, participant who answer "correct affected vs not" AND say correct disease name  
+    # Group2 = expert vs nonexpert, participant who answer "correct affected vs not" BUT say wrong disease name 
     if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023',folder,group)):
       continue
     if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023',folder,group)):
