@@ -6,73 +6,7 @@ import numpy as np
 # ! make script to compare 2 groups on the same image. 
 # ! may have 1 to 3 groups 
 
-script_base = """#!/bin/bash
-
-source /data/$USER/conda/etc/profile.d/conda.sh
-conda activate py37
-
-module load CUDA/11.0
-module load cuDNN/8.0.3/CUDA-11.0
-module load gcc/8.3.0
-
-code_dir=/data/duongdb/tobii-eye-track-syndromic-faces/format_heatmap
-cd $code_dir
-
-# ! NIH data
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023
-img_dir_group_1=$main_data_dir/SLIDE_NUM/GROUP1 
-
-# ! Peter data
-main_data_dir_2=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
-img_dir_group_2=$main_data_dir_2/SLIDE_NUM/GROUP2
-
-# ! output
-output_dir=$main_data_dir/Heatmap25rExpertVsNonExpert04172023 # mean_vs_model.csv
-mkdir $output_dir
-
-output_dir=$main_data_dir/Heatmap25rExpertVsNonExpert04172023/SLIDE_NUM # mean_vs_model.csv
-mkdir $output_dir
-
-# ! add suffix to output average images? 
-name_suffix_1=exp
-name_suffix_2=noexp
-
-# ! may as well do this at tons of threshold to see what happens
-
-remove_low_before_scale=10 # ! remove very low noisy signal before scaling up the color intensity
-
-for this_k in 10        
-do
-  for this_thres in 0 
-  do
-
-    # ! @this_k control smoothing parameter to smooth out the dots in the heatmap 
-    # ! @this_thres remove pixel values in the indidivual person (0=not doing anything). we may need this if there are super noisy dots in the corners of the image. 
-
-    # ! compare simple average images of 2 groups expert vs nonexpert, using simple subtraction
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --simple_diff
-
-    # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes) hence @remove_low_before_scale argument, use using simple subtraction
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --remove_low_before_scale $remove_low_before_scale
-
-    # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use intersection-over-union hence @cut_ave_img_to_binary argument 
-    python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
-
-    # ! START REMOVING VERY LOW SIGNAL (HENCE, USE ONLY HIGH SIGNAL TO COMPARE 2 SETS OF PARTICIPANTS). at very high values like 150, only the brightest spots will be kept, everything else will be removed. 
-    for cut_pixel_ave_img in 50 70 90 110 130 150  
-    do
-
-      # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use using simple subtraction
-      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --simple_diff --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --remove_low_before_scale $remove_low_before_scale
-
-      # ! compare simple average images of 2 groups, scale up the color intensity to match well between 2 groups (due to low sample sizes), use intersection-over-union hence @cut_ave_img_to_binary argument 
-      python3 apply_segmentation.py --cut_seg_to_binary_1 $this_thres --cut_seg_to_binary_2 $this_thres --img_dir_group_1 $img_dir_group_1 --img_dir_group_2 $img_dir_group_2 --output_dir $output_dir --resize 720 --k $this_k --boot_num 1000 --name_suffix_1 $name_suffix_1 --name_suffix_2 $name_suffix_2 --scale_or_shift_ave_pixel 0.3 --smooth_ave --cut_pixel_ave_img $cut_pixel_ave_img --cut_ave_img_to_binary 0.3 --remove_low_before_scale $remove_low_before_scale
-
-    done 
-    
-  done
-done 
-
+script_base = """
 
 """
 
