@@ -93,7 +93,8 @@ for cut_pixel_per_img in [20,70]: # 50,70
     #   threshold = 0.1
 
     threshold = 0.05
-    
+
+    # ! filter out noise from the "complete original black/white saliency"
     seg, img = eye_heatmap_to_segmentation.img_to_segment(image_path, threshold=threshold, smoothing=True, k=20, img_dir=this_path, prefix=None, transparent_to_white=False, plot_grayscale_map=False, plot_segmentation=False, plot_default_otsu=False, resize=(720,720), cut_pixel_per_img=cut_pixel_per_img, face_parse_mask=face_mask)
 
 
