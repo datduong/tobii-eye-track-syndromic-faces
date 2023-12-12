@@ -67,7 +67,7 @@ for (index in c(1:length(file_name))){
 
   # res <- rma(obs_stat, sei=boot_std, data=dat, test="knha")
 
-  res <- rma(new_stat, sei=std, data=dat, test="knha")
+  res <- rma(new_stat, sei=std, data=dat, test="knha") # ! there is a name change, "new_stat" is the key interested value
 
   # ! CHANGE TITLE ACCORDING TO INPUT GROUPS AND SETTING
   this_title = paste ( 'Successful clinicians vs model\nKL threshold', threshold_list[[index]] ) # ! change if needed. 
