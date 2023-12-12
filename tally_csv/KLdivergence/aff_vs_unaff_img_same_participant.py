@@ -71,12 +71,11 @@ id_to_english_name_out = {
 
 # ---------------------------------------------------------------------------- #
 
-path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/ExpSameParticipant'
-foutpath = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/ExpSameParticipant'
+path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/NonExpSameParticipant'
+foutpath = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/NonExpSameParticipant'
 
-
-file_name_array = [ 'Expert_participant-70.0-kl.csv',
-                    'Expert_participant-110.0-kl.csv'
+file_name_array = [ 'NonExpert_participant-70.0-kl.csv',
+                    'NonExpert_participant-110.0-kl.csv'
                   ]
 
 # ! map slide into disease names. 

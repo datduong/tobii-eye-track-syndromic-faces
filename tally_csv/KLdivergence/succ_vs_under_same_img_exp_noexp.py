@@ -75,8 +75,8 @@ path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/
 foutpath = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/Underperforming_clin_vs_nonclin'
 
 
-file_name_array = [ 'Total-G1vG1-70.0-kl.csv',
-                    'Total-G1vG1-110.0-kl.csv'
+file_name_array = [ 'G2vG2-70.0-kl.csv',
+                    'G2vG2-110.0-kl.csv'
                   ]
 
 # ! map slide into disease names. 
