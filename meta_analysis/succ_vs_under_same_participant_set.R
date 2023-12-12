@@ -2,11 +2,11 @@ rm(list = ls())
 
 library('metafor')
 
-dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/all_img_nonexpgroup_succ_vs_under_long.csv')
+dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/all_img_expgroup_succ_vs_under_long.csv')
 
-expert_or_not = 'Nonclinicians' # ! Clinicians OR Nonclinicians CHANGE THIS IF NEEDED
+expert_or_not = 'clinicians' # ! Clinicians OR Nonclinicians CHANGE THIS IF NEEDED
 
-fout_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/'
+fout_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/'
 
 
 mod = c(  'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3',

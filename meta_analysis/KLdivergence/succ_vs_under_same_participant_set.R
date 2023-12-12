@@ -1,73 +1,58 @@
+
 rm(list = ls())
 
 library('metafor')
+library('data.table')
 
-# ! apply meta-analysis on the KL-divergence metric 
+# ! KL divergence between successful vs. underperforming clinicians (and likewise nonclinicians)
+data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
+folder_path = 'KL-symmetric/Succ_v_Underperforming_Nonclinicians'
+expert_or_not = 'nonclinicians' # ! Clinicians OR Nonclinicians CHANGE THIS IF NEEDED
 
-dat = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/all_img_nonexpgroup_succ_vs_under_long.csv')
+data_path = paste0(data_path,folder_path)
 
-expert_or_not = 'Nonclinicians' # ! Clinicians OR Nonclinicians CHANGE THIS IF NEEDED
+threshold_used = c('low','high')
+file_name = c('NonExG1vG2-70.0-kl-name.csv',
+              'NonExG1vG2-110.0-kl-name.csv')
 
-fout_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/'
-
-
-mod = c(  'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3',
-          'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3', 
-          'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3'
-          # 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3' 
-          )
-
-
-threshold_used = c(70,90,110) # ! 
-
-mod_list = list() # put everything into a list (this is like a dictionary in python)
+file_name_list = list() # put everything into a list (this is like a dictionary in python)
 threshold_list = list() 
-for (i in c(1:length(mod))){
-  mod_list [[as.character(i)]] = mod[i] 
-  threshold_list [[as.character(i)]] = threshold_used[i]
+for (i in c(1:length(file_name))){
+  file_name_list [[i]] = file_name[i] 
+  threshold_list [[i]] = threshold_used[i]
 }
 
-# ---------------------------------------------------------------------------- #
-
-for (group in c("1,2") ) { # , "2,3", "2,4", "3,4"
 
 
-  for (i in names(mod_list)) {
+xlim=c(-7,24) # ! define width of plot
+alim=c(0,12)
+height = 5 # ! when look at all slides
 
-    this_df = subset(dat, dat$type==mod_list[[i]])
-    this_df = this_df [this_df$group==group, ]
 
-    this_df = this_df[this_df$group_size1>0,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
-    this_df = this_df[this_df$group_size2>0,]
-    # print (mod[i])
-    # print (this_df)
+for (index in c(1:length(file_name))){
 
-    # ---------------------------------------------------------------------------- #
-    
-    res <- rma(obs_stat, sei=boot_std, data=this_df, test="knha")
+  dat = read.csv(paste0(data_path,'/',file_name_list[[index]]))
+  dat = dat[dat$group_size1>0,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
+  dat = dat[dat$group_size2>0,]
 
-    # ---------------------------------------------------------------------------- #
-
-    threshold = threshold_list[[i]]
-
-    if (threshold > 100) {
-      threshold_name = 'high'
-    } else{
-      threshold_name = 'low'
-    }
-
-    this_title = paste0 ( 'Successful vs underperforming\n', expert_or_not, ' IoU threshold ', threshold_name )
-
-    # ---------------------------------------------------------------------------- #
-
-    # ! PLOT
-    png(file=paste0(fout_path,'Group1-Group2-IoU-thr',threshold,'.png'), width = 4.5, height = 5, units="in", res=300)
-
-    forest(res, order="obs", slab=this_df$condition, main=this_title, xlim=c(-.6,1.5), alim=c(-0.1,0.6), header=c('Image','IoU [95% CI]') ) # alim=c(-0.05,0.45), xlim=c(-.25,.75)
-
-    dev.off()
-
+  dat = dat[dat$boot_std>0,]
+  if (nrow(dat) == 0) {
+    next
   }
+
+  res <- rma(obs_stat, sei=boot_std, data=dat, test="knha")
+
+  # ! CHANGE TITLE ACCORDING TO INPUT GROUPS AND SETTING
+  this_title = paste ( 'Successful vs underperforming\n', expert_or_not, 'KL threshold', threshold_list[[index]] )
+
+  # ! PLOT
+  png(file=paste0(data_path,'/','Group1-Group2-KL-thr',threshold_list[[index]],'.png'), width = 4.5, height = height, units="in", res=300)
+
+  # @slab removes group name on y-axis, so we see "slide" as y-axis name
+  # @xlim sets x-axis width of plot, may need to change depending on how nice we want plot to look visually
+  forest(res, order="obs", slab=dat$condition, main=this_title, xlim=xlim, alim=alim, header=c('Image','KL [95% CI]')) 
+
+  dev.off()
 
 }
 
