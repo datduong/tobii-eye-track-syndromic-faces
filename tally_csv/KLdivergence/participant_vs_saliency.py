@@ -7,7 +7,7 @@ import pandas as pd
 # ! filter rows/cols for nice visual
 
 
-match_powerpoint_to_tobii = {
+match_powerpoint_to_tobii = { # ! in Suzanna's original powerpoint, the images are not in the same order as Chris's ordering on Tobii. 
   1:3, 
   2:5, 
   3:7, 
@@ -71,33 +71,27 @@ id_to_english_name_out = {
 
 # ---------------------------------------------------------------------------- #
 
-path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg'
-foutpath = path # ! maybe clean up. 
-criteria_arr = ['k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3',
-                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3',
-                # 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3', 
-                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3',
-                'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave130.0-round0.3', 
-                # 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave150.0-round0.3'
-                ]
+path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/ExpvModelResult'
+foutpath = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/ExpvModelResult'
 
-slide = ['Slide' + str(i) for i in np.arange(1,18)]
+file_name_array = [ 'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-kl.csv',
+                    'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-kl.csv'
+                  ]
 
-for criteria in criteria_arr: 
-  csv = [i for i in os.listdir(path) if (i.endswith('csv')) and ('Eb4Occ' not in i)]
-  csv = [i for i in csv if criteria in i]
-  csv = [ pd.read_csv(os.path.join(path,c) ) for c in csv ] 
-  df_long = pd.concat (csv) # ! combine csv
-  # 
-  temp = df_long['tobii'].values # get convert slide into english names # may see "Slide11Group1"
-  temp = [t.split('Group')[0] for t in temp]
-  temp = [ id_to_english_name_out[ int (re.sub('Slide','',this_slide)) ] for this_slide in temp ]
-  #
-  df_long['condition'] = temp # ! use english labels, instead of using slide1 slide2...
-  #
-  df_long.to_csv(os.path.join(foutpath,'Eb4Occ-'+criteria+'.csv'), index=False)
+# ! map slide into disease names. 
 
+for fin in file_name_array: 
+  df = pd.read_csv(os.path.join(path,fin))
+  temp = df['tobii'].tolist() # ['SlideXGroupY']
+  temp = [i.split('Group')[0] for i in temp]
+  temp = [int ( re.sub('Slide','',i) ) for i in temp]
+  df ['label_index'] = temp
+  temp = [id_to_english_name_out[i] for i in temp ]
+  df ['condition'] = temp 
+  # ! sort by label index
+  df = df.sort_values(by=['label_index'],ignore_index=True)
+  new_name = re.sub (r'\.csv','-name.csv',fin)
+  df.to_csv ( os.path.join(foutpath,new_name), index=None)
 
-# ---------------------------------------------------------------------------- #
-
+  
 
