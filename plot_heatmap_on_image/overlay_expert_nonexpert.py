@@ -89,6 +89,8 @@ all_model_face_seg = [i for i in all_model_face_seg if i.endswith('.PNG')]
 
 tobii_num = [8,12] # tobii_num = [2,3,4,6,11,14] np.arange(2,18)
 
+tobii_num = [2] # tobii_num = [2,3,4,6,11,14] np.arange(2,18)
+
 image_type = 'img_ave'
 
 output_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/MetaAnalysisExpertNoExpert'
@@ -179,5 +181,5 @@ for this_group in ['Group1']: # 'all','Group1', 'Group2', 'Group3', 'Group4'
     if len(all_img_as_pil)==0: 
       continue
     grid = image_grid(all_img_as_pil, rows=2, cols=len(img_dir_set1))
-    grid.save(os.path.join(output_dir,this_group+'_'+str(this_tobii)+"tobii_overlay_short.png"))
+    grid.save(os.path.join(output_dir,this_group+'_'+str(this_tobii)+"tobii_overlay_short_2.png"))
 

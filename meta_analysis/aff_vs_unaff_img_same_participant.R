@@ -57,7 +57,7 @@ for (i in names(mod_list)) {
     threshold_name = 'low'
   }
 
-  this_title = paste ( expert_or_not, ', affected vs unaffected\nIoU threshold', threshold_name )
+  this_title = paste0 ( expert_or_not, ', affected vs unaffected\nIoU threshold', threshold_name )
 
   # ! PLOT
   png(file=paste0(data_path,expert_or_not,'-Aff-Unaff-IoU-thr',threshold,'.png'), width = 4.5, height = 6, units="in", res=300)
