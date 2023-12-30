@@ -13,6 +13,13 @@ from matplotlib import cm
 
 # ---------------------------------------------------------------------------- #
 
+# ! cannot use original images in paper, we have to redo these for Down and 22q, cannot use KS 
+
+output_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/ProcessStepExample'
+
+os.makedirs(output_dir,exist_ok=True)
+
+
 image_array = [ 
                 # 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png',
                 # 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png',
@@ -22,7 +29,7 @@ image_array = [
               ]
 
 
-for this_img in image_array: 
+for index,this_img in enumerate(image_array): 
 
   # arr = np.array(Image.open(this_img),dtype=float)
   # arr=np.array(np.round(arr),dtype=np.uint8)
@@ -41,6 +48,7 @@ for this_img in image_array:
   out = Image.fromarray(np.uint8(arr*255)).convert("RGB")
 
   foutname = this_img.split('.png')[0] + 'Magma.png'
-  out.save( os.path.join(foutname ) )
+  foutname = 'step'+str(index) + '_' + foutname.split('/')[-1]
+  out.save( os.path.join(output_dir, foutname ) )
 
 

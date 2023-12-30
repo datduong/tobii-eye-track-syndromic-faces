@@ -40,8 +40,8 @@ for (index in c(1:length(file_name))){
   dat = read.csv(paste0(data_path,'/',file_name_list[[index]]))
 
   # ! WE ONLY DO THIS >1 IF THE TOTAL SAMPLE SIZE IS EXTREMELY SMALL, IN 22Q, UNDERPERFORMING HAS 1 AND 3 PEOPLE  
-  dat = dat[dat$group_size1>0,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
-  dat = dat[dat$group_size2>0,]
+  dat = dat[dat$group_size1>1,] # ! AVOID CASES WHERE WE HAVE JUST 1 PARTICIPANT ANSWERING CORRECTLY. HIGHLY UNSTABLE ???
+  dat = dat[dat$group_size2>1,]
 
   dat = dat[dat$boot_std>0,]
   if (nrow(dat) == 0) {
@@ -62,7 +62,8 @@ for (index in c(1:length(file_name))){
   res <- rma(obs_stat, sei=boot_std, data=dat, test="knha")
 
   # ! CHANGE TITLE ACCORDING TO INPUT GROUPS AND SETTING
-  this_title = paste ( what_group_name, 'clinicians vs nonclinicians\nKL threshold', threshold_list[[index]] )
+  # this_title = paste ( what_group_name, 'clinicians vs nonclinicians\nKL threshold', threshold_list[[index]] )
+  this_title = paste ( what_group_name, 'clinicians vs\nnonclinicians KL threshold', threshold_list[[index]] )
 
   # ! PLOT
   png(file=paste0(data_path,'/',what_group_name,'-Expert-NonExpert-KL-noisethr',threshold_list[[index]],split_img,'.png'), width = 4.5, height = height, units="in", res=300)
