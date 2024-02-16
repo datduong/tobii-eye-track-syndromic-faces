@@ -13,7 +13,7 @@ For example, this the [last image on this page here](https://www.funtoday.news/p
 * The average visual attentions of clinicians and nonclinicians on an example image of Kabuki Syndrome. 
 
 <div>
-    <img src="https://github.com/datduong/stylegan3-syndromic-faces/blob/master/examples/seed0141.png" width="100%">
+    <img src="https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/example_img/Kabuki_clinicians_vs_nonclinicians.png" width="100%">
 </div>
 
 <br />
