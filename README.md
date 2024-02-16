@@ -10,7 +10,7 @@ For example, the [very last image on this page here](https://www.funtoday.news/p
 
 <br />
 
-* The average visual attentions of clinicians and nonclinicians on an example image of Kabuki Syndrome at different intensities. 
+* The average visual attentions of clinicians (top row) and nonclinicians (bottom row) on an example image of Kabuki Syndrome at different intensities (from left to right). 
 
 <div>
     <img src="https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/example_img/Kabuki_clinicians_vs_nonclinicians.png" width="100%">
