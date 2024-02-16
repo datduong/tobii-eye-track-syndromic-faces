@@ -18,6 +18,12 @@ python get_remove_average_heatmap.py --main_datadir C:/Users/duongdb/Documents/F
 
 ### Put images into 4 groups based on their accuracy.
 
+For a specific test image, there will be 4 groups each for the clinicians (and likewise for the nonclinicians ):
+- Group 1: clinicians who correctly identify the image is affected vs unaffected
+- Group 1: clinicians who incorrect identify the image is affected vs unaffected
+- Group 1: clinicians who correctly identify the image is affected vs unaffected, AND said the correct disease name
+- Group 1: clinicians who correctly identify the image is affected vs unaffected, BUT said the incorrect disease name
+
 **We can do this on local computer so we can easily view the images.**
 
 ```bash
@@ -35,7 +41,7 @@ We should do this on server, we don't need cuda, simple cpu will work fast enoug
 
 We run python code to create a bunch of bash script, this code will auto submit the bash script. We need to provide command to submit job according to the server specification (see line with `os.system` in this code).
 
-The line `slide_folders` will select with slide (in other word, which image) we want to compare NIH vs Peter's group. The line `for group in ['Group1']` will indicate which group (there are 4 possible groups).  
+The line `slide_folders` will select with slide (in other word, which image) we want to compare clinician vs nonclinician group. The line `for group in ['Group1']` will indicate which group (there are 4 possible groups).  
 
 
 ```bash
@@ -43,13 +49,13 @@ cd tobii-eye-track-syndromic-faces/experiment
 python group_vs_group_same_img_heatmap.py # need to change paths inside this code
 ```
  
-After this step, we will see the heatmap averaged over nih participants (and likewise for peter's group). The average heatmap will be with respect to the specific setting to smooth images and scale color intesity and so forth. 
+After this step, we will see the heatmap averaged over clinician participants (and likewise for nonclinician group). The average heatmap will be with respect to the specific setting to smooth images and scale color intesity and so forth. 
 
 Output will be saved at the variable `$output_dir` in `group_vs_group_same_img_heatmap.py`; for example, output dir can be `/data/duongdb/TOBII_DATA_PATH/eye_track_data_without_ave_signal/Compare_clinicians_vs_not/Slide1`
 
-See example output below. The png outputs are the heatmaps averaged over NIH group1 (and likewise Peter group1). The csv outputs compare the differences between the average of the NIH group1 vs Peter group1. We use many different settings to smooth and scale the Tobii heatmaps, and these settings are shown the output names. See more comments about these settings in `tobii-eye-track-syndromic-faces/experiment/group_vs_group_same_img_heatmap.py`. 
+See example output below. The png outputs are the heatmaps averaged over clinician group1 (and likewise nonclinician group1). The csv outputs compare the differences between the average of the clinician group1 vs nonclinician group1. We use many different settings to smooth and scale the Tobii heatmaps, and these settings are shown the output names. See more comments about these settings in `tobii-eye-track-syndromic-faces/experiment/group_vs_group_same_img_heatmap.py`. 
 
-![example1](https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/img/ExampleOutputDir.PNG)
+<!-- ![example1](https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/img/ExampleOutputDir.PNG) -->
 
 
 ### Combine all the csv outputs into a single place to analyze.
