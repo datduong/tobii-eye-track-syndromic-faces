@@ -10,9 +10,9 @@ We first outline the data processing step, and then the steps to compare visual 
 ```bash
 cd C:/Users/duongdb/Documents/GitHub/tobii-eye-track-syndromic-faces/format_heatmap
 
-python get_remove_average_heatmap.py --main_datadir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --imdir 25radius-fix-mismatch-name-to-csv --where_to_save_formated_individual 25radius-fix-mismatch-name-csv-no-ave-whtbg --imsize 720,720 
+python get_remove_average_heatmap.py --main_datadir C:/Users/duongdb/Documents/TOBII_DATA_PATH --imdir 25radius-fix-mismatch-name-to-csv --where_to_save_formated_individual 25radius-fix-mismatch-name-csv-no-ave-whtbg --imsize 720,720 
 
-python get_remove_average_heatmap.py --main_datadir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --imdir Peter25radiusTobiiHeatmap --where_to_save_formated_individual 25radius-no-ave-whtbg-nonclinicians --imsize 720,720 
+python get_remove_average_heatmap.py --main_datadir C:/Users/duongdb/Documents/TOBII_DATA_PATH --imdir Peter25radiusTobiiHeatmap --where_to_save_formated_individual 25radius-no-ave-whtbg-nonclinicians --imsize 720,720 
 ```
 
 
@@ -29,9 +29,9 @@ For a specific test image, there will be 4 groups each for the clinicians (and l
 ```bash
 cd C:/Users/duongdb/Documents/GitHub/tobii-eye-track-syndromic-faces/check_data
 
-python move_images.py --main_dir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --source 25radius-fix-mismatch-name-csv-no-ave-whtbg --final_output_dir eye_track_data_without_ave_signal --df C:/Users/duongdb/Documents/TOBII_DATA_PATH/eye_track_record_accuracy_per_person.csv.csv
+python move_images.py --main_dir C:/Users/duongdb/Documents/TOBII_DATA_PATH --source 25radius-fix-mismatch-name-csv-no-ave-whtbg --final_output_dir eye_track_data_without_ave_signal --df C:/Users/duongdb/Documents/TOBII_DATA_PATH/eye_track_record_accuracy_per_person.csv.csv
 
-python move_images.py --main_dir C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023 --source 25radius-no-ave-whtbg-nonclinicians --final_output_dir eye_track_data_without_ave_signal_nonclinicians --df C:/Users/duongdb/Documents/TOBII_DATA_PATH/eye_track_record_accuracy_per_person.csv --add_file_name_pattern .png
+python move_images.py --main_dir C:/Users/duongdb/Documents/TOBII_DATA_PATH --source 25radius-no-ave-whtbg-nonclinicians --final_output_dir eye_track_data_without_ave_signal_nonclinicians --df C:/Users/duongdb/Documents/TOBII_DATA_PATH/eye_track_record_accuracy_per_person.csv --add_file_name_pattern .png
 ```
 
 

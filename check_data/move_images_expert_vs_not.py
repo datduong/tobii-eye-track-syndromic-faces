@@ -15,7 +15,7 @@ peter_clinician_id_number = [8,10,11,19,17,27,29]
 
 peter_clinician_id_number = ['_G'+str(p)+'_25r' for p in peter_clinician_id_number]
 
-main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023'
+main_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH'
 source_folder = os.path.join(main_dir,'Peter25RadiusTobiiHeatmap04172023_fix_name')
 destination_folder = os.path.join(main_dir,'Heatmap25rNonExpert04172023')
 

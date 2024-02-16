@@ -10,7 +10,7 @@ import shutil
 
 parser = ArgumentParser()
 
-parser.add_argument('--main_dir', type=str, default='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023',
+parser.add_argument('--main_dir', type=str, default='C:/Users/duongdb/Documents/TOBII_DATA_PATH',
                       help='')
 
 parser.add_argument('--source', type=str,

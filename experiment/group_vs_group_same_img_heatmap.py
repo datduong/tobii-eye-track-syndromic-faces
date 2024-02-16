@@ -83,7 +83,7 @@ cut_seg_to_binary_2 = .5
 
 # ---------------------------------------------------------------------------- #
 
-script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
+script_path = '/data/duongdb/TOBII_DATA_PATH'
 
 main_folder = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the output data
 

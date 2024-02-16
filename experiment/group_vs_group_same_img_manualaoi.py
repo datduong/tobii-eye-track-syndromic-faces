@@ -58,7 +58,7 @@ def get_user_from_image_name (x):
    
 # ---------------------------------------------------------------------------- #
 
-script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
+script_path = '/data/duongdb/TOBII_DATA_PATH'
 
 dir_set_1 = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023' 
 dir_set_2 = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023' 

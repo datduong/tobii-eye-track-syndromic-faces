@@ -29,7 +29,7 @@ def string_comma_to_np (this_str):
 
 parser = ArgumentParser()
 
-parser.add_argument('--main_datadir', type=str, default='C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023',
+parser.add_argument('--main_datadir', type=str, default='C:/Users/duongdb/Documents/TOBII_DATA_PATH',
                       help='')
 
 parser.add_argument('--imdir', type=str,
