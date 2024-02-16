@@ -74,7 +74,7 @@ id_to_english = {
 # ! overlap the saliency map with segmented images.
 # ! cannot use original images, because of copyright problem? 
 
-face_seg_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/SurveyPicsFacerSegment'
+face_seg_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/SurveyPicsFacerSegment'
 all_model_face_seg = os.listdir(face_seg_dir)
 all_model_face_seg = [i for i in all_model_face_seg if i.endswith('.PNG')]
 

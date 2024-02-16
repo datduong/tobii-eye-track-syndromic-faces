@@ -69,7 +69,7 @@ id_to_english_name_out = {
 }
 
 
-path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/HeatmapAffPerParticipant/SameParticipantAffUnaff' # ! individual output of each participant 
+path = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023/HeatmapAffPerParticipant/SameParticipantAffUnaff' # ! individual output of each participant 
 
 foutname = 'same_participant_aff_vs_unaff_heatmap_long.csv' # ! we put all participants into same csv
 
@@ -163,7 +163,7 @@ all_df_long
 
 # ---------------------------------------------------------------------------- #
 
-# cd /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/HeatmapAffPerParticipant
-# scp $biowulf:/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/HeatmapAffPerParticipant/SameParticipantAffUnaff/*csv .
+# cd /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/HeatmapAffPerParticipant
+# scp $biowulf:/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/HeatmapAffPerParticipant/SameParticipantAffUnaff/*csv .
 
 

@@ -71,8 +71,8 @@ id_to_english_name_out = {
 
 # ---------------------------------------------------------------------------- #
 
-path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/NonExpSameParticipant'
-foutpath = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/NonExpSameParticipant'
+path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/KL-symmetric/NonExpSameParticipant'
+foutpath = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/KL-symmetric/NonExpSameParticipant'
 
 file_name_array = [ 'NonExpert_participant-70.0-kl.csv',
                     'NonExpert_participant-110.0-kl.csv'

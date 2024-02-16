@@ -33,8 +33,8 @@ get_user_list = function(expert_level_path, which_group) {
 
 # ---------------------------------------------------------------------------- #
 
-data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-manual05012023/'
-df = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-manual05012023/Peter+Nih05012023.csv')
+data_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/AOI-manual05012023/'
+df = read.csv('C:/Users/duongdb/Documents/TOBII_DATA_PATH/AOI-manual05012023/Peter+Nih05012023.csv')
 
 # ---------------------------------------------------------------------------- #
 
@@ -45,11 +45,11 @@ for (this_slide_number in (c(2,4,6,8,9,11,12,14,15,17))) {
 
   # ---------------------------------------------------------------------------- #
 
-  expert_correct = get_user_list ('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/','Group1')
-  nonexpert_correct = get_user_list ('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/','Group1')
+  expert_correct = get_user_list ('C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/','Group1')
+  nonexpert_correct = get_user_list ('C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023/','Group1')
 
-  expert_incorrect = get_user_list ('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/','Group2')
-  nonexpert_incorrect = get_user_list ('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/','Group2')
+  expert_incorrect = get_user_list ('C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/','Group2')
+  nonexpert_incorrect = get_user_list ('C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023/','Group2')
 
   # ---------------------------------------------------------------------------- #
 

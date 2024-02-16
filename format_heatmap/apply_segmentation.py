@@ -301,7 +301,7 @@ def average_over_data (group_name, segmentation_of_group, args, suffix_to_add=""
 
   Args:
       group_name (_type_): _description_
-      suffix_to_add (_type_): when compare group1-NIH vs group1-Peter, group_name=Group1 in both sets, so we need @suffix_to_add
+      suffix_to_add (_type_): when compare group1-clinicians vs group1-nonclinicians, group_name=Group1 in both sets, so we need @suffix_to_add
       segmentation_of_group (_type_): _description_
       args (_type_): _description_
 
@@ -425,7 +425,7 @@ if __name__ == '__main__':
                         help='before scale color intensity up, we remove random noise signals (e.g. very low pixel values)') 
 
   parser.add_argument('--name_suffix_1', type=str, default='', 
-                        help='without this, output will be called group1, with this, we can say group1-nih') 
+                        help='without this, output will be called group1, with this, we can say group1-clinicians') 
 
   parser.add_argument('--name_suffix_2', type=str, default='', 
                         help='add english suffix name to group2')

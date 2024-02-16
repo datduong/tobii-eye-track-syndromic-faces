@@ -5,7 +5,7 @@ library('metafor')
 library('data.table')
 
 
-data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
+data_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/'
 folder_path = 'KL-symmetric/ExpvModelResult'
 
 # ---------------------------------------------------------------------------- #

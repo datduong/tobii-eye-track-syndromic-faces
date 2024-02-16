@@ -296,7 +296,7 @@ if __name__ == '__main__':
                                                                                 boot_num=args.boot_num)
 
   
-  many_df_to_csv (args, [nice_view_output], ['(Nih-Peter)/Nih,pval<0.05,(Nih)'])
+  many_df_to_csv (args, [nice_view_output], ['(Nih-nonclinicians)/Nih,pval<0.05,(Nih)'])
   
   # ! 
   # many_df_to_csv(args, [observed_stat_percent_change, group_statistic[0][3], group_statistic[1][3], observed_stat, pval, mean, std], ['PercentChangeWrtNIH','nih','peter','observed_stat', 'pval', 'boot_mean', 'boot_std'])

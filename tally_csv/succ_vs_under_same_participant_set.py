@@ -76,7 +76,7 @@ id_to_english_name_out = {
 # ---------------------------------------------------------------------------- #
 
 
-path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023'
+path = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023'
 foutname = 'all_img_nonexpgroup_succ_vs_under_long.csv'
 
 slide = ['Slide' + str(i) for i in np.arange(2,18)]

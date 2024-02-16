@@ -4,7 +4,7 @@
 # ! move some stuffs around on server 
 
 # ! change path
-maindir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertKeepAveByAcc04172023
+maindir=/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertKeepAveByAcc04172023
 subdir=CompareGroupSameImg
 
 cd $maindir
@@ -56,10 +56,10 @@ done
 # ! copy to pc 
 
 # ! condition on experts (or nonexperts), compare how succ vs underperforming do. 
-scp $helix:$datadir/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/all_img_nonexpgroup_succ_vs_under_long.csv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
+scp $helix:$datadir/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023/all_img_nonexpgroup_succ_vs_under_long.csv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023
 
 # ! condition on one image, compare experts vs nonexperts 
-scp $helix:$datadir/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023/*csv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023
+scp $helix:$datadir/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023/*csv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023
 
 # ! compare vs saliency 
-scp -r $helix:$datadir/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/
+scp -r $helix:$datadir/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/

@@ -59,9 +59,9 @@ match_tobii_to_powerpoint = { v:k for k,v in match_powerpoint_to_tobii.items() }
 
 # ---------------------------------------------------------------------------- #
 
-face_seg_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/SurveyPicsFacerSegment'
+face_seg_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/SurveyPicsFacerSegment'
 
-this_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/EfficientNetOccSegment'
+this_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/EfficientNetOccSegment'
 
 this_img_arr = [i for i in os.listdir(this_path)]
 this_img_arr = [i for i in this_img_arr if 'smooth' not in i]

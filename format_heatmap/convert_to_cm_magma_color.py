@@ -15,17 +15,17 @@ from matplotlib import cm
 
 # ! cannot use original images in paper, we have to redo these for Down and 22q, cannot use KS 
 
-output_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/ProcessStepExample'
+output_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/ProcessStepExample'
 
 os.makedirs(output_dir,exist_ok=True)
 
 
 image_array = [ 
-                # 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png',
-                # 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png',
-                'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertKeepAveByAcc04172023/k0-thresh0.0-diff/k0-thresh0.0-diff_img_aveSlide14Group1.png',
-                'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/k0-thresh0.0-diff/k0-thresh0.0-diff_img_aveSlide14Group1.png',
-                'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff/k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff_img_aveSlide14Group1.png'
+                # 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png',
+                # 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png',
+                'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertKeepAveByAcc04172023/k0-thresh0.0-diff/k0-thresh0.0-diff_img_aveSlide14Group1.png',
+                'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/k0-thresh0.0-diff/k0-thresh0.0-diff_img_aveSlide14Group1.png',
+                'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff/k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-diff_img_aveSlide14Group1.png'
               ]
 
 

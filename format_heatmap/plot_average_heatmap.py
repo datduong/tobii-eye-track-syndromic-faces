@@ -34,13 +34,13 @@ slidename_arr = [ str(i)+'_' for i in [11] ] # ['17_'] 2,3,11,14,17
 
 # C:\Users\duongdb\Documents\Face11CondTobiiEyeTrack01112023\Heatmap25rExpertKeepAve04172023
 
-imdir_arr = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertKeepAve04172023/Slide11/Group1',
-            #  'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Slide11'
+imdir_arr = ['C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertKeepAve04172023/Slide11/Group1',
+            #  'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/Slide11'
              ]
 
 out_arr = []
 
-foutname = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png'
+foutname = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png'
 
 for imdir in imdir_arr : 
 
@@ -94,11 +94,11 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 
 
-imdir_arr = ['C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertKeepAve04172023',
-            #  'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Slide11'
+imdir_arr = ['C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rNonExpertKeepAve04172023',
+            #  'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/Slide11'
              ]
 
-foutname = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png'
+foutname = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023/SimpleAverageBeforeRemoveCommonSignal.png'
 
 for imdir in imdir_arr : 
 

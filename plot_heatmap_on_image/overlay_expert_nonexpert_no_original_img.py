@@ -81,7 +81,7 @@ id_to_english = {
 
 use_face_seg_removal = False
 
-face_seg_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/SurveyPicsFacerSegment'
+face_seg_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/SurveyPicsFacerSegment'
 all_model_face_seg = os.listdir(face_seg_dir)
 all_model_face_seg = [i for i in all_model_face_seg if i.endswith('.PNG')]
 
@@ -94,9 +94,9 @@ tobii_num = np.arange(2,18)
 
 image_type = 'img_ave'
 
-# output_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/MetaAnalysisExpertNoExpert'
+# output_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/MetaAnalysisExpertNoExpert'
 
-output_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/MetaAnalysisExpertNoExpert/NoOverlayOnOriginalImg'
+output_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/MetaAnalysisExpertNoExpert/NoOverlayOnOriginalImg'
 
 os.makedirs(output_dir,exist_ok=True)
 
@@ -123,8 +123,8 @@ for this_group in ['Group1']: # 'all','Group1', 'Group2', 'Group3', 'Group4'
     for tobii_choice in TOBII_CHOICE: 
 
       # ! get the average heatmaps of each participant set. @tobii_choice select low/medium/high attention in heatmap
-      tobii_dir1 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//Heatmap25rExpertNoAveByAcc04172023/'+tobii_choice
-      tobii_dir2 = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023//Heatmap25rNonExpertNoAveByAcc04172023/'+tobii_choice
+      tobii_dir1 = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH//Heatmap25rExpertNoAveByAcc04172023/'+tobii_choice
+      tobii_dir2 = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH//Heatmap25rNonExpertNoAveByAcc04172023/'+tobii_choice
 
       tobii_heatmap_arr = [i for i in os.listdir(tobii_dir1) if i.endswith('.png')]
       tobii_heatmap_arr = [i for i in tobii_heatmap_arr if tobii_choice in i]

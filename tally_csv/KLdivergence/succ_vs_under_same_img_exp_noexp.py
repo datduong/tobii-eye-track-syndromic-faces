@@ -71,8 +71,8 @@ id_to_english_name_out = {
 
 # ---------------------------------------------------------------------------- #
 
-path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/Underperforming_clin_vs_nonclin'
-foutpath = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/Underperforming_clin_vs_nonclin'
+path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/KL-symmetric/Underperforming_clin_vs_nonclin'
+foutpath = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/KL-symmetric/Underperforming_clin_vs_nonclin'
 
 
 file_name_array = [ 'G2vG2-70.0-kl.csv',

@@ -4,7 +4,7 @@ library('ggplot2')
 
 # slide_number = 3
 # group_option = 'NihClinicPeterNotClinic' # 'NihClinicPeterNotClinic' # 'NihClinicPeterClinic'
-# main_dir = paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/CompareNihPeter/Slide',slide_number,'/')
+# main_dir = paste0('C:/Users/duongdb/Documents/TOBII_DATA_PATH/AOI-default03232023/CompareNihPeter/Slide',slide_number,'/')
 # csv_input = paste0('meanaoi_metric_all_Slide',slide_number,'_Peter+Nih04072023',group_option,'long-form.csv')
 
 
@@ -12,7 +12,7 @@ library('ggplot2')
 
 slide_number = 2
 group_option = 'NihMetricsManualUniqueDysmorphicAOIs' # 'NihClinicPeterNotClinic' # 'NihClinicPeterClinic'
-main_dir = paste0('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/CompareWithinNihManualAoi/Slide',slide_number,'/')
+main_dir = paste0('C:/Users/duongdb/Documents/TOBII_DATA_PATH/AOI-default03232023/CompareWithinNihManualAoi/Slide',slide_number,'/')
 csv_input = paste0('meanaoi_Group1Group2_Slide',slide_number,'_',group_option,'long-form.csv')
 
 # ---------------------------------------------------------------------------- #
@@ -74,7 +74,7 @@ dev.off()
 
 # ---------------------------------------------------------------------------- #
 
-# df = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Peter+Nih04072023NihClinicPeterClinic.csv')
+# df = read.csv('C:/Users/duongdb/Documents/TOBII_DATA_PATH/AOI-default03232023/Peter+Nih04072023NihClinicPeterClinic.csv')
 # df = subset(df, df$AOI != 'Aggregated AOI 1')
 # df = subset (df, df$Media != 'Slide 1')
 

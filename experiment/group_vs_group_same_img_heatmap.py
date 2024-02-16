@@ -19,11 +19,11 @@ code_dir=/data/duongdb/tobii-eye-track-syndromic-faces/format_heatmap
 cd $code_dir
 
 # ! NIH data
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023
+main_data_dir=/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023
 img_dir_group_1=$main_data_dir/SLIDE_NUM/GROUP1 
 
 # ! Peter data
-main_data_dir_2=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
+main_data_dir_2=/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023
 img_dir_group_2=$main_data_dir_2/SLIDE_NUM/GROUP2
 
 # ! output
@@ -85,7 +85,7 @@ cut_seg_to_binary_2 = .5
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the output data
+main_folder = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the output data
 
 # 
 slide_folders = ['Slide'+str(s) for s in np.arange(1,18)]
@@ -108,9 +108,9 @@ for folder in slide_folders:
     # Group2 = expert vs nonexpert, participant who answer "incorrect affected vs not" 
     # Group3 = expert vs nonexpert, participant who answer "correct affected vs not" AND say correct disease name  
     # Group2 = expert vs nonexpert, participant who answer "correct affected vs not" BUT say wrong disease name 
-    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023',folder,group)):
+    if not os.path.isdir(os.path.join('/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023',folder,group)):
       continue
-    if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023',folder,group)):
+    if not os.path.isdir(os.path.join('/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023',folder,group)):
       continue
     script = re.sub('THIS_K',str(this_k),script_base)
     script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script) # ! note @THRESHOLD_GROUP_1 is NIH

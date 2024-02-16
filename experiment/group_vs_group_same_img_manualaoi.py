@@ -18,7 +18,7 @@ code_dir=/data/duongdb/tobii-eye-track-syndromic-faces/plot_aoi
 cd $code_dir
 
 # ! 
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/AOI-manual05012023
+main_data_dir=/data/duongdb/TOBII_DATA_PATH/AOI-manual05012023
 
 # Number_of_Visits Total_duration_of_whole_fixations
 
@@ -60,8 +60,8 @@ def get_user_from_image_name (x):
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-dir_set_1 = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023' 
-dir_set_2 = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023' 
+dir_set_1 = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023' 
+dir_set_2 = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023' 
 
 slide_folders = ['Slide'+str(s) for s in [11,12,14,15,17,2,4,6,8,9]]
 

@@ -71,8 +71,8 @@ id_to_english_name_out = {
 
 # ---------------------------------------------------------------------------- #
 
-path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023'
-foutpath = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023'
+path = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023'
+foutpath = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/Heatmap25rExpertVsNonExpert04172023'
 
 criteria_arr = ['k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3',
                 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave90.0-round0.3', 

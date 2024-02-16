@@ -4,7 +4,7 @@ rm(list = ls())
 library('metafor')
 library('grid')
 
-data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/HeatmapAffPerParticipant/'
+data_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023/HeatmapAffPerParticipant/'
 csv_input = paste0(data_path,'/','same_participant_aff_vs_unaff_heatmap_long.csv')
 expert_or_not = 'Nonclinicians' # 'Clinicians' 'Nonclinicians'
 

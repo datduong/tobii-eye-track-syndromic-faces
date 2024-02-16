@@ -2,7 +2,7 @@
 library('ggplot2')
 library('plotly')
 
-df = read.csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/img_img_aoi_pval.csv')
+df = read.csv('C:/Users/duongdb/Documents/TOBII_DATA_PATH/img_img_aoi_pval.csv')
 slide_number=11
 df_wrt_slide = subset (df, df$slide1==slide_number)
 df_wrt_slide = df_wrt_slide[df_wrt_slide$value>0,]

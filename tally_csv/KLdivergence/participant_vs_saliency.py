@@ -71,8 +71,8 @@ id_to_english_name_out = {
 
 # ---------------------------------------------------------------------------- #
 
-path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/ExpvModelResult'
-foutpath = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/KL-symmetric/ExpvModelResult'
+path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/KL-symmetric/ExpvModelResult'
+foutpath = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/KL-symmetric/ExpvModelResult'
 
 file_name_array = [ 'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-kl.csv',
                     'Eb4Occ-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-kl.csv'

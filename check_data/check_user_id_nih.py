@@ -3,11 +3,11 @@ import os,sys,re,pickle
 import numpy as np
 import pandas as pd 
 
-df = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/AOI-default03232023/Nih/Simple AOIs_NIH_032923.csv'
+df = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/AOI-default03232023/Nih/Simple AOIs_NIH_032923.csv'
 df = pd.read_csv(df)
 user_in_df = set(df['Participant'].values)
 
-image_source = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-to-csv-04172023'
+image_source = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/25radius-fix-mismatch-name-to-csv-04172023'
 
 img = os.listdir(image_source)
 
@@ -29,7 +29,7 @@ print ( img-user_in_df )
 
 # ---------------------------------------------------------------------------- #
 # ! check with simple excel that saves the accuracy scores
-acc = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/TableEyeTrackingSimpleNih04172023.csv'
+acc = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/eye_track_record_accuracy_per_person.csvNih04172023.csv'
 acc = pd.read_csv(acc)
 user_acc = []
 for i in np.arange(0,4): 
@@ -53,8 +53,8 @@ rename = {'GTF21':'GTF2I', 'GTF@1':'GTF2I',
           'PTPN':'PTPN11'}
 
 # ! need to rename the images. 
-image_source = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius'
-cygwin_source = '/cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius'
+image_source = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/25radius'
+cygwin_source = '/cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius'
 for i in os.listdir(image_source): 
   userid = i.split('_')[1] 
   userid = userid.split('-')[0] if '-' in userid else userid
@@ -85,28 +85,28 @@ for i in os.listdir(image_source):
 #  'TCOF1',
 #  'WHSC1'}
 
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/10_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/10_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/10_RITI-25r_BAD.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/10_RIT1-25r_BAD.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/12_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/12_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/13_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/13_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/13_RITI_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/13_RIT1_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/14_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/14_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/14_RITI_25r_BAD.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/14_RIT1_25r_BAD.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/15_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/15_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/15_RITI_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/15_RIT1_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/16_CEBBP_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/16_CREBBP_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/16_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/16_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/16_RITI_25r_bad.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/16_RIT1_25r_bad.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/16_TOCF1_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/16_TCOF1_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/17_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/17_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/17_RITI_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/17_RIT1_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/5_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/5_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/5_KIMT2_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/5_KMT2_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/5_PTPN_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/5_PTPN11_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/6_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/6_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/6_KIMT2_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/6_KMT2_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/6_RITI_25rBAD.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/6_RIT1_25rBAD.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/7_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/7_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/8_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/8_GTF2I_25r.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/9_GTF@1_25r_BAD.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/9_GTF2I_25r_BAD.png
-# mv /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/9_RTI_25r_BAD.png /cygdrive/c/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius/9_RIT1_25r_BAD.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/10_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/10_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/10_RITI-25r_BAD.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/10_RIT1-25r_BAD.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/12_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/12_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/13_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/13_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/13_RITI_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/13_RIT1_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/14_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/14_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/14_RITI_25r_BAD.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/14_RIT1_25r_BAD.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/15_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/15_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/15_RITI_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/15_RIT1_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/16_CEBBP_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/16_CREBBP_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/16_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/16_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/16_RITI_25r_bad.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/16_RIT1_25r_bad.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/16_TOCF1_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/16_TCOF1_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/17_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/17_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/17_RITI_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/17_RIT1_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/5_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/5_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/5_KIMT2_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/5_KMT2_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/5_PTPN_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/5_PTPN11_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/6_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/6_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/6_KIMT2_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/6_KMT2_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/6_RITI_25rBAD.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/6_RIT1_25rBAD.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/7_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/7_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/8_GTF21_25r.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/8_GTF2I_25r.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/9_GTF@1_25r_BAD.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/9_GTF2I_25r_BAD.png
+# mv /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/9_RTI_25r_BAD.png /cygdrive/c/Users/duongdb/Documents/TOBII_DATA_PATH/25radius/9_RIT1_25r_BAD.png

@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd 
 
 # ! just count how often AOI_x ranks high/low 
-df = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/img_img_aoi_pval.csv'
+df = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/img_img_aoi_pval.csv'
 df = pd.read_csv(df)
 df = df[df['slide1']!=1] # ! skip slide 1, because it's a practice slide
 df = df[df['slide2']!=1]
@@ -65,6 +65,6 @@ for m in metric:
                                 columns = disease_name )  #disease_name[cond_slide_id]
   print(m)
   print(df.to_string())
-  df.to_csv('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/img_img_group1_'+m+'_'+str(treshold_pval)+'.csv')
+  df.to_csv('C:/Users/duongdb/Documents/TOBII_DATA_PATH/img_img_group1_'+m+'_'+str(treshold_pval)+'.csv')
   #
 

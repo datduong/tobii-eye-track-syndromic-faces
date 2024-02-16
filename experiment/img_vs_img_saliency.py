@@ -20,7 +20,7 @@ cd $code_dir
 
 # ! 
 
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023
+main_data_dir=/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023
 
 img_dir_group_1=$main_data_dir/SLIDE_NUM1/GROUP1 
 img_dir_group_2=$main_data_dir/SLIDE_NUM2/GROUP2
@@ -32,7 +32,7 @@ output_dir=$main_data_dir/Compare2Saliency/SALIENCYCRITERIA
 mkdir $output_dir
 
 
-compare_vs_this=/data/duongdb/Face11CondTobiiEyeTrack01112023/EfficientNetOccSegment/COMPARE_VS_THIS
+compare_vs_this=/data/duongdb/TOBII_DATA_PATH/EfficientNetOccSegment/COMPARE_VS_THIS
 
 
 # ! add suffix to output average images? 
@@ -81,7 +81,7 @@ cut_seg_to_binary_2 = .5
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the data
+main_folder = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023' # @main_folder is where we save all the data
 
 # k20-thresh0.1-pixcut0-seg-KSSlide133v2_heatmappositiveAverage
 

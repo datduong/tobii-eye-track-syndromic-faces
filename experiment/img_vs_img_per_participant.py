@@ -19,7 +19,7 @@ code_dir=/data/duongdb/tobii-eye-track-syndromic-faces/format_heatmap
 cd $code_dir
 
 # ! same participant, but look at their heatmap on affected 
-main_data_dir=/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023
+main_data_dir=/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023
 img_dir_group_1=$main_data_dir/FOLDER_1/GROUP1 
 
 # ! same participant, but look at their heatmap on unaffected 
@@ -85,7 +85,7 @@ cut_seg_to_binary_2 = .5
 
 script_path = '/data/duongdb/Face11CondTobiiEyeTrack01112023'
 
-main_folder = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023' # @main_folder is where we save all the output data
+main_folder = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023' # @main_folder is where we save all the output data
 
 #
 folder_array = ['HeatmapAffPerParticipant', 'HeatmapUnAffPerParticipant']
@@ -144,9 +144,9 @@ os.chdir(main_folder)
 
 for this_user in user_array: # Group1
   #
-  if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023',folder_array[0],this_user)):
+  if not os.path.isdir(os.path.join('/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023',folder_array[0],this_user)):
     continue
-  if not os.path.isdir(os.path.join('/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023',folder_array[1],this_user)): # ! compare how same participant looks at aff vs unaff. 
+  if not os.path.isdir(os.path.join('/data/duongdb/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023',folder_array[1],this_user)): # ! compare how same participant looks at aff vs unaff. 
     continue
   script = re.sub('THIS_K',str(this_k),script_base)
   script = re.sub('THRESHOLD_GROUP_1',str(cut_seg_to_binary_1),script) # ! note @THRESHOLD_GROUP_1 is NIH

@@ -71,7 +71,7 @@ id_to_english_name_out = {
 
 # ---------------------------------------------------------------------------- #
 
-path = '/data/duongdb/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg'
+path = '/data/duongdb/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg'
 foutpath = path # ! maybe clean up. 
 criteria_arr = ['k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-round0.3',
                 'k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3',

@@ -7,7 +7,7 @@ library('data.table')
 # ! KL divergence within the same participant, when we compare affected vs unaffected heatmap for this person
 
 
-data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
+data_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/'
 folder_path = 'KL-symmetric/NonExpSameParticipant'
 expert_or_not = 'Nonclinicians' # ! Clinicians OR Nonclinicians CHANGE THIS IF NEEDED
 

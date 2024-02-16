@@ -4,8 +4,8 @@ import numpy as np
 
 # ! some images don't have dash, we should add them? 
 
-# img_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Peter25RadiusTobiiHeatmap04042023_original_name'
-img_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Peter25RadiusTobiiHeatmap04172023_fix_name'
+# img_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Peter25RadiusTobiiHeatmap04042023_original_name'
+img_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Peter25RadiusTobiiHeatmap04172023_fix_name'
 
 os.makedirs(img_dir,exist_ok=True)
 

@@ -53,12 +53,12 @@ id_to_english = {
 }
 
 # ---------------------------------------------------------------------------- #
-outdir_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/SurveyPicsFacerSegment/Rename'
+outdir_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/SurveyPicsFacerSegment/Rename'
 
 os.makedirs(outdir_path,exist_ok=True)
 
 
-datadir_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/SurveyPicsFacerSegment'
+datadir_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/SurveyPicsFacerSegment'
 file_array = os.listdir (datadir_path)
 file_array = [f for f in file_array if f.endswith('.PNG')]
 

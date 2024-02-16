@@ -54,20 +54,20 @@ if args.move_only_non_clinician:
 
 # ---------------------------------------------------------------------------- #
 
-# main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
+# main_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/'
 
 # ---------------------------------------------------------------------------- #
 
 # source = '25radius-fix-mismatch-name-csv-no-ave-whtbg' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
-# final_output_dir = 'RemoveAveEyeTrack' # RemoveAveEyeTrack
-# df = 'TableEyeTrackingSimple.csv'
+# final_output_dir = 'eye_track_data_without_ave_signal' # eye_track_data_without_ave_signal
+# df = 'eye_track_record_accuracy_per_person.csv.csv'
 # add_file_name_pattern = '.png'
 
 # ---------------------------------------------------------------------------- #
 
-# source = '25radius-keep-ave-whtbg-peter' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
-# final_output_dir = 'KeepAveEyeTrackPeter' # RemoveAveEyeTrack
-# df = 'TableEyeTrackingSimpleNihPeter04172023.csv'
+# source = '25radius-keep-ave-whtbg-nonclinicians' # '25radius-fix-mismatch-name-csv-no-ave-whtbg'
+# final_output_dir = 'KeepAveEyeTrackPeter' # eye_track_data_without_ave_signal
+# df = 'eye_track_record_accuracy_per_person.csv'
 
 # ---------------------------------------------------------------------------- #
 

@@ -5,7 +5,7 @@ library('metafor')
 library('data.table')
 
 # ! KL divergence between successful vs. underperforming clinicians (and likewise nonclinicians)
-data_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
+data_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/'
 folder_path = 'KL-symmetric/Succ_v_Underperforming_Nonclinicians'
 expert_or_not = 'nonclinicians' # ! Clinicians OR Nonclinicians CHANGE THIS IF NEEDED
 

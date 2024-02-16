@@ -2,7 +2,7 @@ rm(list = ls())
 
 library('metafor') # ! install.packages('whatever')
 
-saliency_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg/'
+saliency_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rExpertNoAveByAcc04172023/Compare2Saliency/k20-thresh0.05-pixcut20-seg/'
 output_base_name = paste0('sal-','k20-thresh0.05-pixcut20-seg')
 
 # xlim=c(-.4,.8) # works for 'k20-thresh0.05-pixcut70-seg'? 

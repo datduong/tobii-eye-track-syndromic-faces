@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 # ! average of a few images after remove the "common consensus"
-# imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/25radius-fix-mismatch-name-csv-no-ave/'
+# imdir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/25radius-fix-mismatch-name-csv-no-ave/'
 
 
 def scale_shift_ave_pixel_one_image(arr,target=0.5,maxval=1,criteria_pixel=0,flip_01=False,scale=True): 
@@ -49,7 +49,7 @@ def scale_shift_ave_pixel_one_image(arr,target=0.5,maxval=1,criteria_pixel=0,fli
 
 for group in ['Group1','Group2','Group3','Group4']: 
     
-  imdir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/RemoveAveEyeTrack/Slide11/' + group
+  imdir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/eye_track_data_without_ave_signal/Slide11/' + group
   imlist = os.listdir(imdir)
 
   # imlist = [i for i in imlist if re.match(r'^5_',i) ]
@@ -70,10 +70,10 @@ for group in ['Group1','Group2','Group3','Group4']:
   arr=np.array(np.round(arr),dtype=np.uint8)
 
   out=Image.fromarray(np.array(arr)).convert('L')
-  out.save(os.path.join('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/CheckColorIntensityScale',"total_average_no_totave_25radius_slide_11_"+group+".jpg"))
+  out.save(os.path.join('C:/Users/duongdb/Documents/TOBII_DATA_PATH/CheckColorIntensityScale',"total_average_no_totave_25radius_slide_11_"+group+".jpg"))
 
   arr = np.array(out) # ! bring back to np.array to scale
   # arr = 255-arr # flip to black?
   arr = scale_shift_ave_pixel_one_image (arr/255,target=.2) * 255 # do scaling in 0/1 then bring back to 255 
   out=Image.fromarray(np.array(arr,dtype=np.uint8)).convert('L')
-  out.save(os.path.join('C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/CheckColorIntensityScale',"total_average_no_totave_25radius_slide_11_"+group+"scale.jpg"))
+  out.save(os.path.join('C:/Users/duongdb/Documents/TOBII_DATA_PATH/CheckColorIntensityScale',"total_average_no_totave_25radius_slide_11_"+group+"scale.jpg"))

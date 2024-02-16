@@ -6,7 +6,7 @@ import numpy as np
 
 # Heatmap25rExpertNoAveByAcc04172023
 
-main_path = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/Heatmap25rNonExpertNoAveByAcc04172023/'
+main_path = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/Heatmap25rNonExpertNoAveByAcc04172023/'
 
 slides = ['Slide' + str(i) for i in np.arange(2,18)]
 

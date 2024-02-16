@@ -28,7 +28,7 @@ def image_grid(imgs, rows, cols):
 
 # ---------------------------------------------------------------------------- #
 
-main_dir = 'C:/Users/duongdb/Documents/Face11CondTobiiEyeTrack01112023/'
+main_dir = 'C:/Users/duongdb/Documents/TOBII_DATA_PATH/'
 
 fout_dir = os.path.join(main_dir,'Heatmap25rExpertNoAveByAcc04172023')
 imdir = 'Heatmap25rExpertNoAve04172023' 
