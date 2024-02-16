@@ -1,7 +1,7 @@
 
 ## Instruction 
 
-We first outline the data processing step, and then the steps to compare visual heat maps. **Note, please change your directory path accordingly.**
+We first outline the data processing step, and then the steps to compare visual heatmaps. **Note, please change your directory path accordingly.**
 
 ### Remove average heatmap (which focuses on mostly eyes/nose/mouth) from each image.
 
@@ -67,16 +67,13 @@ We should see this `Group1VsPeter-k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothav
 
 ### Make meta-analysis plot in R.
 
-We do this on local computer so we can easily view the plots. Use `meta_analysis/group_vs_group_same_imgVsPeter.R`. 
+We do this on local computer so we can easily view the plots. Use `meta_analysis/clinician_vs_not_on_same_img.R`. 
 
-Variables to change in this .R code are: [`data_path` and `what_group`](https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/meta_analysis/group_vs_group_same_imgVsPeter.R#L5). `threshold_used` defines the intensity where we truncate eye heatmap, and `mod` is the corresponding outputs. 
+Variables to change in this .R code are: [`data_path` and `what_group`](https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/meta_analysis/clinician_vs_not_on_same_img.R#L5). `threshold_used` defines the intensity where we truncate eye heatmap, and `mod` is the corresponding outputs. 
 
 Unless we have our own modified experiments, `threshold_used` and `mod` don't need to be changed, since these outputs were already defined in `group_vs_group_same_img_heatmap.py`. We should see this output. 
 
 ![example3](https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/img/Group1-NIH-Peter-IoU-thr0.png)
 
-### Plot Tobii heatmap on top the original image. 
-
-We will add more instruction soon. 
 
 
