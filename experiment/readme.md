@@ -16,13 +16,13 @@ python get_remove_average_heatmap.py --main_datadir C:/Users/duongdb/Documents/F
 ```
 
 
-### Put images into 4 groups based on their accuracy.
+### For each test image, put the corresponding Tobii eye-tracking output into 4 groups.
 
 For a specific test image, there will be 4 groups each for the clinicians (and likewise for the nonclinicians ):
 - Group 1: clinicians who correctly identify the image is affected vs unaffected
-- Group 1: clinicians who incorrect identify the image is affected vs unaffected
-- Group 1: clinicians who correctly identify the image is affected vs unaffected, AND said the correct disease name
-- Group 1: clinicians who correctly identify the image is affected vs unaffected, BUT said the incorrect disease name
+- Group 2: clinicians who incorrect identify the image is affected vs unaffected
+- Group 3: clinicians who correctly identify the image is affected vs unaffected, AND said the correct disease name
+- Group 4: clinicians who correctly identify the image is affected vs unaffected, BUT said the incorrect disease name
 
 **We can do this on local computer so we can easily view the images.**
 
