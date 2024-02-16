@@ -22,7 +22,10 @@ For example, the [very last image on this page here](https://www.funtoday.news/p
 
 We further compared how saliency maps of a deep learning classifier against human visual heat map. Our classifier is at [this other repo](https://github.com/datduong/classify-syndromic-faces). Our classifier is not state-of-the-art; the goal is to observe preliminary differences between human vs. machine. 
 
+## Instruction 
+
 Please see [`experiment`](https://github.com/datduong/tobii-eye-track-syndromic-faces/tree/master/experiment) for more instructions on running this repo. 
 
+We also provide the .csv outputs which were used to make the figures in the main text. 
 
 

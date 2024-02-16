@@ -39,7 +39,7 @@ python move_images.py --main_dir C:/Users/duongdb/Documents/Face11CondTobiiEyeTr
 
 We should do this on server, we don't need cuda, simple cpu will work fast enough (2-3 hours at most). All paths will now be with respect to server path instead of local pc computer c:/user/something.
 
-We run python code to create a bunch of bash script, this code will auto submit the bash script. We need to provide command to submit job according to the server specification (see line with `os.system` in this code).
+We run python code to create many bash scripts, this code will auto submit the bash scripts. We need to provide command to submit the jobs according to the server's specification (see line with `os.system` in this code).
 
 The line `slide_folders` will select with slide (in other word, which image) we want to compare clinician vs nonclinician group. The line `for group in ['Group1']` will indicate which group (there are 4 possible groups).  
 
@@ -49,13 +49,13 @@ cd tobii-eye-track-syndromic-faces/experiment
 python group_vs_group_same_img_heatmap.py # need to change paths inside this code
 ```
  
-After this step, we will see the heatmap averaged over clinician participants (and likewise for nonclinician group). The average heatmap will be with respect to the specific setting to smooth images and scale color intesity and so forth. 
+After this step, we will see the final heatmap averaged over clinician participants (and likewise for nonclinician group). This average heatmap is done with respect to the specific setting for smoothing images and scaling color intesity and so forth. 
 
 Output will be saved at the variable `$output_dir` in `group_vs_group_same_img_heatmap.py`; for example, output dir can be `/data/duongdb/TOBII_DATA_PATH/eye_track_data_without_ave_signal/Compare_clinicians_vs_not/Slide1`
 
 See example output below. The png outputs are the heatmaps averaged over clinician group1 (and likewise nonclinician group1). The csv outputs compare the differences between the average of the clinician group1 vs nonclinician group1. We use many different settings to smooth and scale the Tobii heatmaps, and these settings are shown the output names. See more comments about these settings in `tobii-eye-track-syndromic-faces/experiment/group_vs_group_same_img_heatmap.py`. 
 
-<!-- ![example1](https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/img/ExampleOutputDir.PNG) -->
+![example1](https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/img/ExampleOutputDir.PNG)
 
 
 ### Combine all the csv outputs into a single place to analyze.
@@ -77,7 +77,9 @@ We do this on local computer so we can easily view the plots. Use `meta_analysis
 
 Variables to change in this .R code are: [`data_path` and `what_group`]. `threshold_used` defines the intensity where we truncate eye heatmap, and `mod` is the corresponding outputs. 
 
-<!-- Unless we have our own modified experiments, `threshold_used` and `mod` don't need to be changed, since these outputs were already defined in `group_vs_group_same_img_heatmap.py`. We should see this output. 
+Unless we have our own modified experiments, `threshold_used` and `mod` don't need to be changed, since these variables were already defined in `group_vs_group_same_img_heatmap.py`. 
+
+<!-- We should see this output. 
 
 ![example3](https://github.com/datduong/tobii-eye-track-syndromic-faces/blob/master/img/Group1-clinicians-nonclinicians-IoU-thr0.png) -->
 
