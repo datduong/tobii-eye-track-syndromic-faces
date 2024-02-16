@@ -1,0 +1,15 @@
+image_number,type,group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2,condition
+Slide2+Slide2,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide2Group2,Slide2Group2,0.242023913677457,0.290463915504312,0.1043330066534802,0.631,1000,5,9,WS
+Slide3+Slide3,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide3Group2,Slide3Group2,0.0,0.0,0.0,0.0,40,0,3,Unaff1
+Slide4+Slide4,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide4Group2,Slide4Group2,0.0,0.0,0.0,0.0,1,0,1,RSTS1
+Slide5+Slide5,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide5Group2,Slide5Group2,0.187120858609426,0.2445135650326177,0.1207041767616244,0.602,1000,3,8,Unaff2
+Slide6+Slide6,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide6Group2,Slide6Group2,0.0867518784005527,0.2705315886754466,0.191241745646428,0.807,1000,2,3,WHS
+Slide7+Slide7,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide7Group2,Slide7Group2,0.0,0.0,0.0,0.0,6,0,2,Unaff3
+Slide9+Slide9,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide9Group2,Slide9Group2,0.0,0.0,0.0,0.0,1,0,1,Down
+Slide10+Slide10,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide10Group2,Slide10Group2,0.2716830439269529,0.3203967723803771,0.1254519043841115,0.62,1000,6,6,Unaff4
+Slide11+Slide11,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide11Group2,Slide11Group2,0.1443515999481798,0.2359213709399659,0.1137517416161556,0.769,1000,3,9,KS
+Slide13+Slide13,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide13Group2,Slide13Group2,0.1394312538267909,0.2620945950989375,0.1670154040515922,0.767,1000,4,4,Unaff5
+Slide14+Slide14,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide14Group2,Slide14Group2,0.0250680418278183,0.2437739169174262,0.2653048211012333,0.8567708333333334,384,1,3,22q11DS
+Slide15+Slide15,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide15Group2,Slide15Group2,0.2447389873494157,0.2648409400064952,0.0873263750103458,0.541,1000,5,12,PWS
+Slide16+Slide16,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide16Group2,Slide16Group2,0.2173097108686663,0.2683899688037192,0.1133658878720763,0.631,1000,8,3,Unaff6
+Slide17+Slide17,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide17Group2,Slide17Group2,0.461742513558123,0.4666609970971235,0.0803832247075988,0.534,1000,13,17,BWS

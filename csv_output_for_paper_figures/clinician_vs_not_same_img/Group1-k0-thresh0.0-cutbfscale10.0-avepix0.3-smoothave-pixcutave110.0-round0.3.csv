@@ -1,0 +1,17 @@
+image_number,type,group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2,condition
+Slide2+Slide2,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide2Group1,Slide2Group1,0.3029831891944417,0.3733636591750562,0.0904823653711026,0.76,1000,17,13,WS
+Slide3+Slide3,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide3Group1,Slide3Group1,0.3835694319420097,0.3508018337246458,0.0729513648573217,0.341,1000,22,19,Unaff1
+Slide4+Slide4,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide4Group1,Slide4Group1,0.4006851865643852,0.3696469151688091,0.0821810739640306,0.36,1000,21,21,RSTS1
+Slide5+Slide5,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide5Group1,Slide5Group1,0.2643159764930982,0.2991091991976036,0.0708110206645509,0.671,1000,19,14,Unaff2
+Slide6+Slide6,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide6Group1,Slide6Group1,0.3995513809056498,0.3755165619802907,0.0839043370911779,0.399,1000,20,19,WHS
+Slide7+Slide7,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide7Group1,Slide7Group1,0.3163227610955723,0.339014517574421,0.0750402288953234,0.615,1000,22,20,Unaff3
+Slide8+Slide8,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide8Group1,Slide8Group1,0.3604995766299746,0.4315791910306808,0.0704390789356337,0.847,1000,22,22,CdLS
+Slide9+Slide9,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide9Group1,Slide9Group1,0.327906976744186,0.4198125493068336,0.0785857723986414,0.881,1000,22,21,Down
+Slide10+Slide10,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide10Group1,Slide10Group1,0.3857823791707242,0.3850757019123034,0.0848759694190264,0.493,1000,15,15,Unaff4
+Slide11+Slide11,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide11Group1,Slide11Group1,0.2732512852469232,0.3536092175329363,0.0857858644595096,0.815,1000,19,13,KS
+Slide12+Slide12,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide12Group1,Slide12Group1,0.4135106256678143,0.4165102672847093,0.0780521442741788,0.499,1000,21,21,NS
+Slide13+Slide13,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide13Group1,Slide13Group1,0.4080746601744776,0.3887880868193815,0.0755636605533862,0.4,1000,18,18,Unaff5
+Slide14+Slide14,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide14Group1,Slide14Group1,0.2693255131964809,0.3147259108210459,0.0740813106973312,0.737,1000,21,19,22q11DS
+Slide15+Slide15,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide15Group1,Slide15Group1,0.2627359354956936,0.3332376265355189,0.0894155793522525,0.786,1000,16,10,PWS
+Slide16+Slide16,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide16Group1,Slide16Group1,0.348040744205384,0.3401705964043947,0.0840170946903066,0.457,1000,14,19,Unaff6
+Slide17+Slide17,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide17Group1,Slide17Group1,0.1911650233523611,0.2488175618108744,0.1107729137007843,0.673,1000,8,5,BWS

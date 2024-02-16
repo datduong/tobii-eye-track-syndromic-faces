@@ -1,0 +1,11 @@
+image_number,type,group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2,condition
+Slide2+Slide2,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide2Group4,Slide2Group4,0.2690229739964655,0.3360432737832332,0.0965032933778182,0.745,1000,13,10,WS
+Slide4+Slide4,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide4Group4,Slide4Group4,0.4488138030194105,0.3802210767017996,0.0830625225194331,0.193,1000,18,21,RSTS1
+Slide6+Slide6,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide6Group4,Slide6Group4,0.3995513809056498,0.382742574800419,0.0822602698855388,0.424,1000,20,19,WHS
+Slide8+Slide8,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide8Group4,Slide8Group4,0.436763550667714,0.4233279575716486,0.0756214237444433,0.419,1000,12,17,CdLS
+Slide9+Slide9,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide9Group4,Slide9Group4,0.0861244019138756,0.2284994647933206,0.0865076559868265,0.965,1000,4,20,Down
+Slide11+Slide11,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide11Group4,Slide11Group4,0.153267905617039,0.251552274007408,0.0925786003706478,0.865,1000,8,11,KS
+Slide12+Slide12,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide12Group4,Slide12Group4,0.3576785132050864,0.3686792470730574,0.0843428848914902,0.549,1000,12,21,NS
+Slide14+Slide14,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide14Group4,Slide14Group4,0.2887347578028862,0.316965264185836,0.0745728418077746,0.645,1000,18,19,22q11DS
+Slide15+Slide15,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide15Group4,Slide15Group4,0.2627359354956936,0.3377453477297185,0.0918767206082955,0.781,1000,16,10,PWS
+Slide17+Slide17,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave110.0-round0.3,Slide17Group4,Slide17Group4,0.1770615866388309,0.2295988654439282,0.1137018227580346,0.625,1000,7,5,BWS

@@ -1,0 +1,9 @@
+image_number,type,group_name1,group_name2,obs_stat,boot_ave,boot_std,boot_rank,boot_num,group_size1,group_size2,condition
+Slide2+Slide2,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide2Group3,Slide2Group3,0.1167144871857219,0.2727723548277276,0.1650310896913367,0.84,1000,4,3,WS
+Slide4+Slide4,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide4Group3,Slide4Group3,0.0,0.0,0.0,0.0,40,3,0,RSTS1
+Slide8+Slide8,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide8Group3,Slide8Group3,0.4167515162247111,0.3822843587845244,0.1030701333047612,0.36,1000,10,5,CdLS
+Slide9+Slide9,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide9Group3,Slide9Group3,0.1738541553797811,0.1837873085351618,0.0708731493131387,0.499,1000,18,1,Down
+Slide11+Slide11,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide11Group3,Slide11Group3,0.111393338522676,0.2655470762334637,0.0992568593312038,0.951,1000,11,2,KS
+Slide12+Slide12,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide12Group3,Slide12Group3,0.0,0.0,0.0,0.0,1000,9,0,NS
+Slide14+Slide14,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide14Group3,Slide14Group3,0.0,0.0,0.0,0.0,40,3,0,22q11DS
+Slide17+Slide17,k0-thresh0.0-cutbfscale10.0-avepix0.3-smoothave-pixcutave70.0-round0.3,Slide17Group3,Slide17Group3,0.0,0.0,0.0,0.0,1,1,0,BWS
