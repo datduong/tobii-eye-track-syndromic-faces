@@ -1,4 +1,7 @@
 
+## Instruction 
+
+We first outline the data processing step, and then the steps to compare visual heat maps. **Note, please change your directory path accordingly.**
 
 ### Remove average heatmap (which focuses on mostly eyes/nose/mouth) from each image.
 
