@@ -4,7 +4,7 @@ Final paper will be available very soon [(first draft)](https://www.medrxiv.org/
 
 All images were collected via online search; however, due to redistribution copyright issues, we cannot freely redistribute these images. Please contact us for the dataset.
 
-Our main objective is to observe how clinicians and nonclinicians inspect pictures of syndromic faces. Tobii eye tracking device was used to collect visual attention heat maps of the clinicians and nonclinicians. Next, we used [intersection-over-union](https://www.nature.com/articles/s42256-022-00536-x) and Kullback–Leibler [(KL) divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence) to compare the visual heat maps. 
+Our main objective is to observe how clinicians and nonclinicians inspect pictures of syndromic faces. Tobii eye tracking device was used to collect visual attention heat maps of the clinicians and nonclinicians. Next, we used [intersection-over-union](https://www.nature.com/articles/s42256-022-00536-x) and Kullback–Leibler (KL) divergence to compare the visual heat maps. 
 
 For example, this the (last image on this page here)[https://www.funtoday.news/post02236391146685] shows an individual affected with Kabuki Syndrome. The key features are the outter corner of the eyes. This was one of the images tested in our paper. The example output below shows the visual attention heat maps of clinicians (top row) vs nonclinicians (bottom row). The overall visual attivity looks simlar for both clinicians and nonclinicians (left most column). However, when narrowing down to areas with the highest visual attivity (e.g. where people spend the most of time looking at), then we observe drastic differences between clinicians and nonclinicians.  
 
