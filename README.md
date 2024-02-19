@@ -26,6 +26,6 @@ We further compared how saliency maps of a deep learning classifier against huma
 
 Please see [`experiment`](https://github.com/datduong/tobii-eye-track-syndromic-faces/tree/master/experiment) for more instructions on running this repo. 
 
-We also provide the [.csv raw files](https://github.com/datduong/tobii-eye-track-syndromic-faces/tree/master/csv_output_for_paper_figures) which were used to make the figures in the main text. 
+We also provide the [.csv raw files](https://github.com/datduong/tobii-eye-track-syndromic-faces/tree/master/csv_output_for_paper_figures) which were used to make the plots and figures in the main text. 
 
 
